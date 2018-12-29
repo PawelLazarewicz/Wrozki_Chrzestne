@@ -18,13 +18,20 @@ public class EmployeeController {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    @PostMapping("addEmployee")
-    public ResponseEntity addEmployee(@RequestBody EmployeeDto employeeDto){
+    @RequestMapping("/addEmployee")
+    public String addEmployeeForm(Model model){
+        model.addAttribute("employee", new EmployeeDto());
+        return "addEmployeeHTML";
+    }
+
+    @RequestMapping(value = "employees", method = RequestMethod.POST)
+    public String addEmployee(@ModelAttribute EmployeeDto employeeDto, Model model){
         Employee newEmployee = new Employee(null,employeeDto.getName(), employeeDto.getLastName(), employeeDto.getCity(), employeeDto.getAge(), employeeDto.getTelephoneNumber(), employeeDto.getMail());
         employeeRepository.save(newEmployee);
 
-        EmployeeDto newEmployeeDto = new EmployeeDto(newEmployee.getName(), newEmployee.getLastName(), newEmployee.getCity(), newEmployee.getAge(), newEmployee.getTelephoneNumber(), newEmployee.getMail());
-        return new ResponseEntity(newEmployeeDto, HttpStatus.OK);
+        allEmployees(model);
+
+        return "redirect:listEmployees";
     }
 
     @RequestMapping("/listEmployees")
