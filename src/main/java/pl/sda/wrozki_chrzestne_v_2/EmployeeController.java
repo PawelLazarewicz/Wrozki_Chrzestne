@@ -1,20 +1,21 @@
 package pl.sda.wrozki_chrzestne_v_2;
 
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
-@AllArgsConstructor
+@Controller
+//@AllArgsConstructor
 public class EmployeeController {
 
+    @Autowired
     private EmployeeRepository employeeRepository;
 
     @PostMapping("addEmployee")
@@ -26,13 +27,15 @@ public class EmployeeController {
         return new ResponseEntity(newEmployeeDto, HttpStatus.OK);
     }
 
-    @GetMapping ("listEmployees")
-    public ResponseEntity allEmployees(){
+    @RequestMapping("/listEmployees")
+    public String allEmployees(Model model){
         List<Employee> employeeList = employeeRepository.findAll();
         List<EmployeeDto> employeeDtos = employeeList.stream()
                 .map(e -> new EmployeeDto(e.getName(), e.getLastName(), e.getCity(), e.getAge(), e.getTelephoneNumber(), e.getMail()))
                 .collect(Collectors.toList());
 
-        return new ResponseEntity(employeeDtos, HttpStatus.OK);
+        model.addAttribute("employeesDtos", employeeDtos);
+
+        return "employeesHTML";
     }
 }
