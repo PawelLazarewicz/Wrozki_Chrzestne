@@ -68,4 +68,14 @@ public class EmployeeController {
 
         return new ResponseEntity(selectedEmployeeDto, HttpStatus.OK);
     }
+
+    @GetMapping("listEmployees/inactive")
+    public ResponseEntity allInactiveEmployees() {
+        List<Employee> inactiveEmployeeList = new ArrayList<>(inactiveEmployees);
+        List<EmployeeDto> inactiveEmployeeDtos = inactiveEmployeeList.stream()
+                .map(e -> new EmployeeDto(e.getName(), e.getLastName(), e.getCity(), e.getAge(), e.getTelephoneNumber(), e.getMail()))
+                .collect(Collectors.toList());
+
+        return new ResponseEntity(inactiveEmployeeDtos, HttpStatus.OK);
+    }
 }
