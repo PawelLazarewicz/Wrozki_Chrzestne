@@ -6,6 +6,7 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,6 +15,8 @@ import java.util.stream.Collectors;
 public class EmployeeController {
 
     private EmployeeRepository employeeRepository;
+
+    private List<Employee> inactiveEmployees;
 
     @PostMapping("addEmployee")
     public ResponseEntity addEmployee(@RequestBody EmployeeDto employeeDto) {
@@ -49,6 +52,18 @@ public class EmployeeController {
 
         EmployeeDto selectedEmployeeDto = new EmployeeDto(selectedEmployee.getName(), selectedEmployee.getLastName(), selectedEmployee.getCity(), selectedEmployee.getAge(), selectedEmployee.getTelephoneNumber(), selectedEmployee.getMail());
 
+        employeeRepository.delete(selectedEmployee);
+
+        return new ResponseEntity(selectedEmployeeDto, HttpStatus.OK);
+    }
+
+    @GetMapping("Employee/{id}/move")
+    public ResponseEntity moveEmployee(@PathVariable Long id){
+        Employee selectedEmployee = employeeRepository.getOne(id);
+
+        EmployeeDto selectedEmployeeDto = new EmployeeDto(selectedEmployee.getName(), selectedEmployee.getLastName(), selectedEmployee.getCity(), selectedEmployee.getAge(), selectedEmployee.getTelephoneNumber(), selectedEmployee.getMail());
+
+        inactiveEmployees.add(selectedEmployee);
         employeeRepository.delete(selectedEmployee);
 
         return new ResponseEntity(selectedEmployeeDto, HttpStatus.OK);
