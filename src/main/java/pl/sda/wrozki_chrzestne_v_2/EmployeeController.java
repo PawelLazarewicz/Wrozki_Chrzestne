@@ -2,6 +2,7 @@ package pl.sda.wrozki_chrzestne_v_2;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +39,17 @@ public class EmployeeController {
         Employee selectedEmployee = employeeRepository.getOne(id);
 
         EmployeeDto selectedEmployeeDto = new EmployeeDto(selectedEmployee.getName(), selectedEmployee.getLastName(), selectedEmployee.getCity(), selectedEmployee.getAge(), selectedEmployee.getTelephoneNumber(), selectedEmployee.getMail());
+
+        return new ResponseEntity(selectedEmployeeDto, HttpStatus.OK);
+    }
+
+    @GetMapping("Employee/{id}/delete")
+    public ResponseEntity deleteEmployee(@PathVariable Long id){
+        Employee selectedEmployee = employeeRepository.getOne(id);
+
+        EmployeeDto selectedEmployeeDto = new EmployeeDto(selectedEmployee.getName(), selectedEmployee.getLastName(), selectedEmployee.getCity(), selectedEmployee.getAge(), selectedEmployee.getTelephoneNumber(), selectedEmployee.getMail());
+
+        employeeRepository.delete(selectedEmployee);
 
         return new ResponseEntity(selectedEmployeeDto, HttpStatus.OK);
     }
