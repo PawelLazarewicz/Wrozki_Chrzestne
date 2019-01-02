@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @AllArgsConstructor
@@ -15,8 +16,8 @@ public class JobDto {
 
     private String clientName;
     private String clientLastName;
-    private Date dateOfJob;
-    private String jobsPlace;
+    private LocalDate dateOfJob;
+    private String city;
 
         private String jobsAddress;
         private String jobsPostalCode;

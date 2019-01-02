@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.text.DateFormat;
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 
 @AllArgsConstructor
@@ -22,12 +25,13 @@ public class Job {
 
     private String clientName;
     private String clientLastName;
-    private Date dateOfJob;
-    private String jobsPlace;
+    private LocalDate dateOfJob;
+    private String city;
 
         private String jobsAddress;
         private String jobsPostalCode;
 
+    @Enumerated(EnumType.STRING)
     private SortOfJobs sortOfJob;
     private int estimatedTime;
     private int numberOfChildren;
