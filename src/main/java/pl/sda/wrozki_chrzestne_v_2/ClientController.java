@@ -3,10 +3,7 @@ package pl.sda.wrozki_chrzestne_v_2;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,5 +33,14 @@ public class ClientController {
                 .collect(Collectors.toList());
 
         return new ResponseEntity(clientDtos, HttpStatus.OK);
+    }
+
+    @GetMapping("Client/{id}")
+    public ResponseEntity getClient(@PathVariable Long id) {
+        Client selectedClient = clientRepository.getOne(id);
+
+        ClientDto selectedClientDto = clientBuilderService.DtoFromEntity(selectedClient);
+
+        return new ResponseEntity(selectedClientDto, HttpStatus.OK);
     }
 }
