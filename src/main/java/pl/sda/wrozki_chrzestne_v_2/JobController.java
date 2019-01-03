@@ -15,6 +15,7 @@ public class JobController {
     private JobRepository jobRepository;
 
     private JobBuilderService jobBuilderService;
+    private List<Job> inactiveJobs;
 
     @GetMapping("listJobs")
     public ResponseEntity allJobs() {
@@ -44,6 +45,17 @@ public class JobController {
         Job selectedJob = jobRepository.getOne(id);
 
         JobDto selectedJobDto = jobBuilderService.DtoFromEntity(selectedJob);
+
+        return new ResponseEntity(selectedJobDto, HttpStatus.OK);
+    }
+
+    @GetMapping("Job/{id}/move")
+    public ResponseEntity moveJob(@PathVariable Long id){
+        Job selectedJob = jobRepository.getOne(id);
+        JobDto selectedJobDto = jobBuilderService.DtoFromEntity(selectedJob);
+
+        inactiveJobs.add(selectedJob);
+        jobRepository.delete(selectedJob);
 
         return new ResponseEntity(selectedJobDto, HttpStatus.OK);
     }
