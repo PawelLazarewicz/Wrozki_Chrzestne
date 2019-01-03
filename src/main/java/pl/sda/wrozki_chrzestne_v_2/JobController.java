@@ -3,10 +3,7 @@ package pl.sda.wrozki_chrzestne_v_2;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,6 +37,15 @@ public class JobController {
         JobDto newJobDto = jobBuilderService.DtoFromEntity(newJob);
 
         return new ResponseEntity(newJobDto, HttpStatus.OK);
+    }
+
+    @GetMapping("Job/{id}")
+    public ResponseEntity getJob(@PathVariable Long id){
+        Job selectedJob = jobRepository.getOne(id);
+
+        JobDto selectedJobDto = jobBuilderService.DtoFromEntity(selectedJob);
+
+        return new ResponseEntity(selectedJobDto, HttpStatus.OK);
     }
 
 }
