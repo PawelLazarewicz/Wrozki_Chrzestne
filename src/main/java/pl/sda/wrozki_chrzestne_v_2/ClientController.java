@@ -43,4 +43,15 @@ public class ClientController {
 
         return new ResponseEntity(selectedClientDto, HttpStatus.OK);
     }
+
+    @GetMapping("Client/{id}/delete")
+    public ResponseEntity deleteClient(@PathVariable Long id){
+        Client selectedClient = clientRepository.getOne(id);
+
+        ClientDto selectedClientDto = clientBuilderService.DtoFromEntity(selectedClient);
+
+        clientRepository.delete(selectedClient);
+
+        return new ResponseEntity(selectedClientDto, HttpStatus.OK);
+    }
 }
