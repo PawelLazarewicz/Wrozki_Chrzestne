@@ -60,4 +60,16 @@ public class JobController {
         return new ResponseEntity(selectedJobDto, HttpStatus.OK);
     }
 
+    @GetMapping("listJobs/completed")
+    public ResponseEntity allCompletedJobs(){
+        List<Job> inactiveJobsList = this.inactiveJobs;
+
+        List<JobDto> inactiveJobDtos = inactiveJobsList
+                .stream()
+                .map(e -> jobBuilderService.DtoFromEntity(e))
+                .collect(Collectors.toList());
+
+        return new ResponseEntity(inactiveJobDtos, HttpStatus.OK);
+    }
+
 }
