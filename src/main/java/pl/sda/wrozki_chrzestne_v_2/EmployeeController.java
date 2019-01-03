@@ -18,12 +18,14 @@ public class EmployeeController {
 
     private List<Employee> inactiveEmployees;
 
+    private EmployeeBuilderService employeeBuilderService;
+
     @PostMapping("addEmployee")
     public ResponseEntity addEmployee(@RequestBody EmployeeDto employeeDto) {
-        Employee newEmployee = new Employee(null, employeeDto.getName(), employeeDto.getLastName(), employeeDto.getCity(), employeeDto.getAge(), employeeDto.getTelephoneNumber(), employeeDto.getMail());
+        Employee newEmployee = employeeBuilderService.entityFromDto(employeeDto);
         employeeRepository.save(newEmployee);
+        EmployeeDto newEmployeeDto = employeeBuilderService.DtoFromEntity(newEmployee);
 
-        EmployeeDto newEmployeeDto = new EmployeeDto(newEmployee.getName(), newEmployee.getLastName(), newEmployee.getCity(), newEmployee.getAge(), newEmployee.getTelephoneNumber(), newEmployee.getMail());
         return new ResponseEntity(newEmployeeDto, HttpStatus.OK);
     }
 
@@ -31,7 +33,7 @@ public class EmployeeController {
     public ResponseEntity allEmployees() {
         List<Employee> employeeList = employeeRepository.findAll();
         List<EmployeeDto> employeeDtos = employeeList.stream()
-                .map(e -> new EmployeeDto(e.getName(), e.getLastName(), e.getCity(), e.getAge(), e.getTelephoneNumber(), e.getMail()))
+                .map(e -> employeeBuilderService.DtoFromEntity(e))
                 .collect(Collectors.toList());
 
         return new ResponseEntity(employeeDtos, HttpStatus.OK);
@@ -41,16 +43,16 @@ public class EmployeeController {
     public ResponseEntity getEmployee(@PathVariable Long id) {
         Employee selectedEmployee = employeeRepository.getOne(id);
 
-        EmployeeDto selectedEmployeeDto = new EmployeeDto(selectedEmployee.getName(), selectedEmployee.getLastName(), selectedEmployee.getCity(), selectedEmployee.getAge(), selectedEmployee.getTelephoneNumber(), selectedEmployee.getMail());
+        EmployeeDto selectedEmployeeDto = employeeBuilderService.DtoFromEntity(selectedEmployee);
 
         return new ResponseEntity(selectedEmployeeDto, HttpStatus.OK);
     }
 
     @GetMapping("Employee/{id}/delete")
-    public ResponseEntity deleteEmployee(@PathVariable Long id){
+    public ResponseEntity deleteEmployee(@PathVariable Long id) {
         Employee selectedEmployee = employeeRepository.getOne(id);
 
-        EmployeeDto selectedEmployeeDto = new EmployeeDto(selectedEmployee.getName(), selectedEmployee.getLastName(), selectedEmployee.getCity(), selectedEmployee.getAge(), selectedEmployee.getTelephoneNumber(), selectedEmployee.getMail());
+        EmployeeDto selectedEmployeeDto = employeeBuilderService.DtoFromEntity(selectedEmployee);
 
         employeeRepository.delete(selectedEmployee);
 
@@ -58,10 +60,10 @@ public class EmployeeController {
     }
 
     @GetMapping("Employee/{id}/move")
-    public ResponseEntity moveEmployee(@PathVariable Long id){
+    public ResponseEntity moveEmployee(@PathVariable Long id) {
         Employee selectedEmployee = employeeRepository.getOne(id);
 
-        EmployeeDto selectedEmployeeDto = new EmployeeDto(selectedEmployee.getName(), selectedEmployee.getLastName(), selectedEmployee.getCity(), selectedEmployee.getAge(), selectedEmployee.getTelephoneNumber(), selectedEmployee.getMail());
+        EmployeeDto selectedEmployeeDto = employeeBuilderService.DtoFromEntity(selectedEmployee);
 
         inactiveEmployees.add(selectedEmployee);
         employeeRepository.delete(selectedEmployee);
@@ -73,7 +75,7 @@ public class EmployeeController {
     public ResponseEntity allInactiveEmployees() {
         List<Employee> inactiveEmployeeList = new ArrayList<>(inactiveEmployees);
         List<EmployeeDto> inactiveEmployeeDtos = inactiveEmployeeList.stream()
-                .map(e -> new EmployeeDto(e.getName(), e.getLastName(), e.getCity(), e.getAge(), e.getTelephoneNumber(), e.getMail()))
+                .map(e -> employeeBuilderService.DtoFromEntity(e))
                 .collect(Collectors.toList());
 
         return new ResponseEntity(inactiveEmployeeDtos, HttpStatus.OK);
