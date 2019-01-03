@@ -15,13 +15,15 @@ public class JobController {
 
     private JobRepository jobRepository;
 
+    private JobBuilderService jobBuilderService;
+
     @GetMapping("/listJobs")
     public ResponseEntity allJobs(){
         List<Job> jobs = jobRepository.findAll();
 
         List<JobDto> jobDtos = jobs
                 .stream()
-                .map(e -> new JobDto(e.getClientName(), e.getClientLastName(), e.getDateOfJob(), e.getCity(), e.getJobsAddress(), e.getJobsPostalCode(), e.getSortOfJob(), e.getEstimatedTime(), e.getNumberOfChildren()))
+                .map(e -> jobBuilderService.DtoFromEntity(e))
                 .collect(Collectors.toList());
 
         return new ResponseEntity(jobDtos, HttpStatus.OK);
