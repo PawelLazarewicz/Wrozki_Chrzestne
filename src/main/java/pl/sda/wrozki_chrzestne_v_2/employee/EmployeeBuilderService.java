@@ -1,4 +1,6 @@
-package pl.sda.wrozki_chrzestne_v_2;
+package pl.sda.wrozki_chrzestne_v_2.employee;
+
+import pl.sda.wrozki_chrzestne_v_2.dto.EmployeeDto;
 
 public class EmployeeBuilderService {
 

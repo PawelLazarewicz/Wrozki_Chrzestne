@@ -1,4 +1,4 @@
-package pl.sda.wrozki_chrzestne_v_2;
+package pl.sda.wrozki_chrzestne_v_2.client;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

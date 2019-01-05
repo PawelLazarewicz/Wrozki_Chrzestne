@@ -1,9 +1,10 @@
-package pl.sda.wrozki_chrzestne_v_2;
+package pl.sda.wrozki_chrzestne_v_2.client;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.sda.wrozki_chrzestne_v_2.dto.ClientDto;
 
 import java.util.List;
 import java.util.stream.Collectors;

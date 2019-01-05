@@ -1,4 +1,6 @@
-package pl.sda.wrozki_chrzestne_v_2;
+package pl.sda.wrozki_chrzestne_v_2.client;
+
+import pl.sda.wrozki_chrzestne_v_2.dto.ClientDto;
 
 public class ClientBuilderService {
 
