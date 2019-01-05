@@ -1,4 +1,4 @@
-package pl.sda.wrozki_chrzestne_v_2;
+package pl.sda.wrozki_chrzestne_v_2.client;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,8 +12,8 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "EMPLOYEES")
-public class Employee {
+@Table(name = "CLIENTS")
+public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,8 @@ public class Employee {
     private String lastName;
     private String city;
 
-    private int age;
-    private int telephoneNumber;
+    private String address;
+    private String postalCode;
+    private String telephoneNumber;
     private String mail;
 }
