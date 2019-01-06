@@ -11,7 +11,7 @@
 
 <div>
     <h1>Form</h1>
-    <form action="/addEmployee" th:action="@{employees}" th:object="${employee}" method="post">
+    <form th:action="@{/Employee/listEmployees}" th:object="${employee}" method="post">
         <p>Name: <input type="text" th:field="*{name}"></p>
 
         <p><input type="submit" value="Submit"></p>

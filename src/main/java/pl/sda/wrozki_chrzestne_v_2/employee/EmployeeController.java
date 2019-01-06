@@ -18,23 +18,23 @@ public class EmployeeController {
     @Autowired
     private EmployeeBuilderService employeeBuilderService;
 
-    @RequestMapping("/addEmployee")
+    @RequestMapping("/Employee/addEmployee")
     public String addEmployeeForm(Model model){
         model.addAttribute("employee", new EmployeeDto());
         return "addEmployeeHTML";
     }
 
-    @RequestMapping(value = "employees", method = RequestMethod.POST)
+    @RequestMapping(value = "/Employee/listEmployees", method = RequestMethod.POST)
     public String addEmployee(@ModelAttribute EmployeeDto employeeDto, Model model){
         Employee newEmployee = employeeBuilderService.entityFromDto(employeeDto);
         employeeRepository.save(newEmployee);
 
         allEmployees(model);
 
-        return "redirect:listEmployees";
+        return "redirect:/Employee/listEmployees";
     }
 
-    @RequestMapping("/listEmployees")
+    @RequestMapping("/Employee/listEmployees")
     public String allEmployees(Model model){
         List<Employee> employeeList = employeeRepository.findAll();
         List<EmployeeDto> employeeDtos = employeeList.stream()
