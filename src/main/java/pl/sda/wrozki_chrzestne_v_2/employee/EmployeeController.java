@@ -58,6 +58,12 @@ public class EmployeeController {
 
         model.addAttribute("employeesDtos", employeeDtos);
 
+        List<EmployeeDto> inactiveEmployeeDtos = inactiveEmployeeList.stream()
+                .map(e -> employeeBuilderService.DtoFromEntity(e))
+                .collect(Collectors.toList());
+
+        model.addAttribute("inactiveEmployeesDtos", inactiveEmployeeDtos);
+
         return "employeesHTML";
     }
 
