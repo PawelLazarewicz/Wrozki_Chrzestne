@@ -65,7 +65,16 @@ public class EmployeeController {
     public String moveEmployee(@PathVariable Long id, Model model) {
         Optional<Employee> selectedEmployeeOptional = employeeRepository.findById(id);
         Employee selectedEmployee = selectedEmployeeOptional.get();
-        inactiveEmployeeList.add(selectedEmployee);
+
+        if (inactiveEmployeeList.isEmpty()){
+            inactiveEmployeeList.add(selectedEmployee);
+        } else {
+            for (int i = 0; i < inactiveEmployeeList.size(); i++) {
+                if (!inactiveEmployeeList.get(i).getId().equals(selectedEmployee.getId())) {
+                    inactiveEmployeeList.add(selectedEmployee);
+                }
+            }
+        }
 
         EmployeeDto selectedEmployeeDto = employeeBuilderService.DtoFromEntity(selectedEmployee);
 
