@@ -74,7 +74,7 @@ public class EmployeeController {
         return "employeeHTML";
     }
 
-    @RequestMapping("Employee/show/{id}")
+    @RequestMapping("Employee/{id}/show")
     public String getEmployee(@PathVariable Long id, Model model) {
         Employee selectedEmployee = employeeRepository.getOne(id);
 
@@ -84,17 +84,20 @@ public class EmployeeController {
 
         return "employeeHTML";
     }
-//    @GetMapping("Employee/{id}/delete")
-//    public ResponseEntity deleteEmployee(@PathVariable Long id) {
-//        Employee selectedEmployee = employeeRepository.getOne(id);
-//
-//        EmployeeDto selectedEmployeeDto = employeeBuilderService.DtoFromEntity(selectedEmployee);
-//
-//        employeeRepository.delete(selectedEmployee);
-//
-//        return new ResponseEntity(selectedEmployeeDto, HttpStatus.OK);
-//    }
-//
+
+    @RequestMapping("Employee/{id}/delete")
+    public String deleteEmployee(@PathVariable Long id, Model model) {
+        Employee selectedEmployee = employeeRepository.getOne(id);
+
+        EmployeeDto selectedEmployeeDto = employeeBuilderService.DtoFromEntity(selectedEmployee);
+
+        model.addAttribute("employee", selectedEmployeeDto);
+
+        employeeRepository.delete(selectedEmployee);
+
+        return "employeeHTML";
+    }
+
 //
 //    @GetMapping("listEmployees/inactive")
 //    public ResponseEntity allInactiveEmployees() {
