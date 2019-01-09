@@ -78,4 +78,24 @@ public class JobController {
 
         return "job/jobHTML";
     }
+
+    @GetMapping("Job/{id}/move")
+    public String moveJobCompleted(@PathVariable Long id, Model model) {
+        Job selectedJob = jobRepository.getOne(id);
+        JobDto selectedJobDto = jobBuilderService.DtoFromEntity(selectedJob);
+
+        if (completedJobs.isEmpty()) {
+            completedJobs.add(selectedJob);
+        } else {
+            for (int i = 0; i < completedJobs.size(); i++) {
+                if (!completedJobs.get(i).getId().equals(selectedJob.getId())) {
+                    completedJobs.add(selectedJob);
+                }
+            }
+        }
+
+        model.addAttribute("job", selectedJobDto);
+
+        return "job/jobHTML";
+    }
 }
