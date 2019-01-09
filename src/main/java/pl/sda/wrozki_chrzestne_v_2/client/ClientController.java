@@ -49,4 +49,28 @@ public class ClientController {
 
         return "client/clientsHTML";
     }
+
+    @RequestMapping("Client/{id}/show")
+    public String getClient(@PathVariable Long id, Model model) {
+        Client selectedClient = clientRepository.getOne(id);
+
+        ClientDto selectedClientDto = clientBuilderService.DtoFromEntity(selectedClient);
+
+        model.addAttribute("client", selectedClientDto);
+
+        return "client/clientHTML";
+    }
+
+    @RequestMapping("Client/{id}/delete")
+    public String deleteClient(@PathVariable Long id, Model model){
+        Client selectedClient = clientRepository.getOne(id);
+
+        ClientDto selectedClientDto = clientBuilderService.DtoFromEntity(selectedClient);
+
+        clientRepository.delete(selectedClient);
+
+        model.addAttribute("client", selectedClientDto);
+
+        return "client/clientHTML";
+    }
 }
