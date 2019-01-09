@@ -1,76 +1,54 @@
 package pl.sda.wrozki_chrzestne_v_2.job;
 
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
-@AllArgsConstructor
+@Controller
 public class JobController {
 
+    @Autowired
     private JobRepository jobRepository;
 
+    @Autowired
     private JobBuilderService jobBuilderService;
-    private List<Job> inactiveJobs;
 
-    @GetMapping("listJobs")
-    public ResponseEntity allJobs() {
+    private List<Job> completedJobs = new ArrayList<>();
+
+    @RequestMapping("Job/listJobs")
+    public String allJobs(Model model) {
         List<Job> jobs = jobRepository.findAll();
 
-        List<JobDto> jobDtos = jobs
+        for (int i = 0; i < jobs.size(); i++) {
+            for (int j = 0; j < completedJobs.size(); j++) {
+                if ((jobs.get(i).getId()).equals(completedJobs.get(j).getId())) {
+                    jobs.remove(jobs.get(i));
+                }
+            }
+        }
+
+        List<JobDto> jobsDtos = jobs
                 .stream()
                 .map(e -> jobBuilderService.DtoFromEntity(e))
                 .collect(Collectors.toList());
 
-        return new ResponseEntity(jobDtos, HttpStatus.OK);
-    }
+        model.addAttribute("jobsDtos", jobsDtos);
 
-    @PostMapping("addJob")
-    public ResponseEntity addJob(@RequestBody JobDto jobDto){
-        Job newJob = jobBuilderService.entityFromDto(jobDto);
-
-        jobRepository.save(newJob);
-
-        JobDto newJobDto = jobBuilderService.DtoFromEntity(newJob);
-
-        return new ResponseEntity(newJobDto, HttpStatus.OK);
-    }
-
-    @GetMapping("Job/{id}")
-    public ResponseEntity getJob(@PathVariable Long id){
-        Job selectedJob = jobRepository.getOne(id);
-
-        JobDto selectedJobDto = jobBuilderService.DtoFromEntity(selectedJob);
-
-        return new ResponseEntity(selectedJobDto, HttpStatus.OK);
-    }
-
-    @GetMapping("Job/{id}/move")
-    public ResponseEntity moveJob(@PathVariable Long id){
-        Job selectedJob = jobRepository.getOne(id);
-        JobDto selectedJobDto = jobBuilderService.DtoFromEntity(selectedJob);
-
-        inactiveJobs.add(selectedJob);
-        jobRepository.delete(selectedJob);
-
-        return new ResponseEntity(selectedJobDto, HttpStatus.OK);
-    }
-
-    @GetMapping("listJobs/completed")
-    public ResponseEntity allCompletedJobs(){
-        List<Job> inactiveJobsList = this.inactiveJobs;
-
-        List<JobDto> inactiveJobDtos = inactiveJobsList
+        List<JobDto> completedJobsDto = completedJobs
                 .stream()
                 .map(e -> jobBuilderService.DtoFromEntity(e))
                 .collect(Collectors.toList());
 
-        return new ResponseEntity(inactiveJobDtos, HttpStatus.OK);
-    }
+        model.addAttribute("completedJobsDto", completedJobsDto);
 
+        return "job/jobsHTML";
+    }
 }
