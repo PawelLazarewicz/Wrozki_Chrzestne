@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>List of Jobs</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+</head>
+<body>
+
+<p th:insert="headerHTML"></p>
+
+
+<div>
+    <table>
+        <tbody>
+        <h1>Active Jobs List</h1>
+        <tr th:if="${jobsDtos.isEmpty()}">
+            <td>No Jobs</td>
+        </tr>
+        <th:block th:each="job : ${jobsDtos}">
+            <tr>
+                <td><span th:text="${job.clientName}">Name</span></td>
+                <td><span th:text="${job.clientLastName}">Lastname</span></td>
+                <td><span th:text="${job.city}">City</span></td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <table>
+        <tbody>
+        <h1>Completed Jobs List</h1>
+        <tr th:if="${completedJobsDto.isEmpty()}">
+            <td>Completed Jobs</td>
+        </tr>
+        <th:block th:each="job : ${completedJobsDto}">
+            <tr>
+                <td><span th:text="${job.clientName}">Name</span></td>
+                <td><span th:text="${job.clientLastName}">Lastname</span></td>
+                <td><span th:text="${job.city}">City</span></td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
