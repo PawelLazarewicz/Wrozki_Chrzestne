@@ -23,7 +23,23 @@ public class JobController {
 
     private List<Job> completedJobs = new ArrayList<>();
 
-    @RequestMapping("Job/listJobs")
+    @RequestMapping("/Job/addJob")
+    public String addEmployeeForm(Model model) {
+        model.addAttribute("job", new JobDto());
+        return "job/addJobHTML";
+    }
+
+    @RequestMapping(value = "/Job/listJobs", method = RequestMethod.POST)
+    public String addJob(@ModelAttribute JobDto jobDto, Model model){
+        Job newJob = jobBuilderService.entityFromDto(jobDto);
+        jobRepository.save(newJob);
+
+        allJobs(model);
+
+        return "redirect:/Job/listJobs";
+    }
+
+    @RequestMapping("/Job/listJobs")
     public String allJobs(Model model) {
         List<Job> jobs = jobRepository.findAll();
 
