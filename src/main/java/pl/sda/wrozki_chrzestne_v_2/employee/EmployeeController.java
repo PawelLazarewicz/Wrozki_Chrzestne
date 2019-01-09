@@ -67,12 +67,12 @@ public class EmployeeController {
         return "employeesHTML";
     }
 
-    @RequestMapping("Employee/{id}/move")
-    public String moveEmployee(@PathVariable Long id, Model model) {
+    @RequestMapping("Employee/{id}/move_Inactive")
+    public String moveEmployeeInactive(@PathVariable Long id, Model model) {
         Optional<Employee> selectedEmployeeOptional = employeeRepository.findById(id);
         Employee selectedEmployee = selectedEmployeeOptional.get();
 
-        if (inactiveEmployeeList.isEmpty()){
+        if (inactiveEmployeeList.isEmpty()) {
             inactiveEmployeeList.add(selectedEmployee);
         } else {
             for (int i = 0; i < inactiveEmployeeList.size(); i++) {
@@ -113,14 +113,21 @@ public class EmployeeController {
         return "employeeHTML";
     }
 
-//
-//    @GetMapping("listEmployees/inactive")
-//    public ResponseEntity allInactiveEmployees() {
-//        List<Employee> inactiveEmployeeList = new ArrayList<>(inactiveEmployees);
-//        List<EmployeeDto> inactiveEmployeeDtos = inactiveEmployeeList.stream()
-//                .map(e -> employeeBuilderService.DtoFromEntity(e))
-//                .collect(Collectors.toList());
-//
-//        return new ResponseEntity(inactiveEmployeeDtos, HttpStatus.OK);
-//    }
+    @RequestMapping("Employee/{id}/move_Active")
+    public String moveEmployeeActive(@PathVariable Long id, Model model) {
+        Optional<Employee> selectedEmployeeOptional = employeeRepository.findById(id);
+        Employee selectedEmployee = selectedEmployeeOptional.get();
+
+        for (int i = 0; i < inactiveEmployeeList.size(); i++) {
+            if (inactiveEmployeeList.get(i).getId().equals(selectedEmployee.getId())) {
+                inactiveEmployeeList.remove(inactiveEmployeeList.get(i));
+            }
+        }
+
+        EmployeeDto selectedEmployeeDto = employeeBuilderService.DtoFromEntity(selectedEmployee);
+
+        model.addAttribute("employee", selectedEmployeeDto);
+
+        return "employeeHTML";
+    }
 }
