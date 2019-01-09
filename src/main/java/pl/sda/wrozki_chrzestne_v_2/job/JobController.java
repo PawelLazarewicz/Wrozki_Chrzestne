@@ -30,7 +30,7 @@ public class JobController {
     }
 
     @RequestMapping(value = "/Job/listJobs", method = RequestMethod.POST)
-    public String addJob(@ModelAttribute JobDto jobDto, Model model){
+    public String addJob(@ModelAttribute JobDto jobDto, Model model) {
         Job newJob = jobBuilderService.entityFromDto(jobDto);
         jobRepository.save(newJob);
 
@@ -66,5 +66,16 @@ public class JobController {
         model.addAttribute("completedJobsDto", completedJobsDto);
 
         return "job/jobsHTML";
+    }
+
+    @RequestMapping("Job/{id}/show")
+    public String getJob(@PathVariable Long id, Model model) {
+        Job selectedJob = jobRepository.getOne(id);
+
+        JobDto selectedJobDto = jobBuilderService.DtoFromEntity(selectedJob);
+
+        model.addAttribute("job", selectedJobDto);
+
+        return "job/jobHTML";
     }
 }
