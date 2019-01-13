@@ -70,7 +70,7 @@ public class JobController {
     public String getJob(@PathVariable Long id, Model model) {
         Job selectedJob = jobBuilderService.selectJob(id);
 
-        JobDto selectedJobDto = jobBuilderService.DtoFromEntity(selectedJob);
+        JobDto selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(selectedJob);
 
         model.addAttribute("job", selectedJobDto);
 

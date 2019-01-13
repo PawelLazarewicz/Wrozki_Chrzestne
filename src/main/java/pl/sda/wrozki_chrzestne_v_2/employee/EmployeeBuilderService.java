@@ -43,6 +43,19 @@ public class EmployeeBuilderService {
         employeeDto.setTelephoneNumber(employee.getTelephoneNumber());
         employeeDto.setMail(employee.getMail());
 
+        return employeeDto;
+    }
+
+    public EmployeeDto dtoFromEntityWithJobs(Employee employee) {
+        EmployeeDto employeeDto = new EmployeeDto();
+
+        employeeDto.setName(employee.getName());
+        employeeDto.setLastName(employee.getLastName());
+        employeeDto.setCity(employee.getCity());
+        employeeDto.setAge(employee.getAge());
+        employeeDto.setTelephoneNumber(employee.getTelephoneNumber());
+        employeeDto.setMail(employee.getMail());
+
         List<JobDto> jobs = employee.getWorkedJobs()
                 .stream()
                 .map(e -> jobBuilderService.DtoFromEntity(e))

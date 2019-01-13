@@ -88,7 +88,7 @@ public class EmployeeController {
     @RequestMapping("Employee/{id}/show")
     public String getEmployee(@PathVariable Long id, Model model) {
         Employee employee = employeeBuilderService.selectEmployee(id);
-        EmployeeDto employeeDto = employeeBuilderService.DtoFromEntity(employee);
+        EmployeeDto employeeDto = employeeBuilderService.dtoFromEntityWithJobs(employee);
 
         model.addAttribute("employee", employeeDto);
 
