@@ -24,7 +24,7 @@ public class EmployeeController {
     @RequestMapping("/Employee/addEmployee")
     public String addEmployeeForm(Model model) {
         model.addAttribute("employee", new EmployeeDto());
-        return "addEmployeeHTML";
+        return "employee/addEmployeeHTML";
     }
 
     @RequestMapping(value = "/Employee/listEmployees", method = RequestMethod.POST)
@@ -61,7 +61,7 @@ public class EmployeeController {
 
         model.addAttribute("inactiveEmployeesDtos", inactiveEmployeeDtos);
 
-        return "employeesHTML";
+        return "employee/employeesHTML";
     }
 
     @RequestMapping("Employee/{id}/move_Inactive")
@@ -82,7 +82,7 @@ public class EmployeeController {
 
         model.addAttribute("employee", selectedEmployeeDto);
 
-        return "employeeHTML";
+        return "employee/employeeHTML";
     }
 
     @RequestMapping("Employee/{id}/show")
@@ -92,7 +92,7 @@ public class EmployeeController {
 
         model.addAttribute("employee", employeeDto);
 
-        return "employeeHTML";
+        return "employee/employeeHTML";
     }
 
     @RequestMapping("Employee/{id}/delete")
@@ -104,7 +104,7 @@ public class EmployeeController {
 
         employeeRepository.delete(employee);
 
-        return "employeeHTML";
+        return "employee/employeeHTML";
     }
 
     @RequestMapping("Employee/{id}/move_Active")
@@ -121,6 +121,6 @@ public class EmployeeController {
 
         model.addAttribute("employee", selectedEmployeeDto);
 
-        return "employeeHTML";
+        return "employee/employeeHTML";
     }
 }
