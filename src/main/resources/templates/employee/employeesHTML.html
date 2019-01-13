@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>List of Employees</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+</head>
+<body>
+
+<p th:insert="headerHTML"></p>
+
+<div>
+    <table>
+        <tbody>
+        <h1>Active Employees List</h1>
+        <tr th:if="${employeesDtos.isEmpty()}">
+            <td>No Employees</td>
+        </tr>
+        <th:block th:each="employee : ${employeesDtos}">
+            <tr>
+                <td><span th:text="${employee.name}">Name</span></td>
+                <td><span th:text="${employee.lastName}">Lastname</span></td>
+                <td><span th:text="${employee.city}">City</span></td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+</div>
+
+<div>
+    <table>
+        <tbody>
+        <h1>Inactive Employees List</h1>
+        <tr th:if="${inactiveEmployeesDtos.isEmpty()}">
+            <td>No Inactive Employees</td>
+        </tr>
+        <th:block th:each="employee : ${inactiveEmployeesDtos}">
+            <tr>
+                <td><span th:text="${employee.name}">Name</span></td>
+                <td><span th:text="${employee.lastName}">Lastname</span></td>
+                <td><span th:text="${employee.city}">City</span></td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

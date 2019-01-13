@@ -1,58 +1,73 @@
 package pl.sda.wrozki_chrzestne_v_2.client;
 
-import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.sda.wrozki_chrzestne_v_2.dto.ClientDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
-@AllArgsConstructor
+@Controller
 public class ClientController {
 
+    @Autowired
     private ClientRepository clientRepository;
 
+    @Autowired
     private ClientBuilderService clientBuilderService;
 
-    @PostMapping("addClient")
-    public ResponseEntity addClient(@RequestBody ClientDto clientDto) {
+    @RequestMapping("/Client/addClient")
+    public String addClientForm(Model model) {
+        model.addAttribute("client", new ClientDto());
+        return "client/addClientHTML";
+    }
+
+    @RequestMapping(value = "/Client/listClients", method = RequestMethod.POST)
+    public String addClient(@ModelAttribute ClientDto clientDto, Model model) {
         Client newClient = clientBuilderService.entityFromDto(clientDto);
         clientRepository.save(newClient);
 
-        ClientDto newClientDto = clientBuilderService.DtoFromEntity(newClient);
-        return new ResponseEntity(newClientDto, HttpStatus.OK);
+        allClients(model);
+
+        return "redirect:/Client/listClients";
     }
 
-    @GetMapping("listClients")
-    public ResponseEntity allClients() {
-        List<Client> clientList = clientRepository.findAll();
-        List<ClientDto> clientDtos = clientList.stream()
+    @RequestMapping("/Client/listClients")
+    public String allClients(Model model) {
+        List<Client> clients = clientRepository.findAll();
+
+        List<ClientDto> clientDtos = clients.stream()
                 .map(e -> clientBuilderService.DtoFromEntity(e))
                 .collect(Collectors.toList());
 
-        return new ResponseEntity(clientDtos, HttpStatus.OK);
+        model.addAttribute("clientsDtos", clientDtos);
+
+        return "client/clientsHTML";
     }
 
-    @GetMapping("Client/{id}")
-    public ResponseEntity getClient(@PathVariable Long id) {
-        Client selectedClient = clientRepository.getOne(id);
+    @RequestMapping("Client/{id}/show")
+    public String getClient(@PathVariable Long id, Model model) {
+        Client selectedClient = clientBuilderService.selectClient(id);
 
         ClientDto selectedClientDto = clientBuilderService.DtoFromEntity(selectedClient);
 
-        return new ResponseEntity(selectedClientDto, HttpStatus.OK);
+        model.addAttribute("client", selectedClientDto);
+
+        return "client/clientHTML";
     }
 
-    @GetMapping("Client/{id}/delete")
-    public ResponseEntity deleteClient(@PathVariable Long id){
-        Client selectedClient = clientRepository.getOne(id);
+    @RequestMapping("Client/{id}/delete")
+    public String deleteClient(@PathVariable Long id, Model model){
+        Client selectedClient = clientBuilderService.selectClient(id);
 
         ClientDto selectedClientDto = clientBuilderService.DtoFromEntity(selectedClient);
 
         clientRepository.delete(selectedClient);
 
-        return new ResponseEntity(selectedClientDto, HttpStatus.OK);
+        model.addAttribute("client", selectedClientDto);
+
+        return "client/clientHTML";
     }
 }

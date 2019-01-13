@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title th:text="Client + ' ' +  ${client.name}"></title>
+
+</head>
+<body>
+
+<p th:insert="headerHTML"></p>
+
+<p>Name: <span th:text="${client.name}"></span></p>
+
+</body>
+</html>
