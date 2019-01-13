@@ -4,9 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.sda.wrozki_chrzestne_v_2.employee.Employee;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.util.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -32,5 +33,8 @@ public class Job {
     private SortOfJobs sortOfJob;
     private int estimatedTime;
     private int numberOfChildren;
+
+    @ManyToMany
+    private List<Employee> employees = new ArrayList<>();
 
 }

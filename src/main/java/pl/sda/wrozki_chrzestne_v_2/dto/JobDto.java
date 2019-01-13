@@ -4,9 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.sda.wrozki_chrzestne_v_2.employee.Employee;
 import pl.sda.wrozki_chrzestne_v_2.job.SortOfJobs;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,4 +28,6 @@ public class JobDto {
     private SortOfJobs sortOfJob;
     private int estimatedTime;
     private int numberOfChildren;
+
+    private List<EmployeeDto> employees = new ArrayList<>();
 }
