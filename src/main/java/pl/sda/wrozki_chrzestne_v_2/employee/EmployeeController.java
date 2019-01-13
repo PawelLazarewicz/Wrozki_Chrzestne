@@ -6,11 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.sda.wrozki_chrzestne_v_2.dto.EmployeeDto;
 
-import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -69,8 +66,7 @@ public class EmployeeController {
 
     @RequestMapping("Employee/{id}/move_Inactive")
     public String moveEmployeeInactive(@PathVariable Long id, Model model) {
-        Optional<Employee> selectedEmployeeOptional = employeeRepository.findById(id);
-        Employee selectedEmployee = selectedEmployeeOptional.get();
+        Employee selectedEmployee = employeeBuilderService.selectEmployee(id);
 
         if (inactiveEmployeeList.isEmpty()) {
             inactiveEmployeeList.add(selectedEmployee);
@@ -91,32 +87,29 @@ public class EmployeeController {
 
     @RequestMapping("Employee/{id}/show")
     public String getEmployee(@PathVariable Long id, Model model) {
-        Employee selectedEmployee = employeeRepository.getOne(id);
+        Employee employee = employeeBuilderService.selectEmployee(id);
+        EmployeeDto employeeDto = employeeBuilderService.DtoFromEntity(employee);
 
-        EmployeeDto selectedEmployeeDto = employeeBuilderService.DtoFromEntity(selectedEmployee);
-
-        model.addAttribute("employee", selectedEmployeeDto);
+        model.addAttribute("employee", employeeDto);
 
         return "employeeHTML";
     }
 
     @RequestMapping("Employee/{id}/delete")
     public String deleteEmployee(@PathVariable Long id, Model model) {
-        Employee selectedEmployee = employeeRepository.getOne(id);
+        Employee employee = employeeBuilderService.selectEmployee(id);
+        EmployeeDto employeeDto = employeeBuilderService.DtoFromEntity(employee);
 
-        EmployeeDto selectedEmployeeDto = employeeBuilderService.DtoFromEntity(selectedEmployee);
+        model.addAttribute("employee", employeeDto);
 
-        model.addAttribute("employee", selectedEmployeeDto);
-
-        employeeRepository.delete(selectedEmployee);
+        employeeRepository.delete(employee);
 
         return "employeeHTML";
     }
 
     @RequestMapping("Employee/{id}/move_Active")
     public String moveEmployeeActive(@PathVariable Long id, Model model) {
-        Optional<Employee> selectedEmployeeOptional = employeeRepository.findById(id);
-        Employee selectedEmployee = selectedEmployeeOptional.get();
+        Employee selectedEmployee = employeeBuilderService.selectEmployee(id);
 
         for (int i = 0; i < inactiveEmployeeList.size(); i++) {
             if (inactiveEmployeeList.get(i).getId().equals(selectedEmployee.getId())) {

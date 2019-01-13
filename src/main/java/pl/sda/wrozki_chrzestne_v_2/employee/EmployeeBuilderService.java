@@ -1,8 +1,14 @@
 package pl.sda.wrozki_chrzestne_v_2.employee;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import pl.sda.wrozki_chrzestne_v_2.dto.EmployeeDto;
 
+import java.util.Optional;
+
 public class EmployeeBuilderService {
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     public Employee entityFromDto(EmployeeDto employeeDto) {
         Employee employee = new Employee();
@@ -29,5 +35,12 @@ public class EmployeeBuilderService {
         employeeDto.setMail(employee.getMail());
 
         return employeeDto;
+    }
+
+    public Employee selectEmployee(Long id) {
+        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
+        Employee employee = optionalEmployee.get();
+
+        return employee;
     }
 }
