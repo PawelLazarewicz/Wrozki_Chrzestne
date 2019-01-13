@@ -1,8 +1,14 @@
 package pl.sda.wrozki_chrzestne_v_2.job;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
 
+import java.util.Optional;
+
 public class JobBuilderService {
+
+    @Autowired
+    private JobRepository jobRepository;
 
     public Job entityFromDto(JobDto jobDto) {
         Job job = new Job();
@@ -35,5 +41,12 @@ public class JobBuilderService {
         jobDto.setNumberOfChildren(job.getNumberOfChildren());
 
         return jobDto;
+    }
+
+    public Job selectJob(Long id) {
+        Optional<Job> optionalJob = jobRepository.findById(id);
+        Job job = optionalJob.get();
+
+        return job;
     }
 }

@@ -24,7 +24,7 @@ public class JobController {
     private List<Job> completedJobs = new ArrayList<>();
 
     @RequestMapping("/Job/addJob")
-    public String addEmployeeForm(Model model) {
+    public String addJobForm(Model model) {
         model.addAttribute("job", new JobDto());
         return "job/addJobHTML";
     }
@@ -70,7 +70,7 @@ public class JobController {
 
     @RequestMapping("Job/{id}/show")
     public String getJob(@PathVariable Long id, Model model) {
-        Job selectedJob = jobRepository.getOne(id);
+        Job selectedJob = jobBuilderService.selectEmployee(id);
 
         JobDto selectedJobDto = jobBuilderService.DtoFromEntity(selectedJob);
 
@@ -81,7 +81,7 @@ public class JobController {
 
     @GetMapping("Job/{id}/move")
     public String moveJobCompleted(@PathVariable Long id, Model model) {
-        Job selectedJob = jobRepository.getOne(id);
+        Job selectedJob = jobBuilderService.selectEmployee(id);
         JobDto selectedJobDto = jobBuilderService.DtoFromEntity(selectedJob);
 
         if (completedJobs.isEmpty()) {
