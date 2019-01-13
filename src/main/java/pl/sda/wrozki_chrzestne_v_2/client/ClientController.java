@@ -1,9 +1,6 @@
 package pl.sda.wrozki_chrzestne_v_2.client;
 
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -52,7 +49,7 @@ public class ClientController {
 
     @RequestMapping("Client/{id}/show")
     public String getClient(@PathVariable Long id, Model model) {
-        Client selectedClient = clientRepository.getOne(id);
+        Client selectedClient = clientBuilderService.selectClient(id);
 
         ClientDto selectedClientDto = clientBuilderService.DtoFromEntity(selectedClient);
 
@@ -63,7 +60,7 @@ public class ClientController {
 
     @RequestMapping("Client/{id}/delete")
     public String deleteClient(@PathVariable Long id, Model model){
-        Client selectedClient = clientRepository.getOne(id);
+        Client selectedClient = clientBuilderService.selectClient(id);
 
         ClientDto selectedClientDto = clientBuilderService.DtoFromEntity(selectedClient);
 

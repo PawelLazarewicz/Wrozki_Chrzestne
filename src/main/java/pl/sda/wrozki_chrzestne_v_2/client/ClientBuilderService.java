@@ -1,8 +1,14 @@
 package pl.sda.wrozki_chrzestne_v_2.client;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import pl.sda.wrozki_chrzestne_v_2.dto.ClientDto;
 
+import java.util.Optional;
+
 public class ClientBuilderService {
+
+    @Autowired
+    private ClientRepository clientRepository;
 
     public Client entityFromDto(ClientDto clientDto) {
         Client client = new Client();
@@ -31,5 +37,12 @@ public class ClientBuilderService {
         clientDto.setMail(client.getMail());
 
         return clientDto;
+    }
+
+    public Client selectClient(Long id) {
+        Optional<Client> optionalClient = clientRepository.findById(id);
+        Client client = optionalClient.get();
+
+        return client;
     }
 }
