@@ -70,7 +70,7 @@ public class JobController {
 
     @RequestMapping("Job/{id}/show")
     public String getJob(@PathVariable Long id, Model model) {
-        Job selectedJob = jobBuilderService.selectEmployee(id);
+        Job selectedJob = jobBuilderService.selectJob(id);
 
         JobDto selectedJobDto = jobBuilderService.DtoFromEntity(selectedJob);
 
@@ -81,7 +81,7 @@ public class JobController {
 
     @GetMapping("Job/{id}/move")
     public String moveJobCompleted(@PathVariable Long id, Model model) {
-        Job selectedJob = jobBuilderService.selectEmployee(id);
+        Job selectedJob = jobBuilderService.selectJob(id);
         JobDto selectedJobDto = jobBuilderService.DtoFromEntity(selectedJob);
 
         if (completedJobs.isEmpty()) {
