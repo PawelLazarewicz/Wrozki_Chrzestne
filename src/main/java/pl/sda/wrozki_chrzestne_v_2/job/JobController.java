@@ -51,14 +51,14 @@ public class JobController {
 
         List<JobDto> jobsDtos = jobs
                 .stream()
-                .map(e -> jobBuilderService.DtoFromEntity(e))
+                .map(e -> jobBuilderService.dtoFromEntityWithEmployees(e))
                 .collect(Collectors.toList());
 
         model.addAttribute("jobsDtos", jobsDtos);
 
         List<JobDto> completedJobsDto = completedJobs
                 .stream()
-                .map(e -> jobBuilderService.DtoFromEntity(e))
+                .map(e -> jobBuilderService.dtoFromEntityWithEmployees(e))
                 .collect(Collectors.toList());
 
         model.addAttribute("completedJobsDto", completedJobsDto);
@@ -80,7 +80,7 @@ public class JobController {
     @GetMapping("Job/{id}/move")
     public String moveJobCompleted(@PathVariable Long id, Model model) {
         Job selectedJob = jobBuilderService.selectJob(id);
-        JobDto selectedJobDto = jobBuilderService.DtoFromEntity(selectedJob);
+        JobDto selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(selectedJob);
 
         if (completedJobs.isEmpty()) {
             completedJobs.add(selectedJob);
