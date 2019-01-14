@@ -18,9 +18,10 @@
         </tr>
         <th:block th:each="employee : ${employeesDtos}">
             <tr>
-                <td><span th:text="${employee.name}">Name</span></td>
-                <td><span th:text="${employee.lastName}">Lastname</span></td>
-                <td><span th:text="${employee.city}">City</span></td>
+                <td>Name: <span th:text="${employee.name}"></span></td>
+                <td>Lastname: <span th:text="${employee.lastName}"></span></td>
+                <td>City: <span th:text="${employee.city}"></span></td>
+                <td>Worked Jobs: <span th:text="${employee.workedJobs.size()}"></span></td>
             </tr>
         </th:block>
         </tbody>

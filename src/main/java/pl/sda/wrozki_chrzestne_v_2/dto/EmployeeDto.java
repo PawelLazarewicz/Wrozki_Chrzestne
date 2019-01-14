@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -18,4 +21,6 @@ public class EmployeeDto {
     private int age;
     private int telephoneNumber;
     private String mail;
+
+    private List<JobDto> workedJobs = new ArrayList<>();
 }

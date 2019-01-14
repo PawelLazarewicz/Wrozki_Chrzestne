@@ -19,9 +19,10 @@
         </tr>
         <th:block th:each="job : ${jobsDtos}">
             <tr>
-                <td><span th:text="${job.clientName}">Name</span></td>
-                <td><span th:text="${job.clientLastName}">Lastname</span></td>
-                <td><span th:text="${job.city}">City</span></td>
+                <td><span th:text="${job.clientName}"></span></td>
+                <td><span th:text="${job.clientLastName}"></span></td>
+                <td><span th:text="${job.city}"></span></td>
+                <td><span th:each="employee: ${job.employees}" th:text="${employee.lastName} + '; '"></span></td>
             </tr>
         </th:block>
         </tbody>
