@@ -3,12 +3,10 @@ package pl.sda.wrozki_chrzestne_v_2.employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.sda.wrozki_chrzestne_v_2.dto.EmployeeDto;
 import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
-import pl.sda.wrozki_chrzestne_v_2.job.Job;
 import pl.sda.wrozki_chrzestne_v_2.job.JobBuilderService;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class EmployeeBuilderService {
@@ -33,7 +31,7 @@ public class EmployeeBuilderService {
         return employee;
     }
 
-    public EmployeeDto DtoFromEntity(Employee employee) {
+    public EmployeeDto dtoFromEntity(Employee employee) {
         EmployeeDto employeeDto = new EmployeeDto();
 
         employeeDto.setName(employee.getName());

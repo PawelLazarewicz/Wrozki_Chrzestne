@@ -50,13 +50,13 @@ public class EmployeeController {
         }
 
         List<EmployeeDto> employeeDtos = employeeList.stream()
-                .map(e -> employeeBuilderService.DtoFromEntity(e))
+                .map(e -> employeeBuilderService.dtoFromEntityWithJobs(e))
                 .collect(Collectors.toList());
 
         model.addAttribute("employeesDtos", employeeDtos);
 
         List<EmployeeDto> inactiveEmployeeDtos = inactiveEmployeeList.stream()
-                .map(e -> employeeBuilderService.DtoFromEntity(e))
+                .map(e -> employeeBuilderService.dtoFromEntityWithJobs(e))
                 .collect(Collectors.toList());
 
         model.addAttribute("inactiveEmployeesDtos", inactiveEmployeeDtos);
@@ -78,7 +78,7 @@ public class EmployeeController {
             }
         }
 
-        EmployeeDto selectedEmployeeDto = employeeBuilderService.DtoFromEntity(selectedEmployee);
+        EmployeeDto selectedEmployeeDto = employeeBuilderService.dtoFromEntityWithJobs(selectedEmployee);
 
         model.addAttribute("employee", selectedEmployeeDto);
 
@@ -98,7 +98,7 @@ public class EmployeeController {
     @RequestMapping("Employee/{id}/delete")
     public String deleteEmployee(@PathVariable Long id, Model model) {
         Employee employee = employeeBuilderService.selectEmployee(id);
-        EmployeeDto employeeDto = employeeBuilderService.DtoFromEntity(employee);
+        EmployeeDto employeeDto = employeeBuilderService.dtoFromEntityWithJobs(employee);
 
         model.addAttribute("employee", employeeDto);
 
@@ -117,7 +117,7 @@ public class EmployeeController {
             }
         }
 
-        EmployeeDto selectedEmployeeDto = employeeBuilderService.DtoFromEntity(selectedEmployee);
+        EmployeeDto selectedEmployeeDto = employeeBuilderService.dtoFromEntityWithJobs(selectedEmployee);
 
         model.addAttribute("employee", selectedEmployeeDto);
 
