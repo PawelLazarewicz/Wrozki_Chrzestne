@@ -2,13 +2,20 @@ package pl.sda.wrozki_chrzestne_v_2.employee;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.sda.wrozki_chrzestne_v_2.dto.EmployeeDto;
+import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
+import pl.sda.wrozki_chrzestne_v_2.job.JobBuilderService;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class EmployeeBuilderService {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private JobBuilderService jobBuilderService;
 
     public Employee entityFromDto(EmployeeDto employeeDto) {
         Employee employee = new Employee();
@@ -24,7 +31,7 @@ public class EmployeeBuilderService {
         return employee;
     }
 
-    public EmployeeDto DtoFromEntity(Employee employee) {
+    public EmployeeDto dtoFromEntity(Employee employee) {
         EmployeeDto employeeDto = new EmployeeDto();
 
         employeeDto.setName(employee.getName());
@@ -33,6 +40,26 @@ public class EmployeeBuilderService {
         employeeDto.setAge(employee.getAge());
         employeeDto.setTelephoneNumber(employee.getTelephoneNumber());
         employeeDto.setMail(employee.getMail());
+
+        return employeeDto;
+    }
+
+    public EmployeeDto dtoFromEntityWithJobs(Employee employee) {
+        EmployeeDto employeeDto = new EmployeeDto();
+
+        employeeDto.setName(employee.getName());
+        employeeDto.setLastName(employee.getLastName());
+        employeeDto.setCity(employee.getCity());
+        employeeDto.setAge(employee.getAge());
+        employeeDto.setTelephoneNumber(employee.getTelephoneNumber());
+        employeeDto.setMail(employee.getMail());
+
+        List<JobDto> jobs = employee.getWorkedJobs()
+                .stream()
+                .map(e -> jobBuilderService.DtoFromEntity(e))
+                .collect(Collectors.toList());
+
+        employeeDto.setWorkedJobs(jobs);
 
         return employeeDto;
     }

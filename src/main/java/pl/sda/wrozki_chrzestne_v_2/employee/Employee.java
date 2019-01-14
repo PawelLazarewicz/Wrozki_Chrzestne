@@ -4,8 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.sda.wrozki_chrzestne_v_2.job.Job;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,4 +29,7 @@ public class Employee {
     private int age;
     private int telephoneNumber;
     private String mail;
+
+    @ManyToMany(mappedBy = "employees")
+    private List<Job> workedJobs = new ArrayList<>();
 }

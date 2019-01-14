@@ -10,6 +10,9 @@
 <p th:insert="headerHTML"></p>
 
 <p>Name: <span th:text="${employee.name}"></span></p>
+<th:block th:each="job : ${employee.workedJobs}">
+<p>Worked Job: <span th:text="${job.sortOfJob} + '; ' + ${job.clientLastName}"></span></p>
+</th:block>
 
 </body>
 </html>
