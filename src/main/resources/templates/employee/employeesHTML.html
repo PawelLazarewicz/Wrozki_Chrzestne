@@ -19,40 +19,32 @@
 <p th:insert="headerHTML"></p>
 
 <div class="container">
-    <h1>
-        <mark>Active</mark>
-        Employees List
-    </h1>
+    <h1><mark>Active</mark>Employees List</h1>
     <table class="table table-striped table-bordered">
-        <thead>
-        <th><code>Lp.</code></th>
-        <th><code>Name</code></th>
-        <th><code>Lastname</code></th>
-        <th><code>City</code></th>
-        <th><code>Worked Jobs</code></th>
-        </thead>
-        <tbody>
-        <tr th:if="${employeesDtos.isEmpty()}">
-            <td>No Employees</td>
-        </tr>
-        <th:block th:each="employee : ${employeesDtos}">
+        <div th:if="${not #lists.isEmpty(employeesDtos)}">
             <tr>
+                <th><code>Lp.</code></th>
+                <th><code>Name</code></th>
+                <th><code>Lastname</code></th>
+                <th><code>City</code></th>
+                <th><code>Worked Jobs</code></th>
+            </tr>
+            <tr th:each="employee : ${employeesDtos}">
                 <td><span th:text="${employeeStat.count}"></span></td>
                 <td><span th:text="${employee.name}"></span></td>
                 <td><span th:text="${employee.lastName}"></span></td>
                 <td><span th:text="${employee.city}"></span></td>
                 <td><span th:text="${employee.workedJobs.size()}"></span></td>
             </tr>
-        </th:block>
-        </tbody>
+        </div>
+        <div th:if="${#lists.isEmpty(employeesDtos)}">
+            <h5><kbd>No Inactive Employees</kbd></h5>
+        </div>
     </table>
 </div>
 
 <div class="container">
-    <h1>
-        <mark>Inactive</mark>
-        Employees List
-    </h1>
+    <h1><mark>Inactive</mark>Employees List</h1>
     <table class="table table-striped table-bordered">
         <div th:if="${not #lists.isEmpty(inactiveEmployeesDtos)}">
             <tr>
