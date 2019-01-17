@@ -4,7 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import pl.sda.wrozki_chrzestne_v_2.dto.EmployeeDto;
 import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
+import pl.sda.wrozki_chrzestne_v_2.employee.Employee;
+import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeBuilderService;
+import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +22,9 @@ public class JobController {
 
     @Autowired
     private JobBuilderService jobBuilderService;
+
+    @Autowired
+    private EmployeeBuilderService employeeBuilderService;
 
     private List<Job> completedJobs = new ArrayList<>();
 
@@ -77,7 +84,7 @@ public class JobController {
         return "job/jobHTML";
     }
 
-    @GetMapping("Job/{id}/move")
+    @RequestMapping("Job/{id}/move")
     public String moveJobCompleted(@PathVariable Long id, Model model) {
         Job selectedJob = jobBuilderService.selectJob(id);
         JobDto selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(selectedJob);
@@ -96,4 +103,37 @@ public class JobController {
 
         return "job/jobHTML";
     }
+
+//    @RequestMapping("Job/{idJob}/assignedEmployee={idEmployee}")
+//    public String assignEmployeeForJob(@PathVariable Long idJob, @PathVariable Long idEmployee, Model model) {
+//        Job selectedJob = jobBuilderService.selectJob(idJob);
+//        JobDto selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(selectedJob);
+//
+//        Employee selectedEmployee = employeeBuilderService.selectEmployee(idEmployee);
+//        EmployeeDto selectedEmployeeDto = employeeBuilderService.dtoFromEntityWithJobs(selectedEmployee);
+//
+//        List<EmployeeDto> employeesDto = selectedJobDto.getEmployees();
+//        employeesDto.add(selectedEmployeeDto);
+//        selectedJobDto.setEmployees(employeesDto);
+//
+//
+//        List<JobDto> jobsDto = selectedEmployeeDto.getWorkedJobs();
+//        jobsDto.add(selectedJobDto);
+//        selectedEmployeeDto.setWorkedJobs(jobsDto);
+//
+//        selectedEmployee = employeeBuilderService.entityFromDto(selectedEmployeeDto);
+//        selectedJob = jobBuilderService.entityFromDto(selectedJobDto);
+//
+//        jobRepository.;
+//
+////        jobRepository.save(selectedJob);
+////        allJobs(model);
+////        employeeController.allEmployees(model);
+//
+//        model.addAttribute("job", selectedJobDto);
+//
+//
+//        return "job/jobHTML";
+//
+//    }
 }
