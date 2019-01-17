@@ -12,5 +12,6 @@
 <p>Name: <span th:text="${job.clientName}"></span></p>
 <th:block th:each="employee : ${job.employees}">
     <p>Employees assigned: <span th:text="${employee.name} + '; ' + ${employee.lastName}"></span></p>
+</th:block>
 </body>
 </html>

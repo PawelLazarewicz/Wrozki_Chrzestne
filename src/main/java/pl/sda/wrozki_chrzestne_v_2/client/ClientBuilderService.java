@@ -45,4 +45,18 @@ public class ClientBuilderService {
 
         return client;
     }
+
+    public Client updateEntityFromDto(ClientDto clientDto, Client client) {
+
+        client.setId(client.getId());
+        client.setName(clientDto.getName());
+        client.setLastName(clientDto.getLastName());
+        client.setCity(clientDto.getCity());
+        client.setAddress(clientDto.getAddress());
+        client.setPostalCode(clientDto.getPostalCode());
+        client.setTelephoneNumber(clientDto.getTelephoneNumber());
+        client.setMail(clientDto.getMail());
+
+        return client;
+    }
 }

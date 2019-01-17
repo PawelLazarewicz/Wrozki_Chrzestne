@@ -20,6 +20,7 @@ public class JobController {
     private JobBuilderService jobBuilderService;
 
     private List<Job> completedJobs = new ArrayList<>();
+    private Job editedJob;
 
     @RequestMapping("/Job/addJob")
     public String addJobForm(Model model) {
@@ -77,7 +78,7 @@ public class JobController {
         return "job/jobHTML";
     }
 
-    @GetMapping("Job/{id}/move")
+    @RequestMapping("Job/{id}/move")
     public String moveJobCompleted(@PathVariable Long id, Model model) {
         Job selectedJob = jobBuilderService.selectJob(id);
         JobDto selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(selectedJob);
@@ -95,5 +96,25 @@ public class JobController {
         model.addAttribute("job", selectedJobDto);
 
         return "job/jobHTML";
+    }
+
+    @RequestMapping("Job/{id}/edit")
+    public String editJob(@PathVariable Long id, Model model){
+        editedJob = jobBuilderService.selectJob(id);
+        JobDto editedJobDto = jobBuilderService.dtoFromEntityWithEmployees(editedJob);
+
+        model.addAttribute("editedJob", editedJobDto);
+
+        return "job/updateJobHTML";
+    }
+
+    @RequestMapping(value = "/Job/updateJob", method = RequestMethod.POST)
+    public String updateJob(@ModelAttribute JobDto jobDto, Model model) {
+        editedJob = jobBuilderService.updateEntityFromDto(jobDto, editedJob);
+        jobRepository.save(editedJob);
+
+        allJobs(model);
+
+        return "redirect:/Job/listJobs";
     }
 }
