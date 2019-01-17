@@ -20,6 +20,7 @@ public class EmployeeController {
     private EmployeeBuilderService employeeBuilderService;
 
     private List<Employee> inactiveEmployeeList = new ArrayList<>();
+    private Employee editedEmployee;
 
     @RequestMapping("/Employee/addEmployee")
     public String addEmployeeForm(Model model) {
@@ -122,5 +123,25 @@ public class EmployeeController {
         model.addAttribute("employee", selectedEmployeeDto);
 
         return "employee/employeeHTML";
+    }
+
+    @RequestMapping("Employee/{id}/edit")
+    public String editEmployee(@PathVariable Long id, Model model){
+        editedEmployee = employeeBuilderService.selectEmployee(id);
+        EmployeeDto editedEmployeeDto = employeeBuilderService.dtoFromEntityWithJobs(editedEmployee);
+
+        model.addAttribute("editedEmployee", editedEmployeeDto);
+
+        return "employee/updateEmployeeHTML";
+    }
+
+    @RequestMapping(value = "/Employee/updateEmployee", method = RequestMethod.POST)
+    public String updateEmployee(@ModelAttribute EmployeeDto employeeDto, Model model) {
+        editedEmployee = employeeBuilderService.updateEntityFromDto(employeeDto, editedEmployee);
+        employeeRepository.save(editedEmployee);
+
+        allEmployees(model);
+
+        return "redirect:/Employee/listEmployees";
     }
 }

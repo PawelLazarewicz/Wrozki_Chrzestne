@@ -70,4 +70,17 @@ public class EmployeeBuilderService {
 
         return employee;
     }
+
+    public Employee updateEntityFromDto(EmployeeDto employeeDto, Employee employee) {
+
+        employee.setId(employee.getId());
+        employee.setName(employeeDto.getName());
+        employee.setLastName(employeeDto.getLastName());
+        employee.setCity(employeeDto.getCity());
+        employee.setAge(employeeDto.getAge());
+        employee.setTelephoneNumber(employeeDto.getTelephoneNumber());
+        employee.setMail(employeeDto.getMail());
+
+        return employee;
+    }
 }
