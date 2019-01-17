@@ -99,7 +99,7 @@ public class JobController {
     }
 
     @RequestMapping("Job/{id}/edit")
-    public String edit(@PathVariable Long id, Model model){
+    public String editJob(@PathVariable Long id, Model model){
         editedJob = jobBuilderService.selectJob(id);
         JobDto editedJobDto = jobBuilderService.dtoFromEntityWithEmployees(editedJob);
 
@@ -109,7 +109,7 @@ public class JobController {
     }
 
     @RequestMapping(value = "/Job/updateJob", method = RequestMethod.POST)
-    public String update(@ModelAttribute JobDto jobDto, Model model) {
+    public String updateJob(@ModelAttribute JobDto jobDto, Model model) {
         editedJob = jobBuilderService.updateEntityFromDto(jobDto, editedJob);
         jobRepository.save(editedJob);
 
