@@ -4,11 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import pl.sda.wrozki_chrzestne_v_2.dto.EmployeeDto;
 import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
-import pl.sda.wrozki_chrzestne_v_2.employee.Employee;
-import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeBuilderService;
-import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +19,8 @@ public class JobController {
     @Autowired
     private JobBuilderService jobBuilderService;
 
-    @Autowired
-    private EmployeeBuilderService employeeBuilderService;
-
     private List<Job> completedJobs = new ArrayList<>();
+    private Job editedJob;
 
     @RequestMapping("/Job/addJob")
     public String addJobForm(Model model) {
@@ -84,7 +78,7 @@ public class JobController {
         return "job/jobHTML";
     }
 
-    @RequestMapping("Job/{id}/move")
+    @GetMapping("Job/{id}/move")
     public String moveJobCompleted(@PathVariable Long id, Model model) {
         Job selectedJob = jobBuilderService.selectJob(id);
         JobDto selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(selectedJob);
@@ -102,6 +96,26 @@ public class JobController {
         model.addAttribute("job", selectedJobDto);
 
         return "job/jobHTML";
+    }
+
+    @RequestMapping("Job/{id}/edit")
+    public String editJob(@PathVariable Long id, Model model){
+        editedJob = jobBuilderService.selectJob(id);
+        JobDto editedJobDto = jobBuilderService.dtoFromEntityWithEmployees(editedJob);
+
+        model.addAttribute("editedJob", editedJobDto);
+
+        return "job/updateJobHTML";
+    }
+
+    @RequestMapping(value = "/Job/updateJob", method = RequestMethod.POST)
+    public String updateJob(@ModelAttribute JobDto jobDto, Model model) {
+        editedJob = jobBuilderService.updateEntityFromDto(jobDto, editedJob);
+        jobRepository.save(editedJob);
+
+        allJobs(model);
+
+        return "redirect:/Job/listJobs";
     }
 
 //    @RequestMapping("Job/{idJob}/assignedEmployee={idEmployee}")

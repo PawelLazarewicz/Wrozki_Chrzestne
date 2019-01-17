@@ -87,4 +87,20 @@ public class JobBuilderService {
 
         return job;
     }
+
+    public Job updateEntityFromDto(JobDto jobDto, Job job) {
+
+        job.setId(job.getId());
+        job.setClientName(jobDto.getClientName());
+        job.setClientLastName(jobDto.getClientLastName());
+        job.setDateOfJob(jobDto.getDateOfJob());
+        job.setCity(jobDto.getCity());
+        job.setJobsAddress(jobDto.getJobsAddress());
+        job.setJobsPostalCode(jobDto.getJobsPostalCode());
+        job.setSortOfJob(jobDto.getSortOfJob());
+        job.setEstimatedTime(jobDto.getEstimatedTime());
+        job.setNumberOfChildren(jobDto.getNumberOfChildren());
+
+        return job;
+    }
 }
