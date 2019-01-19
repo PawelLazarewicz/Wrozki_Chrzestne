@@ -18,9 +18,6 @@ public class EmployeeBuilderService {
     @Autowired
     private JobBuilderService jobBuilderService;
 
-    @Autowired
-    private EmployeeController employeeController;
-
     public Employee entityFromDto(EmployeeDto employeeDto) {
         Employee employee = new Employee();
 
@@ -95,7 +92,4 @@ public class EmployeeBuilderService {
         return employee;
     }
 
-    public List<Employee> getActiveEmployeeList() {
-        return employeeController.activeEmployeeList;
-    }
 }

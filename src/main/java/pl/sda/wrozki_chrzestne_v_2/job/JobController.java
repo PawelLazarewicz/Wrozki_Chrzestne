@@ -31,6 +31,9 @@ public class JobController {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    @Autowired
+    private EmployeeController employeeController;
+
     private List<Job> completedJobs = new ArrayList<>();
     private Job editedJob;
 
@@ -86,7 +89,7 @@ public class JobController {
 
         model.addAttribute("job", selectedJobDto);
 
-        List<Employee> employeesList = employeeBuilderService.getActiveEmployeeList();
+        List<Employee> employeesList = employeeController.getActiveEmployeeList();
         List<EmployeeDto> employeesDtos = employeesList
                 .stream()
                 .map(e-> employeeBuilderService.dtoFromEntityWithJobs(e))
