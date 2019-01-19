@@ -9,6 +9,7 @@ import pl.sda.wrozki_chrzestne_v_2.dto.EmployeeDto;
 import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
 import pl.sda.wrozki_chrzestne_v_2.employee.Employee;
 import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeBuilderService;
+import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeController;
 import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeRepository;
 
 import java.util.ArrayList;
@@ -85,7 +86,7 @@ public class JobController {
 
         model.addAttribute("job", selectedJobDto);
 
-        List<Employee> employeesList = employeeRepository.findAll();
+        List<Employee> employeesList = employeeBuilderService.getActiveEmployeeList();
         List<EmployeeDto> employeesDtos = employeesList
                 .stream()
                 .map(e-> employeeBuilderService.dtoFromEntityWithJobs(e))
