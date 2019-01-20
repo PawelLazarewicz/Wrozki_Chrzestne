@@ -13,13 +13,15 @@
 <th:block th:each="employee : ${job.employees}">
     <p>Employees assigned: <span th:text="${employee.name} + '; ' + ${employee.lastName}"></span></p>
 </th:block>
-    <p>
-        <select>
-            <th:block th:each="employee: ${employees}">
-                <option><span th:text="${employee.name}"></span></option>
-            </th:block>
-        </select>
-        <button type="submit" class="btn btn-default">Dodaj pracownika</button>
-    </p>
+
+<form action="/Job/assigningEmployee" th:object="${job}" method="post">
+    <select th:field="*{city}">
+        <option th:each="employee : ${employees}"
+                th:value="${employee}"
+                th:text="${employee.name} + '; ' + ${employee.age}"></option>
+    </select>
+    <button type="submit" class="btn btn-default">Dodaj pracownika</button>
+</form>
+
 </body>
 </html>

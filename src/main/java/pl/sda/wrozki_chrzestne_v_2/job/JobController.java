@@ -36,6 +36,7 @@ public class JobController {
 
     private List<Job> completedJobs = new ArrayList<>();
     private Job editedJob;
+    private Job selectedJob;
 
     @RequestMapping("/Job/addJob")
     public String addJobForm(Model model) {
@@ -84,7 +85,7 @@ public class JobController {
 
     @RequestMapping("Job/{id}/show")
     public String getJob(@PathVariable Long id, Model model) {
-        Job selectedJob = jobBuilderService.selectJob(id);
+        selectedJob = jobBuilderService.selectJob(id);
         JobDto selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(selectedJob);
 
         model.addAttribute("job", selectedJobDto);
@@ -92,7 +93,7 @@ public class JobController {
         List<Employee> employeesList = employeeController.getActiveEmployeeList();
         List<EmployeeDto> employeesDtos = employeesList
                 .stream()
-                .map(e-> employeeBuilderService.dtoFromEntityWithJobs(e))
+                .map(e -> employeeBuilderService.dtoFromEntityWithJobs(e))
                 .collect(Collectors.toList());
 
         model.addAttribute("employees", employeesDtos);
@@ -121,7 +122,7 @@ public class JobController {
     }
 
     @RequestMapping("Job/{id}/edit")
-    public String editJob(@PathVariable Long id, Model model){
+    public String editJob(@PathVariable Long id, Model model) {
         editedJob = jobBuilderService.selectJob(id);
         JobDto editedJobDto = jobBuilderService.dtoFromEntityWithEmployees(editedJob);
 
@@ -140,9 +141,25 @@ public class JobController {
         return "redirect:/Job/listJobs";
     }
 
-//    @RequestMapping("Job/{idJob}/assignedEmployee={idEmployee}")
-//    public String assignEmployeeForJob(@PathVariable Long idJob, @PathVariable Long idEmployee, Model model) {
-//        Job selectedJob = jobBuilderService.selectJob(idJob);
+    @RequestMapping(value = "/Job/assigningEmployee", method = RequestMethod.POST)
+    public String assignEmployeeForJob(@ModelAttribute JobDto jobDto, @ModelAttribute EmployeeDto employeeDto, Model model) {
+        List<EmployeeDto> assignedEmployeesDto = jobDto.getEmployees();
+        assignedEmployeesDto.add(employeeDto);
+        jobDto.setEmployees(assignedEmployeesDto);
+
+        selectedJob = jobBuilderService.updateEntityFromDto(jobDto, selectedJob);
+        jobRepository.save(selectedJob);
+
+        allJobs(model);
+
+//        selectedJob.getEmployees().add(employeeRepository.getOne(idEmployee));
+//        jobRepository.save(selectedJob);
+//        allJobs(model);
+//
+//        model.addAttribute("id", selectedJob.getId());
+//
+//        selectedJob.getEmployees().add();
+//
 //        JobDto selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(selectedJob);
 //
 //        Employee selectedEmployee = employeeBuilderService.selectEmployee(idEmployee);
@@ -161,12 +178,11 @@ public class JobController {
 //        selectedJob = jobBuilderService.entityFromDto(selectedJobDto);
 //
 //
-////        jobRepository.save(selectedJob);
-////        allJobs(model);
-////        employeeController.allEmployees(model);
+//        employeeController.allEmployees(model);
 //
-//        model.addAttribute("job", selectedJobDto);
-//
-//
-//        return "job/jobHTML";
+//        model.addAttribute("assignedJob", selectedJobDto);
+
+
+        return "redirect:/Job/" + selectedJob.getId() + "/show";
+    }
 }
