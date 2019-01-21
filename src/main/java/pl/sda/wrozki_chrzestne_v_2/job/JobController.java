@@ -1,6 +1,5 @@
 package pl.sda.wrozki_chrzestne_v_2.job;
 
-import antlr.ASTNULLType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -141,47 +140,12 @@ public class JobController {
         return "redirect:/Job/listJobs";
     }
 
-    @RequestMapping(value = "/Job/assigningEmployee", method = RequestMethod.POST)
-    public String assignEmployeeForJob(@ModelAttribute JobDto jobDto, @ModelAttribute EmployeeDto employeeDto, Model model) {
-        List<EmployeeDto> assignedEmployeesDto = jobDto.getEmployees();
-        assignedEmployeesDto.add(employeeDto);
-        jobDto.setEmployees(assignedEmployeesDto);
-
-        selectedJob = jobBuilderService.updateEntityFromDto(jobDto, selectedJob);
+    @RequestMapping(value = "/Job/{id}/assigningEmployee", method = RequestMethod.POST)
+    public String assignEmployeeForJob(@ModelAttribute EmployeeDto employeeDto, Model model) {
+        selectedJob.getEmployees().add(employeeBuilderService.selectEmployee(employeeDto.getId()));
         jobRepository.save(selectedJob);
 
         allJobs(model);
-
-//        selectedJob.getEmployees().add(employeeRepository.getOne(idEmployee));
-//        jobRepository.save(selectedJob);
-//        allJobs(model);
-//
-//        model.addAttribute("id", selectedJob.getId());
-//
-//        selectedJob.getEmployees().add();
-//
-//        JobDto selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(selectedJob);
-//
-//        Employee selectedEmployee = employeeBuilderService.selectEmployee(idEmployee);
-//        EmployeeDto selectedEmployeeDto = employeeBuilderService.dtoFromEntityWithJobs(selectedEmployee);
-//
-//        List<EmployeeDto> employeesDto = selectedJobDto.getEmployees();
-//        employeesDto.add(selectedEmployeeDto);
-//        selectedJobDto.setEmployees(employeesDto);
-//
-//
-//        List<JobDto> jobsDto = selectedEmployeeDto.getWorkedJobs();
-//        jobsDto.add(selectedJobDto);
-//        selectedEmployeeDto.setWorkedJobs(jobsDto);
-//
-//        selectedEmployee = employeeBuilderService.entityFromDto(selectedEmployeeDto);
-//        selectedJob = jobBuilderService.entityFromDto(selectedJobDto);
-//
-//
-//        employeeController.allEmployees(model);
-//
-//        model.addAttribute("assignedJob", selectedJobDto);
-
 
         return "redirect:/Job/" + selectedJob.getId() + "/show";
     }
