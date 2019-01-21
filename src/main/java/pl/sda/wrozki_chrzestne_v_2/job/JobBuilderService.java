@@ -37,6 +37,7 @@ public class JobBuilderService {
     public JobDto DtoFromEntity(Job job) {
         JobDto jobDto = new JobDto();
 
+        jobDto.setId(job.getId());
         jobDto.setClientName(job.getClientName());
         jobDto.setClientLastName(job.getClientLastName());
         jobDto.setDateOfJob(job.getDateOfJob());
@@ -53,6 +54,7 @@ public class JobBuilderService {
     public JobDto dtoFromEntityWithEmployees(Job job) {
         JobDto jobDto = new JobDto();
 
+        jobDto.setId(job.getId());
         jobDto.setClientName(job.getClientName());
         jobDto.setClientLastName(job.getClientLastName());
         jobDto.setDateOfJob(job.getDateOfJob());

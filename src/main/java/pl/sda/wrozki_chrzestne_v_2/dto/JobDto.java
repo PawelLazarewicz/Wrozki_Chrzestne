@@ -17,6 +17,8 @@ import java.util.List;
 @Setter
 public class JobDto {
 
+    private Long id;
+
     private String clientName;
     private String clientLastName;
     private Date dateOfJob;
