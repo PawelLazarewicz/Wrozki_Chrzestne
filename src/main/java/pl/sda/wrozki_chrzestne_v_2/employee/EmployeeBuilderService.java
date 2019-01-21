@@ -42,6 +42,7 @@ public class EmployeeBuilderService {
     public EmployeeDto dtoFromEntity(Employee employee) {
         EmployeeDto employeeDto = new EmployeeDto();
 
+        employeeDto.setId(employee.getId());
         employeeDto.setName(employee.getName());
         employeeDto.setLastName(employee.getLastName());
         employeeDto.setCity(employee.getCity());
@@ -55,6 +56,7 @@ public class EmployeeBuilderService {
     public EmployeeDto dtoFromEntityWithJobs(Employee employee) {
         EmployeeDto employeeDto = new EmployeeDto();
 
+        employeeDto.setId(employee.getId());
         employeeDto.setName(employee.getName());
         employeeDto.setLastName(employee.getLastName());
         employeeDto.setCity(employee.getCity());

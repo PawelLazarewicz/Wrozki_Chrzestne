@@ -11,6 +11,8 @@ import lombok.Setter;
 @Setter
 public class ClientDto {
 
+    private Long id;
+
     private String name;
     private String lastName;
     private String city;

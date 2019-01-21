@@ -28,6 +28,7 @@ public class ClientBuilderService {
     public ClientDto DtoFromEntity(Client client) {
         ClientDto clientDto = new ClientDto();
 
+        clientDto.setId(client.getId());
         clientDto.setName(client.getName());
         clientDto.setLastName(client.getLastName());
         clientDto.setCity(client.getCity());
