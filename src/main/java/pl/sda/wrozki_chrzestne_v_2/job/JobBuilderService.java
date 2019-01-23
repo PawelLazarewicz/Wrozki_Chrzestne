@@ -3,6 +3,7 @@ package pl.sda.wrozki_chrzestne_v_2.job;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.sda.wrozki_chrzestne_v_2.dto.EmployeeDto;
 import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
+import pl.sda.wrozki_chrzestne_v_2.employee.Employee;
 import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeBuilderService;
 
 import java.util.List;
@@ -31,12 +32,20 @@ public class JobBuilderService {
         job.setEstimatedTime(jobDto.getEstimatedTime());
         job.setNumberOfChildren(jobDto.getNumberOfChildren());
 
+        List<Employee> employees = jobDto.getEmployees()
+                .stream()
+                .map(e->employeeBuilderService.entityFromDto(e))
+                .collect(Collectors.toList());
+
+        job.setEmployees(employees);
+
         return job;
     }
 
     public JobDto DtoFromEntity(Job job) {
         JobDto jobDto = new JobDto();
 
+        jobDto.setId(job.getId());
         jobDto.setClientName(job.getClientName());
         jobDto.setClientLastName(job.getClientLastName());
         jobDto.setDateOfJob(job.getDateOfJob());
@@ -53,6 +62,7 @@ public class JobBuilderService {
     public JobDto dtoFromEntityWithEmployees(Job job) {
         JobDto jobDto = new JobDto();
 
+        jobDto.setId(job.getId());
         jobDto.setClientName(job.getClientName());
         jobDto.setClientLastName(job.getClientLastName());
         jobDto.setDateOfJob(job.getDateOfJob());
@@ -63,12 +73,12 @@ public class JobBuilderService {
         jobDto.setEstimatedTime(job.getEstimatedTime());
         jobDto.setNumberOfChildren(job.getNumberOfChildren());
 
-        List<EmployeeDto> jobs = job.getEmployees()
+        List<EmployeeDto> employeesDto = job.getEmployees()
                 .stream()
                 .map(e -> employeeBuilderService.dtoFromEntity(e))
                 .collect(Collectors.toList());
 
-        jobDto.setEmployees(jobs);
+        jobDto.setEmployees(employeesDto);
 
         return jobDto;
     }
