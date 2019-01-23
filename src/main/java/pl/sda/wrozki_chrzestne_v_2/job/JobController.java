@@ -4,7 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import pl.sda.wrozki_chrzestne_v_2.dto.EmployeeDto;
 import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
+import pl.sda.wrozki_chrzestne_v_2.employee.Employee;
+import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeBuilderService;
+import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeController;
+import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +24,18 @@ public class JobController {
     @Autowired
     private JobBuilderService jobBuilderService;
 
+    @Autowired
+    private EmployeeBuilderService employeeBuilderService;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private EmployeeController employeeController;
+
     private List<Job> completedJobs = new ArrayList<>();
+    private Job editedJob;
+    private Job selectedJob;
 
     @RequestMapping("/Job/addJob")
     public String addJobForm(Model model) {
@@ -68,11 +84,18 @@ public class JobController {
 
     @RequestMapping("Job/{id}/show")
     public String getJob(@PathVariable Long id, Model model) {
-        Job selectedJob = jobBuilderService.selectJob(id);
-
+        selectedJob = jobBuilderService.selectJob(id);
         JobDto selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(selectedJob);
 
         model.addAttribute("job", selectedJobDto);
+
+        List<Employee> employeesList = employeeController.getActiveEmployeeList();
+        List<EmployeeDto> employeesDtos = employeesList
+                .stream()
+                .map(e -> employeeBuilderService.dtoFromEntityWithJobs(e))
+                .collect(Collectors.toList());
+
+        model.addAttribute("employees", employeesDtos);
 
         return "job/jobHTML";
     }
@@ -95,5 +118,90 @@ public class JobController {
         model.addAttribute("job", selectedJobDto);
 
         return "job/jobHTML";
+    }
+
+    @RequestMapping("Job/{id}/edit")
+    public String editJob(@PathVariable Long id, Model model) {
+        editedJob = jobBuilderService.selectJob(id);
+        JobDto editedJobDto = jobBuilderService.dtoFromEntityWithEmployees(editedJob);
+
+        model.addAttribute("editedJob", editedJobDto);
+
+        return "job/updateJobHTML";
+    }
+
+    @RequestMapping(value = "/Job/updateJob", method = RequestMethod.POST)
+    public String updateJob(@ModelAttribute JobDto jobDto, Model model) {
+        editedJob = jobBuilderService.updateEntityFromDto(jobDto, editedJob);
+        jobRepository.save(editedJob);
+
+        allJobs(model);
+
+        return "redirect:/Job/listJobs";
+    }
+
+    @RequestMapping("Job/{id}/assignEmployee")
+    public String assignEmployee(@PathVariable Long id, Model model) {
+        selectedJob = jobBuilderService.selectJob(id);
+        JobDto selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(selectedJob);
+
+        model.addAttribute("jobForAssign", selectedJobDto);
+
+        List<Employee> employeesList = employeeController.getActiveEmployeeList();
+        List<EmployeeDto> activeEmployeesDtos = employeesList
+                .stream()
+                .map(e -> employeeBuilderService.dtoFromEntityWithJobs(e))
+                .collect(Collectors.toList());
+
+        List<EmployeeDto> alreadyAssignedEmployeesDto = selectedJobDto.getEmployees();
+        List<EmployeeDto> employeesDtoAvailableToAssign = new ArrayList<>(activeEmployeesDtos);
+
+
+        for (EmployeeDto employeeAssigned : alreadyAssignedEmployeesDto) {
+            if (!employeesDtoAvailableToAssign.isEmpty()) {
+                for (EmployeeDto employeeAvailableToAssign : employeesDtoAvailableToAssign) {
+                    if (employeeAssigned.getId().equals(employeeAvailableToAssign.getId())) {
+                        employeesDtoAvailableToAssign.remove(employeeAvailableToAssign);
+                        break;
+                    }
+                }
+            } else {
+                employeesDtoAvailableToAssign = new ArrayList<>();
+            }
+
+        }
+
+        model.addAttribute("employeesDtoAvailableToAssign", employeesDtoAvailableToAssign);
+
+        return "job/assignEmployeeHTML";
+    }
+
+    @RequestMapping(value = "/Job/{id}/assigningEmployee", method = RequestMethod.POST)
+    public String assignEmployeeForJob(@ModelAttribute EmployeeDto employeeDto, Model model) {
+        selectedJob.getEmployees().add(employeeBuilderService.selectEmployee(employeeDto.getId()));
+        jobRepository.save(selectedJob);
+
+        allJobs(model);
+
+        return "redirect:/Job/" + selectedJob.getId() + "/assignEmployee";
+    }
+
+    @RequestMapping(value = "/Job/{id}/removeAssignedEmployee/{idEmployee}", method = RequestMethod.POST)
+    public String removeAssignedEmployeeFromJob(@PathVariable Long idEmployee, Model model) {
+        Employee removedEmployee = employeeBuilderService.selectEmployee(idEmployee);
+        List<Employee> assignedEmployees = selectedJob.getEmployees();
+
+        for (Employee assignedEmployee : assignedEmployees) {
+            if (removedEmployee.getId().equals(assignedEmployee.getId())) {
+                assignedEmployees.remove(assignedEmployee);
+                break;
+            }
+        }
+
+        jobRepository.save(selectedJob);
+
+        allJobs(model);
+
+        return "redirect:/Job/" + selectedJob.getId() + "/assignEmployee";
     }
 }

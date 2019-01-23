@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title th:text="Job + ' ' +  ${editedJob.clientName}"></title>
+
+</head>
+<body>
+
+<p th:insert="headerHTML"></p>
+
+<div>
+    <h1>Form</h1>
+    <form th:action="@{/Job/updateJob}" th:object="${editedJob}" method="post">
+        <p>Name: <input type="text" th:field="*{clientName}"></p>
+
+        <p><input type="submit" value="Submit"></p>
+    </form>
+</div>
+
+</body>
+</html>

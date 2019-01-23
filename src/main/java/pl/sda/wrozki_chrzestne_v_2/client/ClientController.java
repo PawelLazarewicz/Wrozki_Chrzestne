@@ -17,6 +17,7 @@ public class ClientController {
 
     @Autowired
     private ClientBuilderService clientBuilderService;
+    private Client editedClient;
 
     @RequestMapping("/Client/addClient")
     public String addClientForm(Model model) {
@@ -69,5 +70,25 @@ public class ClientController {
         model.addAttribute("client", selectedClientDto);
 
         return "client/clientHTML";
+    }
+
+    @RequestMapping("Client/{id}/edit")
+    public String editClient(@PathVariable Long id, Model model){
+        editedClient = clientBuilderService.selectClient(id);
+        ClientDto editedClientDto = clientBuilderService.DtoFromEntity(editedClient);
+
+        model.addAttribute("editedClient", editedClientDto);
+
+        return "client/updateClientHTML";
+    }
+
+    @RequestMapping(value = "/Client/updateClient", method = RequestMethod.POST)
+    public String updateClient(@ModelAttribute ClientDto jobDto, Model model) {
+        editedClient = clientBuilderService.updateEntityFromDto(jobDto, editedClient);
+        clientRepository.save(editedClient);
+
+        allClients(model);
+
+        return "redirect:/Client/listClients";
     }
 }

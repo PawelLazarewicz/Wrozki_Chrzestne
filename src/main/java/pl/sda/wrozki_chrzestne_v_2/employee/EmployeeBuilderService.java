@@ -3,6 +3,7 @@ package pl.sda.wrozki_chrzestne_v_2.employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.sda.wrozki_chrzestne_v_2.dto.EmployeeDto;
 import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
+import pl.sda.wrozki_chrzestne_v_2.job.Job;
 import pl.sda.wrozki_chrzestne_v_2.job.JobBuilderService;
 
 import java.util.List;
@@ -28,12 +29,20 @@ public class EmployeeBuilderService {
         employee.setTelephoneNumber(employeeDto.getTelephoneNumber());
         employee.setMail(employeeDto.getMail());
 
+        List<Job> jobs = employeeDto.getWorkedJobs()
+                .stream()
+                .map(e -> jobBuilderService.entityFromDto(e))
+                .collect(Collectors.toList());
+
+        employee.setWorkedJobs(jobs);
+
         return employee;
     }
 
     public EmployeeDto dtoFromEntity(Employee employee) {
         EmployeeDto employeeDto = new EmployeeDto();
 
+        employeeDto.setId(employee.getId());
         employeeDto.setName(employee.getName());
         employeeDto.setLastName(employee.getLastName());
         employeeDto.setCity(employee.getCity());
@@ -47,6 +56,7 @@ public class EmployeeBuilderService {
     public EmployeeDto dtoFromEntityWithJobs(Employee employee) {
         EmployeeDto employeeDto = new EmployeeDto();
 
+        employeeDto.setId(employee.getId());
         employeeDto.setName(employee.getName());
         employeeDto.setLastName(employee.getLastName());
         employeeDto.setCity(employee.getCity());
@@ -70,4 +80,18 @@ public class EmployeeBuilderService {
 
         return employee;
     }
+
+    public Employee updateEntityFromDto(EmployeeDto employeeDto, Employee employee) {
+
+        employee.setId(employee.getId());
+        employee.setName(employeeDto.getName());
+        employee.setLastName(employeeDto.getLastName());
+        employee.setCity(employeeDto.getCity());
+        employee.setAge(employeeDto.getAge());
+        employee.setTelephoneNumber(employeeDto.getTelephoneNumber());
+        employee.setMail(employeeDto.getMail());
+
+        return employee;
+    }
+
 }

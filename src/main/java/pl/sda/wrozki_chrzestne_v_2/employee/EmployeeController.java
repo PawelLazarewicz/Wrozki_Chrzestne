@@ -20,6 +20,8 @@ public class EmployeeController {
     private EmployeeBuilderService employeeBuilderService;
 
     private List<Employee> inactiveEmployeeList = new ArrayList<>();
+    private List<Employee> activeEmployeeList = new ArrayList<>();
+    private Employee editedEmployee;
 
     @RequestMapping("/Employee/addEmployee")
     public String addEmployeeForm(Model model) {
@@ -39,17 +41,7 @@ public class EmployeeController {
 
     @RequestMapping("/Employee/listEmployees")
     public String allEmployees(Model model) {
-        List<Employee> employeeList = employeeRepository.findAll();
-
-        for (int i = 0; i < employeeList.size(); i++) {
-            for (int j = 0; j < inactiveEmployeeList.size(); j++) {
-                if ((employeeList.get(i).getId()).equals(inactiveEmployeeList.get(j).getId())) {
-                    employeeList.remove(employeeList.get(i));
-                }
-            }
-        }
-
-        List<EmployeeDto> employeeDtos = employeeList.stream()
+        List<EmployeeDto> employeeDtos = getActiveEmployeeList().stream()
                 .map(e -> employeeBuilderService.dtoFromEntityWithJobs(e))
                 .collect(Collectors.toList());
 
@@ -122,5 +114,38 @@ public class EmployeeController {
         model.addAttribute("employee", selectedEmployeeDto);
 
         return "employee/employeeHTML";
+    }
+
+    @RequestMapping("Employee/{id}/edit")
+    public String editEmployee(@PathVariable Long id, Model model){
+        editedEmployee = employeeBuilderService.selectEmployee(id);
+        EmployeeDto editedEmployeeDto = employeeBuilderService.dtoFromEntityWithJobs(editedEmployee);
+
+        model.addAttribute("editedEmployee", editedEmployeeDto);
+
+        return "employee/updateEmployeeHTML";
+    }
+
+    @RequestMapping(value = "/Employee/updateEmployee", method = RequestMethod.POST)
+    public String updateEmployee(@ModelAttribute EmployeeDto employeeDto, Model model) {
+        editedEmployee = employeeBuilderService.updateEntityFromDto(employeeDto, editedEmployee);
+        employeeRepository.save(editedEmployee);
+
+        allEmployees(model);
+
+        return "redirect:/Employee/listEmployees";
+    }
+
+    public List<Employee> getActiveEmployeeList() {
+        activeEmployeeList = employeeRepository.findAll();
+
+        for (int i = 0; i < activeEmployeeList.size(); i++) {
+            for (int j = 0; j < inactiveEmployeeList.size(); j++) {
+                if ((activeEmployeeList.get(i).getId()).equals(inactiveEmployeeList.get(j).getId())) {
+                    activeEmployeeList.remove(activeEmployeeList.get(i));
+                }
+            }
+        }
+        return activeEmployeeList;
     }
 }
