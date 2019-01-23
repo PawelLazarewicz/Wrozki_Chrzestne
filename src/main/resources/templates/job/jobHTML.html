@@ -14,14 +14,5 @@
     <p>Employees assigned: <span th:text="${employee.name} + '; ' + ${employee.lastName}"></span></p>
 </th:block>
 
-<form th:action="@{/Job/{id}/assigningEmployee}" th:object="${job}" method="post">
-    <select th:field="*{id}">
-        <option th:each="employee : ${employees}"
-                th:value="${employee.id}"
-                th:text="${employee.name} + '; ' + ${employee.age}"></option>
-    </select>
-    <button type="submit" class="btn btn-default">Dodaj pracownika</button>
-</form>
-
 </body>
 </html>

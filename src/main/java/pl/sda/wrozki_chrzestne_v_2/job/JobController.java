@@ -140,6 +140,42 @@ public class JobController {
         return "redirect:/Job/listJobs";
     }
 
+    @RequestMapping("Job/{id}/assignEmployee")
+    public String assignEmployee(@PathVariable Long id, Model model) {
+        selectedJob = jobBuilderService.selectJob(id);
+        JobDto selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(selectedJob);
+
+        model.addAttribute("jobForAssign", selectedJobDto);
+
+        List<Employee> employeesList = employeeController.getActiveEmployeeList();
+        List<EmployeeDto> activeEmployeesDtos = employeesList
+                .stream()
+                .map(e -> employeeBuilderService.dtoFromEntityWithJobs(e))
+                .collect(Collectors.toList());
+
+        List<EmployeeDto> alreadyAssignedEmployeesDto = selectedJobDto.getEmployees();
+        List<EmployeeDto> employeesDtoAvailableToAssign = new ArrayList<>(activeEmployeesDtos);
+
+
+        for (EmployeeDto employeeAssigned : alreadyAssignedEmployeesDto) {
+            if (!employeesDtoAvailableToAssign.isEmpty()) {
+                for (EmployeeDto employeeAvailableToAssign : employeesDtoAvailableToAssign) {
+                    if (employeeAssigned.getId().equals(employeeAvailableToAssign.getId())) {
+                        employeesDtoAvailableToAssign.remove(employeeAvailableToAssign);
+                        break;
+                    }
+                }
+            } else {
+                employeesDtoAvailableToAssign = new ArrayList<>();
+            }
+
+        }
+
+        model.addAttribute("employeesDtoAvailableToAssign", employeesDtoAvailableToAssign);
+
+        return "job/assignEmployeeHTML";
+    }
+
     @RequestMapping(value = "/Job/{id}/assigningEmployee", method = RequestMethod.POST)
     public String assignEmployeeForJob(@ModelAttribute EmployeeDto employeeDto, Model model) {
         selectedJob.getEmployees().add(employeeBuilderService.selectEmployee(employeeDto.getId()));
