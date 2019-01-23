@@ -74,7 +74,7 @@ public class EmployeeController {
 
         model.addAttribute("employee", selectedEmployeeDto);
 
-        return "employee/employeeHTML";
+        return "redirect:/Employee/listEmployees";
     }
 
     @RequestMapping("Employee/{id}/show")
@@ -113,7 +113,7 @@ public class EmployeeController {
 
         model.addAttribute("employee", selectedEmployeeDto);
 
-        return "employee/employeeHTML";
+        return "redirect:/Employee/listEmployees";
     }
 
     @RequestMapping("Employee/{id}/edit")
