@@ -183,6 +183,25 @@ public class JobController {
 
         allJobs(model);
 
-        return "redirect:/Job/" + selectedJob.getId() + "/show";
+        return "redirect:/Job/" + selectedJob.getId() + "/assignEmployee";
+    }
+
+    @RequestMapping(value = "/Job/{id}/removeAssignedEmployee/{idEmployee}", method = RequestMethod.POST)
+    public String removeAssignedEmployeeFromJob(@PathVariable Long idEmployee, Model model) {
+        Employee removedEmployee = employeeBuilderService.selectEmployee(idEmployee);
+        List<Employee> assignedEmployees = selectedJob.getEmployees();
+
+        for (Employee assignedEmployee : assignedEmployees) {
+            if (removedEmployee.getId().equals(assignedEmployee.getId())) {
+                assignedEmployees.remove(assignedEmployee);
+                break;
+            }
+        }
+
+        jobRepository.save(selectedJob);
+
+        allJobs(model);
+
+        return "redirect:/Job/" + selectedJob.getId() + "/assignEmployee";
     }
 }

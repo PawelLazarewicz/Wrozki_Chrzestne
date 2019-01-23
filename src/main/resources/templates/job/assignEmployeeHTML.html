@@ -11,7 +11,13 @@
 
 <p>Name: <span th:text="${jobForAssign.clientName}"></span></p>
 <th:block th:each="employee : ${jobForAssign.employees}">
-    <p>Employees assigned: <span th:text="${employee.name} + '; ' + ${employee.lastName}"></span></p>
+    <form th:action="${'/Job/' + jobForAssign.id + '/removeAssignedEmployee/' + employee.id}"
+          th:object="${jobForAssign}"
+          method="post">
+        <p>Employees assigned: <span th:text="${employee.name} + '; ' + ${employee.lastName}"></span>
+            <button type="submit">Usuń pracownika</button>
+        </p>
+    </form>
 </th:block>
 
 <form th:action="@{/Job/{id}/assigningEmployee}" th:object="${jobForAssign}" method="post">
