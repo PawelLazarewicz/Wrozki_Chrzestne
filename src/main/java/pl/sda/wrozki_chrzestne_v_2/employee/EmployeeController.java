@@ -96,7 +96,7 @@ public class EmployeeController {
 
         employeeRepository.delete(employee);
 
-        return "employee/employeeHTML";
+        return "redirect:/Employee/listEmployees";
     }
 
     @RequestMapping("Employee/{id}/move_Active")
