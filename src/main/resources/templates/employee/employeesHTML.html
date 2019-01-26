@@ -31,7 +31,7 @@
 <div class="container">
     <table class="table-row-cell">
         <tr>
-            <td><a th:href="${'/Employee/addEmployee'}"><button>Dodaj nowego pracownika</button></a></td>
+            <td><a th:href="${'/Employee/addEmployee'}"><button type="submit" class="btn btn-info">Dodaj nowego pracownika</button></a></td>
         </tr>
     </table>
 </div>
@@ -53,10 +53,10 @@
                 <td><span th:text="${employee.lastName}"></span></td>
                 <td><span th:text="${employee.city}"></span></td>
                 <td><span th:text="${employee.workedJobs.size()}"></span></td>
-                <td><a th:href="${'/Employee/' + employee.id + '/show'}"><button>Wyświetl</button></a></td>
-                <td><a th:href="${'/Employee/' + employee.id + '/edit'}"><button>Edytuj</button></a></td>
-                <td><a th:href="${'/Employee/' + employee.id + '/move_Inactive'}"><button>Dezaktywuj</button></a></td>
-                <td><a th:href="${'/Employee/' + employee.id + '/delete'}"><button>Usuń</button></a></td>
+                <td><a th:href="${'/Employee/' + employee.id + '/show'}"><button type="submit" class="btn btn-info">Wyświetl</button></a></td>
+                <td><a th:href="${'/Employee/' + employee.id + '/edit'}"><button type="submit" class="btn btn-info">Edytuj</button></a></td>
+                <td><a th:href="${'/Employee/' + employee.id + '/move_Inactive'}"><button type="submit" class="btn btn-warning">Dezaktywuj</button></a></td>
+                <td><a th:href="${'/Employee/' + employee.id + '/delete'}"><button type="submit" class="btn btn-danger">Usuń</button></a></td>
             </tr>
         </div>
         <div th:if="${#lists.isEmpty(employeesDtos)}">
@@ -82,10 +82,10 @@
                 <td><span th:text="${employee.lastName}"></span></td>
                 <td><span th:text="${employee.city}"></span></td>
                 <td><span th:text="${employee.workedJobs.size()}"></span></td>
-                <td><a th:href="${'/Employee/' + employee.id + '/show'}"><button>Wyświetl</button></a></td>
-                <td><a th:href="${'/Employee/' + employee.id + '/edit'}"><button>Edytuj</button></a></td>
-                <td><a th:href="${'/Employee/' + employee.id + '/move_Active'}"><button>Aktywuj</button></a></td>
-                <td><a th:href="${'/Employee/' + employee.id + '/delete'}"><button>Usuń</button></a></td>
+                <td><a th:href="${'/Employee/' + employee.id + '/show'}"><button type="submit" class="btn btn-info">Wyświetl</button></a></td>
+                <td><a th:href="${'/Employee/' + employee.id + '/edit'}"><button type="submit" class="btn btn-info">Edytuj</button></a></td>
+                <td><a th:href="${'/Employee/' + employee.id + '/move_Active'}"><button type="submit" class="btn btn-success">Aktywuj</button></a></td>
+                <td><a th:href="${'/Employee/' + employee.id + '/delete'}"><button type="submit" class="btn btn-danger">Usuń</button></a></td>
             </tr>
         </div>
         <div th:if="${#lists.isEmpty(inactiveEmployeesDtos)}">
