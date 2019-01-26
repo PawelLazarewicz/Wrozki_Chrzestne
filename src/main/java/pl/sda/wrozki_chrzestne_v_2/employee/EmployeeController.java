@@ -70,11 +70,7 @@ public class EmployeeController {
             }
         }
 
-        EmployeeDto selectedEmployeeDto = employeeBuilderService.dtoFromEntityWithJobs(selectedEmployee);
-
-        model.addAttribute("employee", selectedEmployeeDto);
-
-        return "employee/employeeHTML";
+        return "redirect:/Employee/listEmployees";
     }
 
     @RequestMapping("Employee/{id}/show")
@@ -90,13 +86,17 @@ public class EmployeeController {
     @RequestMapping("Employee/{id}/delete")
     public String deleteEmployee(@PathVariable Long id, Model model) {
         Employee employee = employeeBuilderService.selectEmployee(id);
-        EmployeeDto employeeDto = employeeBuilderService.dtoFromEntityWithJobs(employee);
 
-        model.addAttribute("employee", employeeDto);
+        for (Employee inactiveEmployee : inactiveEmployeeList) {
+            if (inactiveEmployee.getId().equals(employee.getId())) {
+                inactiveEmployeeList.remove(inactiveEmployee);
+            }
+            break;
+        }
 
         employeeRepository.delete(employee);
 
-        return "employee/employeeHTML";
+        return "redirect:/Employee/listEmployees";
     }
 
     @RequestMapping("Employee/{id}/move_Active")
@@ -107,13 +107,10 @@ public class EmployeeController {
             if (inactiveEmployee.getId().equals(selectedEmployee.getId())) {
                 inactiveEmployeeList.remove(inactiveEmployee);
             }
+            break;
         }
 
-        EmployeeDto selectedEmployeeDto = employeeBuilderService.dtoFromEntityWithJobs(selectedEmployee);
-
-        model.addAttribute("employee", selectedEmployeeDto);
-
-        return "employee/employeeHTML";
+        return "redirect:/Employee/listEmployees";
     }
 
     @RequestMapping("Employee/{id}/edit")
