@@ -18,6 +18,24 @@
 
 <p th:insert="headerHTML"></p>
 
+<nav class="navbar navbar-default">
+    <div class="container">
+        <ul class="nav navbar-nav">
+        <li><a href="/Employee/listEmployees">Pracownicy</a></li>
+        <li><a href="/Job/listJobs">Zlecenia</a></li>
+        <li><a href="/Client/listClients">Klienci</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <table class="table-row-cell">
+        <tr>
+            <td><a th:href="${'/Employee/addEmployee'}"><button>Dodaj nowego pracownika</button></a></td>
+        </tr>
+    </table>
+</div>
+
 <div class="container">
     <h1><mark>Active</mark>Employees List</h1>
     <table class="table table-striped table-bordered">
@@ -35,10 +53,10 @@
                 <td><span th:text="${employee.lastName}"></span></td>
                 <td><span th:text="${employee.city}"></span></td>
                 <td><span th:text="${employee.workedJobs.size()}"></span></td>
-                <td><a th:href="${'/Employee/' + employee.id + '/show'}"><button>Show</button></a></td>
-                <td><a th:href="${'/Employee/' + employee.id + '/edit'}"><button>Edit</button></a></td>
-                <td><a th:href="${'/Employee/' + employee.id + '/move_Inactive'}"><button>Move</button></a></td>
-                <td><a th:href="${'/Employee/' + employee.id + '/delete'}"><button>Delete</button></a></td>
+                <td><a th:href="${'/Employee/' + employee.id + '/show'}"><button>Wyświetl</button></a></td>
+                <td><a th:href="${'/Employee/' + employee.id + '/edit'}"><button>Edytuj</button></a></td>
+                <td><a th:href="${'/Employee/' + employee.id + '/move_Inactive'}"><button>Dezaktywuj</button></a></td>
+                <td><a th:href="${'/Employee/' + employee.id + '/delete'}"><button>Usuń</button></a></td>
             </tr>
         </div>
         <div th:if="${#lists.isEmpty(employeesDtos)}">
@@ -64,10 +82,10 @@
                 <td><span th:text="${employee.lastName}"></span></td>
                 <td><span th:text="${employee.city}"></span></td>
                 <td><span th:text="${employee.workedJobs.size()}"></span></td>
-                <td><a th:href="${'/Employee/' + employee.id + '/show'}"><button>Show</button></a></td>
-                <td><a th:href="${'/Employee/' + employee.id + '/edit'}"><button>Edit</button></a></td>
-                <td><a th:href="${'/Employee/' + employee.id + '/move_Active'}"><button>Move</button></a></td>
-                <td><a th:href="${'/Employee/' + employee.id + '/delete'}"><button>Delete</button></a></td>
+                <td><a th:href="${'/Employee/' + employee.id + '/show'}"><button>Wyświetl</button></a></td>
+                <td><a th:href="${'/Employee/' + employee.id + '/edit'}"><button>Edytuj</button></a></td>
+                <td><a th:href="${'/Employee/' + employee.id + '/move_Active'}"><button>Aktywuj</button></a></td>
+                <td><a th:href="${'/Employee/' + employee.id + '/delete'}"><button>Usuń</button></a></td>
             </tr>
         </div>
         <div th:if="${#lists.isEmpty(inactiveEmployeesDtos)}">
