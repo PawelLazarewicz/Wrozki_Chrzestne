@@ -9,7 +9,6 @@ import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
 import pl.sda.wrozki_chrzestne_v_2.employee.Employee;
 import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeBuilderService;
 import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeController;
-import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +25,6 @@ public class JobController {
 
     @Autowired
     private EmployeeBuilderService employeeBuilderService;
-
-    @Autowired
-    private EmployeeRepository employeeRepository;
 
     @Autowired
     private EmployeeController employeeController;
