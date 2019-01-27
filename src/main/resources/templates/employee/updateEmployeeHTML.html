@@ -1,6 +1,15 @@
 <!DOCTYPE HTML>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title th:text="Employee + ' ' +  ${editedEmployee.name}"></title>
 
@@ -9,13 +18,60 @@
 
 <p th:insert="headerHTML"></p>
 
-<div>
-    <h1>Form</h1>
-    <form th:action="@{/Employee/updateEmployee}" th:object="${editedEmployee}" method="post">
-        <p>Name: <input type="text" th:field="*{name}"></p>
+<div class="container">
+    <h1 th:text="'Edycja pracownika'"></h1>
 
-        <p><input type="submit" value="Submit"></p>
+    <form class="form-horizontal" th:action="@{/Employee/updateEmployee}" th:object="${editedEmployee}" method="post">
+        <div class="form-group">
+            <label class="control-label col-sm-2">Imię:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" th:field="*{name}"></label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2">Nazwisko:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" th:field="*{lastName}"></label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2">Miasto:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" th:field="*{city}"></label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2">Wiek:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" th:field="*{age}"></label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2">Telefon:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" th:field="*{telephoneNumber}"></label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2">Mail:</label>
+            <div class="col-sm-10">
+                <input type="email" class="form-control" th:field="*{mail}"></label>
+            </div>
+        </div>
+
+    <div class="button-group">
+        <button type="submit" class="btn btn-success">Zapisz</button>
+        <a th:href="@{/Employee/listEmployees}">
+            <button type="button" class="btn btn-info">Powrót</button>
+        </a>
+    </div>
     </form>
+
 </div>
 
 </body>

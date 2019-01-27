@@ -2,6 +2,15 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>List of Employees</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
 </head>
@@ -9,40 +18,79 @@
 
 <p th:insert="headerHTML"></p>
 
-<div>
-    <table>
-        <tbody>
-        <h1>Active Employees List</h1>
-        <tr th:if="${employeesDtos.isEmpty()}">
-            <td>No Employees</td>
+<nav class="navbar navbar-default">
+    <div class="container">
+        <ul class="nav navbar-nav">
+        <li><a href="/Employee/listEmployees">Pracownicy</a></li>
+        <li><a href="/Job/listJobs">Zlecenia</a></li>
+        <li><a href="/Client/listClients">Klienci</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <table class="table-row-cell">
+        <tr>
+            <td><a th:href="${'/Employee/addEmployee'}"><button type="submit" class="btn btn-info">Dodaj nowego pracownika</button></a></td>
         </tr>
-        <th:block th:each="employee : ${employeesDtos}">
-            <tr>
-                <td>Name: <span th:text="${employee.name}"></span></td>
-                <td>Lastname: <span th:text="${employee.lastName}"></span></td>
-                <td>City: <span th:text="${employee.city}"></span></td>
-                <td>Worked Jobs: <span th:text="${employee.workedJobs.size()}"></span></td>
-            </tr>
-        </th:block>
-        </tbody>
     </table>
 </div>
 
-<div>
-    <table>
-        <tbody>
-        <h1>Inactive Employees List</h1>
-        <tr th:if="${inactiveEmployeesDtos.isEmpty()}">
-            <td>No Inactive Employees</td>
-        </tr>
-        <th:block th:each="employee : ${inactiveEmployeesDtos}">
+<div class="container">
+    <h1>Aktywni pracownicy</h1>
+    <table class="table table-striped table-bordered">
+        <div th:if="${not #lists.isEmpty(employeesDtos)}">
             <tr>
-                <td><span th:text="${employee.name}">Name</span></td>
-                <td><span th:text="${employee.lastName}">Lastname</span></td>
-                <td><span th:text="${employee.city}">City</span></td>
+                <th><code>Lp.</code></th>
+                <th><code>Imię</code></th>
+                <th><code>Nazwisko</code></th>
+                <th><code>Miasto</code></th>
+                <th><code>Zlecenia</code></th>
             </tr>
-        </th:block>
-        </tbody>
+            <tr th:each="employee : ${employeesDtos}">
+                <td><span th:text="${employeeStat.count}"></span></td>
+                <td><span th:text="${employee.name}"></span></td>
+                <td><span th:text="${employee.lastName}"></span></td>
+                <td><span th:text="${employee.city}"></span></td>
+                <td><span th:text="${employee.workedJobs.size()}"></span></td>
+                <td><a th:href="${'/Employee/' + employee.id + '/show'}"><button type="submit" class="btn btn-info">Wyświetl</button></a></td>
+                <td><a th:href="${'/Employee/' + employee.id + '/edit'}"><button type="submit" class="btn btn-info">Edytuj</button></a></td>
+                <td><a th:href="${'/Employee/' + employee.id + '/move_Inactive'}"><button type="submit" class="btn btn-warning">Dezaktywuj</button></a></td>
+                <td><a th:href="${'/Employee/' + employee.id + '/delete'}"><button type="submit" class="btn btn-danger">Usuń</button></a></td>
+            </tr>
+        </div>
+        <div th:if="${#lists.isEmpty(employeesDtos)}">
+            <h5><kbd>Brak aktywnych pracowników</kbd></h5>
+        </div>
+    </table>
+</div>
+
+<div class="container">
+    <h1>Nieaktywni pracownicy</h1>
+    <table class="table table-striped table-bordered">
+        <div th:if="${not #lists.isEmpty(inactiveEmployeesDtos)}">
+            <tr>
+                <th><code>Lp.</code></th>
+                <th><code>Imię</code></th>
+                <th><code>Nazwisko</code></th>
+                <th><code>Miasto</code></th>
+                <th><code>Zlecenia</code></th>
+            </tr>
+            <tr th:each="employee : ${inactiveEmployeesDtos}">
+                <td><span th:text="${employeeStat.count}"></span></td>
+                <td><span th:text="${employee.name}"></span></td>
+                <td><span th:text="${employee.lastName}"></span></td>
+                <td><span th:text="${employee.city}"></span></td>
+                <td><span th:text="${employee.workedJobs.size()}"></span></td>
+                <td><a th:href="${'/Employee/' + employee.id + '/show'}"><button type="submit" class="btn btn-info" >Wyświetl</button></a></td>
+                <td><a th:href="${'/Employee/' + employee.id + '/edit'}"><button type="submit" class="btn btn-info">Edytuj</button></a></td>
+                <td><a th:href="${'/Employee/' + employee.id + '/move_Active'}"><button type="submit" class="btn btn-success">Aktywuj</button></a></td>
+                <td><a th:href="${'/Employee/' + employee.id + '/delete'}"><button type="submit" class="btn btn-danger">Usuń</button></a></td>
+            </tr>
+        </div>
+        <div th:if="${#lists.isEmpty(inactiveEmployeesDtos)}">
+            <h5><kbd>Brak nieaktywnych pracowników</kbd></h5>
+        </div>
     </table>
 </div>
 

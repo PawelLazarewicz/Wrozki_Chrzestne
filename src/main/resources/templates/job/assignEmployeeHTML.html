@@ -1,6 +1,14 @@
 <!DOCTYPE HTML>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title th:text="Job + ' ' +  ${jobForAssign.clientName}"></title>
 
@@ -9,25 +17,55 @@
 
 <p th:insert="headerHTML"></p>
 
-<p>Name: <span th:text="${jobForAssign.clientName}"></span></p>
-<th:block th:each="employee : ${jobForAssign.employees}">
-    <form th:action="${'/Job/' + jobForAssign.id + '/removeAssignedEmployee/' + employee.id}"
-          th:object="${jobForAssign}"
-          method="post">
-        <p>Employees assigned: <span th:text="${employee.name} + '; ' + ${employee.lastName}"></span>
-            <button type="submit">Usuń pracownika</button>
-        </p>
-    </form>
-</th:block>
+<div class="container">
+    <h1 th:text="'Dodawanie pracownika do zlecenia'"></h1>
+    <div class="row">
+        <div class="col-sm-8">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Imię :</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-static" th:text="${jobForAssign.clientName}"></p>
+                    </div>
+                </div>
+            </form>
 
-<form th:action="@{/Job/{id}/assigningEmployee}" th:object="${jobForAssign}" method="post">
-    <select th:field="*{id}">
-        <option th:each="employee : ${employeesDtoAvailableToAssign}"
-                th:value="${employee.id}"
-                th:text="${employee.name} + '; ' + ${employee.age}"></option>
-    </select>
-    <button type="submit" class="btn btn-default">Dodaj pracownika</button>
-</form>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Przypisany pracownik :</label>
+                    <div class="col-sm-9">
+                        <div th:if="${not #lists.isEmpty(jobForAssign.employees)}">
+                            <th:block th:each="employee : ${jobForAssign.employees}">
+                                <form th:action="${'/Job/' + jobForAssign.id + '/removeAssignedEmployee/' + employee.id}"
+                                      th:object="${jobForAssign}"
+                                      method="post">
+                                    <p><span class="form-control-static"
+                                             th:text="${employee.name} + '; ' + ${employee.lastName}"></span>
+                                        <button type="submit" class="btn btn-danger">Usuń pracownika</button>
+                                    </p>
+                                </form>
+                            </th:block>
+                        </div>
+                        <div th:if="${#lists.isEmpty(jobForAssign.employees)}">
+                            <h5><kbd>Brak przypisanych pracowników</kbd></h5>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+
+    <form th:action="@{/Job/{id}/assigningEmployee}" th:object="${jobForAssign}" method="post">
+        <select th:field="*{id}">
+            <option th:each="employee : ${employeesDtoAvailableToAssign}"
+                    th:value="${employee.id}"
+                    th:text="${employee.name} + '; ' + ${employee.age}"></option>
+        </select>
+        <button type="submit" class="btn btn-success">Dodaj pracownika</button>
+    </form>
+    <a th:href="@{/Job/listJobs}">
+        <button type="button" class="btn btn-info">Powrót</button>
+    </a>
+</div>
+
 
 </body>
 </html>

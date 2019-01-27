@@ -117,7 +117,7 @@ public class JobController {
 
         model.addAttribute("job", selectedJobDto);
 
-        return "job/jobHTML";
+        return "redirect:/Job/listJobs";
     }
 
     @RequestMapping("Job/{id}/edit")
