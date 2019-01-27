@@ -64,10 +64,11 @@ public class EmployeeController {
             inactiveEmployeeList.add(selectedEmployee);
         } else {
             for (Employee inactiveEmployee : inactiveEmployeeList) {
-                if (!inactiveEmployee.getId().equals(selectedEmployee.getId())) {
-                    inactiveEmployeeList.add(selectedEmployee);
+                if (inactiveEmployee.getId().equals(selectedEmployee.getId())) {
+                    break;
                 }
             }
+                    inactiveEmployeeList.add(selectedEmployee);
         }
 
         EmployeeDto selectedEmployeeDto = employeeBuilderService.dtoFromEntityWithJobs(selectedEmployee);
@@ -95,8 +96,8 @@ public class EmployeeController {
         for (Employee inactiveEmployee : inactiveEmployeeList) {
             if (inactiveEmployee.getId().equals(employee.getId())) {
                 inactiveEmployeeList.remove(inactiveEmployee);
+                break;
             }
-            break;
         }
 
         model.addAttribute("employee", employeeDto);
@@ -113,8 +114,8 @@ public class EmployeeController {
         for (Employee inactiveEmployee : inactiveEmployeeList) {
             if (inactiveEmployee.getId().equals(selectedEmployee.getId())) {
                 inactiveEmployeeList.remove(inactiveEmployee);
+                break;
             }
-            break;
         }
 
         EmployeeDto selectedEmployeeDto = employeeBuilderService.dtoFromEntityWithJobs(selectedEmployee);
@@ -125,7 +126,7 @@ public class EmployeeController {
     }
 
     @RequestMapping("Employee/{id}/edit")
-    public String editEmployee(@PathVariable Long id, Model model){
+    public String editEmployee(@PathVariable Long id, Model model) {
         editedEmployee = employeeBuilderService.selectEmployee(id);
         EmployeeDto editedEmployeeDto = employeeBuilderService.dtoFromEntityWithJobs(editedEmployee);
 
@@ -147,10 +148,11 @@ public class EmployeeController {
     public List<Employee> getActiveEmployeeList() {
         activeEmployeeList = employeeRepository.findAll();
 
-        for (Employee activeEmployee : activeEmployeeList) {
-            for (Employee inactiveEmployee : inactiveEmployeeList) {
+        for (Employee inactiveEmployee : inactiveEmployeeList) {
+            for (Employee activeEmployee : activeEmployeeList) {
                 if ((activeEmployee.getId()).equals(inactiveEmployee.getId())) {
                     activeEmployeeList.remove(activeEmployee);
+                    break;
                 }
             }
         }
