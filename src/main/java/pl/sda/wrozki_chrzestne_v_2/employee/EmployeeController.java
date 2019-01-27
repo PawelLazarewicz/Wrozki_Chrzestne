@@ -74,7 +74,7 @@ public class EmployeeController {
 
         model.addAttribute("employee", selectedEmployeeDto);
 
-        return "employee/employeeHTML";
+        return "redirect:/Employee/listEmployees";
     }
 
     @RequestMapping("Employee/{id}/show")
@@ -96,7 +96,7 @@ public class EmployeeController {
 
         employeeRepository.delete(employee);
 
-        return "employee/employeeHTML";
+        return "redirect:/Employee/listEmployees";
     }
 
     @RequestMapping("Employee/{id}/move_Active")
@@ -113,7 +113,7 @@ public class EmployeeController {
 
         model.addAttribute("employee", selectedEmployeeDto);
 
-        return "employee/employeeHTML";
+        return "redirect:/Employee/listEmployees";
     }
 
     @RequestMapping("Employee/{id}/edit")

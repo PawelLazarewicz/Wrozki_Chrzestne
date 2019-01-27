@@ -69,7 +69,7 @@ public class ClientController {
 
         model.addAttribute("client", selectedClientDto);
 
-        return "client/clientHTML";
+        return "redirect:/Client/listClients";
     }
 
     @RequestMapping("Client/{id}/edit")

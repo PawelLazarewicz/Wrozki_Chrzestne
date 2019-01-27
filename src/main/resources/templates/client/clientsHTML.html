@@ -1,29 +1,68 @@
 <!DOCTYPE HTML>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>List of Clients</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Klienci</title>
 
 </head>
 <body>
 
 <p th:insert="headerHTML"></p>
 
-<div>
-    <table>
-        <tbody>
-        <h1>Clients List</h1>
-        <tr th:if="${clientsDtos.isEmpty()}">
-            <td>No Clients</td>
+<nav class="navbar navbar-default">
+    <div class="container">
+        <ul class="nav navbar-nav">
+            <li><a href="/Employee/listEmployees">Pracownicy</a></li>
+            <li><a href="/Job/listJobs">Zlecenia</a></li>
+            <li><a href="/Client/listClients">Klienci</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <table class="table-row-cell">
+        <tr>
+            <td><a th:href="${'/Client/addClient'}"><button class="btn btn-info">Dodaj nowego klienta</button></a></td>
         </tr>
-        <th:block th:each="client : ${clientsDtos}">
+    </table>
+</div>
+
+<div class="container">
+    <h1>Klienci</h1>
+    <table class="table table-striped table-bordered">
+        <div th:if="${not #lists.isEmpty(clientsDtos)}">
             <tr>
-                <td><span th:text="${client.name}">Name</span></td>
-                <td><span th:text="${client.lastName}">Lastname</span></td>
-                <td><span th:text="${client.city}">City</span></td>
+                <th><code>Lp.</code></th>
+                <th><code>Imię</code></th>
+                <th><code>Nazwisko (nazwa Firmy)</code></th>
+                <th><code>Miasto</code></th>
+                <th><code>Telefon</code></th>
+                <th><code>mail</code></th>
             </tr>
-        </th:block>
-        </tbody>
+            <tr th:each="client : ${clientsDtos}">
+                <td><span th:text="${clientStat.count}"></span></td>
+                <td><span th:text="${client.name}"></span></td>
+                <td><span th:text="${client.lastName}"></span></td>
+                <td><span th:text="${client.city}"></span></td>
+                <td><span th:text="${client.telephoneNumber}"></span></td>
+                <td><span th:text="${client.mail}"></span></td>
+                <!--<td><span th:text="${client.employees.size()}"></span></td>-->
+                <td><a th:href="${'/Client/' + client.id + '/show'}"><button type="submit" class="btn btn-info">Wyświetl</button></a></td>
+                <td><a th:href="${'/Client/' + client.id + '/edit'}"><button type="submit" class="btn btn-info">Edytuj</button></a></td>
+                <td><a th:href="${'/Client/' + client.id + '/delete'}"><button type="submit" class="btn btn-danger">Usuń</button></a></td>
+            </tr>
+        </div>
+        <div th:if="${#lists.isEmpty(clientsDtos)}">
+            <h5><kbd>Brak klientów</kbd></h5>
+        </div>
     </table>
 </div>
 

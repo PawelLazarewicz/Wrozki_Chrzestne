@@ -1,7 +1,16 @@
 <!DOCTYPE HTML>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
     <title th:text="Job + ' ' +  ${job.clientName}"></title>
 
 </head>
@@ -9,10 +18,86 @@
 
 <p th:insert="headerHTML"></p>
 
-<p>Name: <span th:text="${job.clientName}"></span></p>
-<th:block th:each="employee : ${job.employees}">
-    <p>Employees assigned: <span th:text="${employee.name} + '; ' + ${employee.lastName}"></span></p>
-</th:block>
+<div class="container">
+    <h1 th:text="'Informacje o zleceniu'"></h1>
+    <div class="row">
+        <div class="col-sm-8">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Imię :</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-static" th:text="${job.clientName}"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Nazwisko (Nazwa) :</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-static" th:text="${job.clientLastName}"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Data zlecenia :</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-static" th:text="${job.dateOfJob}"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Miasto :</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-static" th:text="${job.city}"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Adress :</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-static" th:text="${job.jobsAddress}"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Kod pocztowy :</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-static" th:text="${job.jobsPostalCode}"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Rodzaj implezy :</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-static" th:text="${job.sortOfJob}"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Czas trwania :</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-static" th:text="${job.estimatedTime}"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Liczba dzieci :</label>
+                    <div class="col-sm-9">
+                        <p class="form-control-static" th:text="${job.numberOfChildren}"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Przypisani pracownicy :</label>
+                    <div class="col-sm-9">
+                        <th:block th:each="employee : ${job.employees}">
+                            <p><a th:href="@{'/Employee/' + ${employee.id} + '/show'}"><span class="form-control-static"
+                                     th:text="${employee.name} + ' ' + ${employee.lastName}"></span></a></p>
+                        </th:block>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <a th:href="@{/Job/listJobs}">
+        <button type="button" class="btn btn-info">Powrót</button>
+    </a>
+</div>
+
+<!--<p>Name: <span th:text="${job.clientName}"></span></p>-->
+<!--<th:block th:each="job : ${job.employees}">-->
+    <!--<p>Employees assigned: <span th:text="${employee.name} + '; ' + ${employee.lastName}"></span></p>-->
+<!--</th:block>-->
 
 </body>
 </html>
