@@ -9,7 +9,6 @@ import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
 import pl.sda.wrozki_chrzestne_v_2.employee.Employee;
 import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeBuilderService;
 import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeController;
-import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +27,10 @@ public class JobController {
     private EmployeeBuilderService employeeBuilderService;
 
     @Autowired
-    private EmployeeRepository employeeRepository;
-
-    @Autowired
     private EmployeeController employeeController;
 
     private List<Job> completedJobs = new ArrayList<>();
+    private List<Job> uncompletedJobs = new ArrayList<>();
     private Job editedJob;
     private Job selectedJob;
 
@@ -55,17 +52,7 @@ public class JobController {
 
     @RequestMapping("/Job/listJobs")
     public String allJobs(Model model) {
-        List<Job> jobs = jobRepository.findAll();
-
-        for (Job allJob : jobs) {
-            for (Job completedJob : completedJobs) {
-                if ((allJob.getId()).equals(completedJob.getId())) {
-                    jobs.remove(allJob);
-                }
-            }
-        }
-
-        List<JobDto> jobsDtos = jobs
+        List<JobDto> jobsDtos = getUncompletedJobList()
                 .stream()
                 .map(e -> jobBuilderService.dtoFromEntityWithEmployees(e))
                 .collect(Collectors.toList());
@@ -109,10 +96,11 @@ public class JobController {
             completedJobs.add(selectedJob);
         } else {
             for (Job completedJob : completedJobs) {
-                if (!completedJob.getId().equals(selectedJob.getId())) {
-                    completedJobs.add(selectedJob);
+                if (completedJob.getId().equals(selectedJob.getId())) {
+                    break;
                 }
             }
+            completedJobs.add(selectedJob);
         }
 
         model.addAttribute("job", selectedJobDto);
@@ -204,4 +192,19 @@ public class JobController {
 
         return "redirect:/Job/" + selectedJob.getId() + "/assignEmployee";
     }
+
+    public List<Job> getUncompletedJobList() {
+        uncompletedJobs = jobRepository.findAll();
+
+        for (Job completedJob : completedJobs) {
+            for (Job uncompletedJob : uncompletedJobs) {
+                if ((uncompletedJob.getId()).equals(completedJob.getId())) {
+                    uncompletedJobs.remove(uncompletedJob);
+                    break;
+                }
+            }
+        }
+        return uncompletedJobs;
+    }
+
 }
