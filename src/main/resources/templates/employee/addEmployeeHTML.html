@@ -11,14 +11,14 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Dodawanie Pracownika</title>
+    <title>Dodawanie pracownika</title>
 </head>
 <body>
 
 <p th:insert="headerHTML"></p>
 
 <div class="container">
-    <h1 th:text="'Dodaj Nowego Pracownika'"></h1>
+    <h1 th:text="'Dodaj nowego pracownika'"></h1>
 
         <form class="form-horizontal" th:action="@{/Employee/listEmployees}" th:object="${employee}" method="post">
             <div class="form-group">
