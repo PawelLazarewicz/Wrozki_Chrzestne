@@ -70,6 +70,10 @@ public class EmployeeController {
             }
         }
 
+        EmployeeDto selectedEmployeeDto = employeeBuilderService.dtoFromEntityWithJobs(selectedEmployee);
+
+        model.addAttribute("employee", selectedEmployeeDto);
+
         return "redirect:/Employee/listEmployees";
     }
 
@@ -86,6 +90,7 @@ public class EmployeeController {
     @RequestMapping("Employee/{id}/delete")
     public String deleteEmployee(@PathVariable Long id, Model model) {
         Employee employee = employeeBuilderService.selectEmployee(id);
+        EmployeeDto employeeDto = employeeBuilderService.dtoFromEntityWithJobs(employee);
 
         for (Employee inactiveEmployee : inactiveEmployeeList) {
             if (inactiveEmployee.getId().equals(employee.getId())) {
@@ -93,6 +98,8 @@ public class EmployeeController {
             }
             break;
         }
+
+        model.addAttribute("employee", employeeDto);
 
         employeeRepository.delete(employee);
 
@@ -109,6 +116,10 @@ public class EmployeeController {
             }
             break;
         }
+
+        EmployeeDto selectedEmployeeDto = employeeBuilderService.dtoFromEntityWithJobs(selectedEmployee);
+
+        model.addAttribute("employee", selectedEmployeeDto);
 
         return "redirect:/Employee/listEmployees";
     }
