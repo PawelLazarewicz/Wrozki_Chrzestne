@@ -19,7 +19,7 @@
 <p th:insert="headerHTML"></p>
 
 <div class="container">
-    <h1 th:text="'Edycja Pracownika'"></h1>
+    <h1 th:text="'Edycja pracownika'"></h1>
 
     <form class="form-horizontal" th:action="@{/Employee/updateEmployee}" th:object="${editedEmployee}" method="post">
         <div class="form-group">
