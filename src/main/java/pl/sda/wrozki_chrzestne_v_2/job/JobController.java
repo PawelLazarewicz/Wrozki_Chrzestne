@@ -57,10 +57,10 @@ public class JobController {
     public String allJobs(Model model) {
         List<Job> jobs = jobRepository.findAll();
 
-        for (int i = 0; i < jobs.size(); i++) {
-            for (int j = 0; j < completedJobs.size(); j++) {
-                if ((jobs.get(i).getId()).equals(completedJobs.get(j).getId())) {
-                    jobs.remove(jobs.get(i));
+        for (Job allJob : jobs) {
+            for (Job completedJob : completedJobs) {
+                if ((allJob.getId()).equals(completedJob.getId())) {
+                    jobs.remove(allJob);
                 }
             }
         }
@@ -108,8 +108,8 @@ public class JobController {
         if (completedJobs.isEmpty()) {
             completedJobs.add(selectedJob);
         } else {
-            for (int i = 0; i < completedJobs.size(); i++) {
-                if (!completedJobs.get(i).getId().equals(selectedJob.getId())) {
+            for (Job completedJob : completedJobs) {
+                if (!completedJob.getId().equals(selectedJob.getId())) {
                     completedJobs.add(selectedJob);
                 }
             }
