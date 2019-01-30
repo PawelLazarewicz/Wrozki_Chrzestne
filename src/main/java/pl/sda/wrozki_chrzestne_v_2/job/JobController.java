@@ -171,25 +171,27 @@ public class JobController {
         selectedJob.getEmployees().add(employeeToAssign);
         jobRepository.save(selectedJob);
 
-        Employee employeeAbleToAssign = employeeToAssign;
-        if (assignedEmployees.isEmpty()) {
-            assignedEmployees.add(employeeBuilderService.selectEmployee(employeeDto.getId()));
-            employeeAbleToAssign = null;
-        } else {
-            for (Employee assignedEmployee : assignedEmployees) {
-                if (assignedEmployee.getId().equals(employeeToAssign.getId())) {
-                    employeeAbleToAssign = null;
-                    break;
-                } else {
-                    employeeAbleToAssign = employeeToAssign;
-                }
-            }
-        }
+        assignedEmployees.add(employeeToAssign);
 
-
-        if (employeeAbleToAssign != null) {
-            assignedEmployees.add(employeeBuilderService.selectEmployee(employeeDto.getId()));
-        }
+//        Employee employeeAbleToAssign = employeeToAssign;
+//        if (assignedEmployees.isEmpty()) {
+//            assignedEmployees.add(employeeBuilderService.selectEmployee(employeeDto.getId()));
+//            employeeAbleToAssign = null;
+//        } else {
+//            for (Employee assignedEmployee : assignedEmployees) {
+//                if (assignedEmployee.getId().equals(employeeToAssign.getId())) {
+//                    employeeAbleToAssign = null;
+//                    break;
+//                } else {
+//                    employeeAbleToAssign = employeeToAssign;
+//                }
+//            }
+//        }
+//
+//
+//        if (employeeAbleToAssign != null) {
+//            assignedEmployees.add(employeeBuilderService.selectEmployee(employeeDto.getId()));
+//        }
 
         allJobs(model);
 
@@ -199,7 +201,16 @@ public class JobController {
     @RequestMapping(value = "/Job/{id}/removeAssignedEmployee/{idEmployee}", method = RequestMethod.POST)
     public String removeAssignedEmployeeFromJob(@PathVariable Long idEmployee, Model model) {
         Employee removedEmployee = employeeBuilderService.selectEmployee(idEmployee);
-        List<Employee> assignedEmployees = selectedJob.getEmployees();
+        List<Employee> assignedEmployeesForSelectedJob = selectedJob.getEmployees();
+
+        for (Employee assignedEmployeeJob : assignedEmployeesForSelectedJob) {
+
+            if (removedEmployee.getId().equals(assignedEmployeeJob.getId())) {
+                assignedEmployeesForSelectedJob.remove(assignedEmployeeJob);
+                break;
+            }
+        }
+
 
         for (Employee assignedEmployee : assignedEmployees) {
             if (removedEmployee.getId().equals(assignedEmployee.getId())) {
