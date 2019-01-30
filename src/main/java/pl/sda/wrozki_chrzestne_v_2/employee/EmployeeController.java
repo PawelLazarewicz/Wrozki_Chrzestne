@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.sda.wrozki_chrzestne_v_2.dto.EmployeeDto;
+import pl.sda.wrozki_chrzestne_v_2.job.JobController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,9 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeBuilderService employeeBuilderService;
+
+    @Autowired
+    private JobController jobController;
 
     private List<Employee> inactiveEmployeeList = new ArrayList<>();
     private List<Employee> activeEmployeeList = new ArrayList<>();
@@ -102,7 +106,19 @@ public class EmployeeController {
 
         model.addAttribute("employee", employeeDto);
 
-        employeeRepository.delete(employee);
+        Employee employeeToDelete = employee;
+        for (Employee assignedEmployee : jobController.getAssignedEmployees()) {
+            if (employee.getId().equals(assignedEmployee.getId())) {
+                employeeToDelete = null;
+                break;
+            } else {
+                employeeToDelete = employee;
+            }
+        }
+
+        if (employeeToDelete != null){
+            employeeRepository.delete(employeeToDelete);
+        }
 
         return "redirect:/Employee/listEmployees";
     }
