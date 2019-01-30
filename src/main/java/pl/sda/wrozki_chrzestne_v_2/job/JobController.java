@@ -33,6 +33,7 @@ public class JobController {
     private List<Job> uncompletedJobs = new ArrayList<>();
     private Job editedJob;
     private Job selectedJob;
+    private List<Employee> assignedEmployees = new ArrayList<>();
 
     @RequestMapping("/Job/addJob")
     public String addJobForm(Model model) {
@@ -166,8 +167,29 @@ public class JobController {
 
     @RequestMapping(value = "/Job/{id}/assigningEmployee", method = RequestMethod.POST)
     public String assignEmployeeForJob(@ModelAttribute EmployeeDto employeeDto, Model model) {
-        selectedJob.getEmployees().add(employeeBuilderService.selectEmployee(employeeDto.getId()));
+        Employee employeeToAssign = employeeBuilderService.selectEmployee(employeeDto.getId());
+        selectedJob.getEmployees().add(employeeToAssign);
         jobRepository.save(selectedJob);
+
+        Employee employeeAbleToAssign = employeeToAssign;
+        if (assignedEmployees.isEmpty()) {
+            assignedEmployees.add(employeeBuilderService.selectEmployee(employeeDto.getId()));
+            employeeAbleToAssign = null;
+        } else {
+            for (Employee assignedEmployee : assignedEmployees) {
+                if (assignedEmployee.getId().equals(employeeToAssign.getId())) {
+                    employeeAbleToAssign = null;
+                    break;
+                } else {
+                    employeeAbleToAssign = employeeToAssign;
+                }
+            }
+        }
+
+
+        if (employeeAbleToAssign != null) {
+            assignedEmployees.add(employeeBuilderService.selectEmployee(employeeDto.getId()));
+        }
 
         allJobs(model);
 
@@ -205,6 +227,10 @@ public class JobController {
             }
         }
         return uncompletedJobs;
+    }
+
+    public List<Employee> getAssignedEmployees() {
+        return assignedEmployees;
     }
 
 }
