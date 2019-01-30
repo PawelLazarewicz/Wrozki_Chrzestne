@@ -21,7 +21,7 @@ public class JobDto {
 
     private String clientName;
     private String clientLastName;
-    private Date dateOfJob;
+    private String dateOfJob;
     private String city;
 
         private String jobsAddress;
