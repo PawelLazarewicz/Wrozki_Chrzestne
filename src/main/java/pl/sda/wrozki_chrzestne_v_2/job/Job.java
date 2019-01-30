@@ -26,15 +26,22 @@ public class Job {
     private Date dateOfJob;
     private String city;
 
-        private String jobsAddress;
-        private String jobsPostalCode;
+    private String jobsAddress;
+    private String jobsPostalCode;
 
     @Enumerated(EnumType.STRING)
     private SortOfJobs sortOfJob;
     private int estimatedTime;
     private int numberOfChildren;
 
-    @ManyToMany
+    @ManyToMany(
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE,}
+            )
+    @JoinTable(
+            name = "JOBS_EMPLOYEES",
+            joinColumns = {@JoinColumn(name = "WORKED_jOBS_ID")},
+            inverseJoinColumns = {@JoinColumn(name = "EMPLOYEES_ID")}
+    )
     private List<Employee> employees = new ArrayList<>();
 
 }

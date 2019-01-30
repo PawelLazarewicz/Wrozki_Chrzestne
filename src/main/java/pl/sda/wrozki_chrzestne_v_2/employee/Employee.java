@@ -30,6 +30,13 @@ public class Employee {
     private int telephoneNumber;
     private String mail;
 
-    @ManyToMany(mappedBy = "employees")
+    @ManyToMany(
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE,}
+            )
+    @JoinTable(
+            name = "JOBS_EMPLOYEES",
+            inverseJoinColumns = {@JoinColumn(name = "WORKED_jOBS_ID")},
+            joinColumns = {@JoinColumn(name = "EMPLOYEES_ID")}
+    )
     private List<Job> workedJobs = new ArrayList<>();
 }
