@@ -65,7 +65,12 @@
         <div class="form-group">
             <label class="control-label col-sm-2">Rodzaj implezy:</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" th:field="*{sortOfJob}" placeholder="Rodzaj imprezy"></label>
+                <select class="form-control" th:name="*{sortOfJob}">
+                    <option th:value="NONE" selected="selected">---- Wybierz ----</option>
+                    <option th:value="NONE">WESELE</option>
+                    <option th:value="NONE">FESTYN</option>
+                    <option th:value="NONE">URODZINY</option>
+                </select>
             </div>
         </div>
 
