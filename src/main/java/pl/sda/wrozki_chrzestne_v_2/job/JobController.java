@@ -33,7 +33,8 @@ public class JobController {
     private List<Job> uncompletedJobs = new ArrayList<>();
     private Job editedJob;
     private Job selectedJob;
-    private List<Employee> assignedEmployees = new ArrayList<>();
+    private List<Employee> assignedEmployeesForActiveJob = new ArrayList<>();
+    private List<Employee> assignedEmployeesForCompletedJob = new ArrayList<>();
 
     @RequestMapping("/Job/addJob")
     public String addJobForm(Model model) {
@@ -104,6 +105,18 @@ public class JobController {
             completedJobs.add(selectedJob);
         }
 
+        List<Employee> assignedEmployeesForJobBeingCompleted = selectedJob.getEmployees();
+
+        for (Employee assignedEmployeeForJobBeingCompleted : assignedEmployeesForJobBeingCompleted) {
+            for (Employee assignedEmployeeForActiveJob : assignedEmployeesForActiveJob) {
+                if (assignedEmployeeForActiveJob.getId().equals(assignedEmployeeForJobBeingCompleted.getId())) {
+                    assignedEmployeesForCompletedJob.add(assignedEmployeeForActiveJob);
+                    break;
+                }
+            }
+        }
+        assignedEmployeesForActiveJob.removeAll(assignedEmployeesForCompletedJob);
+
         model.addAttribute("job", selectedJobDto);
 
         return "redirect:/Job/listJobs";
@@ -171,14 +184,14 @@ public class JobController {
         selectedJob.getEmployees().add(employeeToAssign);
         jobRepository.save(selectedJob);
 
-        assignedEmployees.add(employeeToAssign);
+        assignedEmployeesForActiveJob.add(employeeToAssign);
 
 //        Employee employeeAbleToAssign = employeeToAssign;
-//        if (assignedEmployees.isEmpty()) {
-//            assignedEmployees.add(employeeBuilderService.selectEmployee(employeeDto.getId()));
+//        if (assignedEmployeesForActiveJob.isEmpty()) {
+//            assignedEmployeesForActiveJob.add(employeeBuilderService.selectEmployee(employeeDto.getId()));
 //            employeeAbleToAssign = null;
 //        } else {
-//            for (Employee assignedEmployee : assignedEmployees) {
+//            for (Employee assignedEmployee : assignedEmployeesForActiveJob) {
 //                if (assignedEmployee.getId().equals(employeeToAssign.getId())) {
 //                    employeeAbleToAssign = null;
 //                    break;
@@ -190,7 +203,7 @@ public class JobController {
 //
 //
 //        if (employeeAbleToAssign != null) {
-//            assignedEmployees.add(employeeBuilderService.selectEmployee(employeeDto.getId()));
+//            assignedEmployeesForActiveJob.add(employeeBuilderService.selectEmployee(employeeDto.getId()));
 //        }
 
         allJobs(model);
@@ -212,9 +225,9 @@ public class JobController {
         }
 
 
-        for (Employee assignedEmployee : assignedEmployees) {
+        for (Employee assignedEmployee : assignedEmployeesForActiveJob) {
             if (removedEmployee.getId().equals(assignedEmployee.getId())) {
-                assignedEmployees.remove(assignedEmployee);
+                assignedEmployeesForActiveJob.remove(assignedEmployee);
                 break;
             }
         }
@@ -240,8 +253,12 @@ public class JobController {
         return uncompletedJobs;
     }
 
-    public List<Employee> getAssignedEmployees() {
-        return assignedEmployees;
+    public List<Employee> getAssignedEmployeesForActiveJob() {
+        return assignedEmployeesForActiveJob;
+    }
+
+    public List<Employee> getAssignedEmployeesForCompletedJob() {
+        return assignedEmployeesForCompletedJob;
     }
 
 }
