@@ -61,7 +61,7 @@ public class EmployeeController {
         List<Employee> assignedEmployeesForActiveJob = jobController.getAssignedEmployeesForActiveJob();
 
         for (EmployeeDto employee : employeeDtos) {
-                assignedEmployeesForActiveJobMap.put(employee.getId(), new ArrayList<>());
+            assignedEmployeesForActiveJobMap.put(employee.getId(), new ArrayList<>());
         }
 
         for (EmployeeDto employee : employeeDtos) {
@@ -106,15 +106,27 @@ public class EmployeeController {
     public String moveEmployeeInactive(@PathVariable Long id, Model model) {
         Employee selectedEmployee = employeeBuilderService.selectEmployee(id);
 
-        if (inactiveEmployeeList.isEmpty()) {
-            inactiveEmployeeList.add(selectedEmployee);
-        } else {
-            for (Employee inactiveEmployee : inactiveEmployeeList) {
-                if (inactiveEmployee.getId().equals(selectedEmployee.getId())) {
-                    break;
-                }
+        Employee employeeToMoveInactive = selectedEmployee;
+        for (Employee assignedEmployee : jobController.getAssignedEmployeesForActiveJob()) {
+            if (selectedEmployee.getId().equals(assignedEmployee.getId())) {
+                employeeToMoveInactive = null;
+                break;
+            } else {
+                employeeToMoveInactive = selectedEmployee;
             }
-            inactiveEmployeeList.add(selectedEmployee);
+        }
+
+        if (employeeToMoveInactive != null) {
+            if (inactiveEmployeeList.isEmpty()) {
+                inactiveEmployeeList.add(employeeToMoveInactive);
+            } else {
+                for (Employee inactiveEmployee : inactiveEmployeeList) {
+                    if (inactiveEmployee.getId().equals(employeeToMoveInactive.getId())) {
+                        break;
+                    }
+                }
+                inactiveEmployeeList.add(employeeToMoveInactive);
+            }
         }
 
         EmployeeDto selectedEmployeeDto = employeeBuilderService.dtoFromEntityWithJobs(selectedEmployee);
