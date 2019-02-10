@@ -45,15 +45,17 @@
                 <th><code>Imię</code></th>
                 <th><code>Nazwisko</code></th>
                 <th><code>Miasto</code></th>
-                <th><code>Zlecenia</code></th>
+                <th><code>Bierzące Zlecenia</code></th>
+                <th><code>Wykonane Zlecenia</code></th>
             </tr>
             <tr th:each="employee : ${employeesDtos}">
                 <td><span th:text="${employeeStat.count}"></span></td>
                 <td><span th:text="${employee.name}"></span></td>
                 <td><span th:text="${employee.lastName}"></span></td>
                 <td><span th:text="${employee.city}"></span></td>
-                <td><span th:text="${employee.workedJobs.size()}"></span></td>
-                <td><a th:href="${'/Employee/' + employee.id + '/show'}"><button type="submit" class="btn btn-info">Wyświetl</button></a></td>
+                <td><span th:text="${assignedEmployeesForActiveJobMap.get(employee.getId()).size()}"></span></td>
+                <td><span th:text="${assignedEmployeesForCompletedJobMap.get(employee.getId()).size()}"></span></td>
+                <td><a th:href="${'/Employee/' + employee.id + '/show'}"><button type="button" class="btn btn-default">Wyświetl</button></a></td>
                 <td><a th:href="${'/Employee/' + employee.id + '/edit'}"><button type="submit" class="btn btn-info">Edytuj</button></a></td>
                 <td><a th:href="${'/Employee/' + employee.id + '/move_Inactive'}"><button type="submit" class="btn btn-warning">Dezaktywuj</button></a></td>
                 <td><a th:href="${'/Employee/' + employee.id + '/delete'}"><button type="submit" class="btn btn-danger">Usuń</button></a></td>
@@ -74,15 +76,15 @@
                 <th><code>Imię</code></th>
                 <th><code>Nazwisko</code></th>
                 <th><code>Miasto</code></th>
-                <th><code>Zlecenia</code></th>
+                <th><code>Wykonane Zlecenia</code></th>
             </tr>
             <tr th:each="employee : ${inactiveEmployeesDtos}">
                 <td><span th:text="${employeeStat.count}"></span></td>
                 <td><span th:text="${employee.name}"></span></td>
                 <td><span th:text="${employee.lastName}"></span></td>
                 <td><span th:text="${employee.city}"></span></td>
-                <td><span th:text="${employee.workedJobs.size()}"></span></td>
-                <td><a th:href="${'/Employee/' + employee.id + '/show'}"><button type="submit" class="btn btn-info" >Wyświetl</button></a></td>
+                <td><span th:text="${assignedEmployeesForCompletedJobMap.get(employee.getId()).size()}"></span></td>
+                <td><a th:href="${'/Employee/' + employee.id + '/show'}"><button type="submit" class="btn btn-default" >Wyświetl</button></a></td>
                 <td><a th:href="${'/Employee/' + employee.id + '/edit'}"><button type="submit" class="btn btn-info">Edytuj</button></a></td>
                 <td><a th:href="${'/Employee/' + employee.id + '/move_Active'}"><button type="submit" class="btn btn-success">Aktywuj</button></a></td>
                 <td><a th:href="${'/Employee/' + employee.id + '/delete'}"><button type="submit" class="btn btn-danger">Usuń</button></a></td>

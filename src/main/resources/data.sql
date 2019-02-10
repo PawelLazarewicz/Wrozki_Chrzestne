@@ -13,7 +13,7 @@ INSERT INTO JOBS (client_Name, client_Last_Name, city, date_Of_Job, jobs_Address
 INSERT INTO CLIENTS (name, last_Name, city, address, postal_Code, telephone_Number, mail) VALUES ('Ben', 'Benek', 'Koziegłowy', 'Cienka 10a/155', '22-222', '999', 'BB@wp.pl');
 INSERT INTO CLIENTS (name, last_Name, city, address, postal_Code, telephone_Number, mail) VALUES ('Zuza', 'Zuz', 'Suchy Las', 'Słoneczna 5', '33-333', '555', 'zz@gmail.pl');
 
-INSERT INTO JOBS_EMPLOYEES (WORKED_JOBS_ID, EMPLOYEES_ID) VALUES (1, 1);
-INSERT INTO JOBS_EMPLOYEES (WORKED_JOBS_ID, EMPLOYEES_ID) VALUES (2, 1);
-INSERT INTO JOBS_EMPLOYEES (WORKED_JOBS_ID, EMPLOYEES_ID) VALUES (1, 2);
+-- INSERT INTO JOBS_EMPLOYEES (WORKED_JOBS_ID, EMPLOYEES_ID) VALUES (1, 1);
+-- INSERT INTO JOBS_EMPLOYEES (WORKED_JOBS_ID, EMPLOYEES_ID) VALUES (2, 1);
+-- INSERT INTO JOBS_EMPLOYEES (WORKED_JOBS_ID, EMPLOYEES_ID) VALUES (1, 2);
 

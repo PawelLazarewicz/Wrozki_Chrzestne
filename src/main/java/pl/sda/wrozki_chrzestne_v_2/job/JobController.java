@@ -33,6 +33,8 @@ public class JobController {
     private List<Job> uncompletedJobs = new ArrayList<>();
     private Job editedJob;
     private Job selectedJob;
+    private List<Employee> assignedEmployeesForActiveJob = new ArrayList<>();
+    private List<Employee> assignedEmployeesForCompletedJob = new ArrayList<>();
 
     @RequestMapping("/Job/addJob")
     public String addJobForm(Model model) {
@@ -103,6 +105,18 @@ public class JobController {
             completedJobs.add(selectedJob);
         }
 
+        List<Employee> assignedEmployeesForJobBeingCompleted = selectedJob.getEmployees();
+
+        for (Employee assignedEmployeeForJobBeingCompleted : assignedEmployeesForJobBeingCompleted) {
+            for (Employee assignedEmployeeForActiveJob : assignedEmployeesForActiveJob) {
+                if (assignedEmployeeForActiveJob.getId().equals(assignedEmployeeForJobBeingCompleted.getId())) {
+                    assignedEmployeesForCompletedJob.add(assignedEmployeeForActiveJob);
+                    break;
+                }
+            }
+        }
+        assignedEmployeesForActiveJob.removeAll(assignedEmployeesForCompletedJob);
+
         model.addAttribute("job", selectedJobDto);
 
         return "redirect:/Job/listJobs";
@@ -166,8 +180,31 @@ public class JobController {
 
     @RequestMapping(value = "/Job/{id}/assigningEmployee", method = RequestMethod.POST)
     public String assignEmployeeForJob(@ModelAttribute EmployeeDto employeeDto, Model model) {
-        selectedJob.getEmployees().add(employeeBuilderService.selectEmployee(employeeDto.getId()));
+        Employee employeeToAssign = employeeBuilderService.selectEmployee(employeeDto.getId());
+        selectedJob.getEmployees().add(employeeToAssign);
         jobRepository.save(selectedJob);
+
+        assignedEmployeesForActiveJob.add(employeeToAssign);
+
+//        Employee employeeAbleToAssign = employeeToAssign;
+//        if (assignedEmployeesForActiveJob.isEmpty()) {
+//            assignedEmployeesForActiveJob.add(employeeBuilderService.selectEmployee(employeeDto.getId()));
+//            employeeAbleToAssign = null;
+//        } else {
+//            for (Employee assignedEmployee : assignedEmployeesForActiveJob) {
+//                if (assignedEmployee.getId().equals(employeeToAssign.getId())) {
+//                    employeeAbleToAssign = null;
+//                    break;
+//                } else {
+//                    employeeAbleToAssign = employeeToAssign;
+//                }
+//            }
+//        }
+//
+//
+//        if (employeeAbleToAssign != null) {
+//            assignedEmployeesForActiveJob.add(employeeBuilderService.selectEmployee(employeeDto.getId()));
+//        }
 
         allJobs(model);
 
@@ -177,11 +214,20 @@ public class JobController {
     @RequestMapping(value = "/Job/{id}/removeAssignedEmployee/{idEmployee}", method = RequestMethod.POST)
     public String removeAssignedEmployeeFromJob(@PathVariable Long idEmployee, Model model) {
         Employee removedEmployee = employeeBuilderService.selectEmployee(idEmployee);
-        List<Employee> assignedEmployees = selectedJob.getEmployees();
+        List<Employee> assignedEmployeesForSelectedJob = selectedJob.getEmployees();
 
-        for (Employee assignedEmployee : assignedEmployees) {
+        for (Employee assignedEmployeeJob : assignedEmployeesForSelectedJob) {
+
+            if (removedEmployee.getId().equals(assignedEmployeeJob.getId())) {
+                assignedEmployeesForSelectedJob.remove(assignedEmployeeJob);
+                break;
+            }
+        }
+
+
+        for (Employee assignedEmployee : assignedEmployeesForActiveJob) {
             if (removedEmployee.getId().equals(assignedEmployee.getId())) {
-                assignedEmployees.remove(assignedEmployee);
+                assignedEmployeesForActiveJob.remove(assignedEmployee);
                 break;
             }
         }
@@ -205,6 +251,14 @@ public class JobController {
             }
         }
         return uncompletedJobs;
+    }
+
+    public List<Employee> getAssignedEmployeesForActiveJob() {
+        return assignedEmployeesForActiveJob;
+    }
+
+    public List<Employee> getAssignedEmployeesForCompletedJob() {
+        return assignedEmployeesForCompletedJob;
     }
 
 }
