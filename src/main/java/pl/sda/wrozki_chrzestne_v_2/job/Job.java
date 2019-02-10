@@ -22,6 +22,10 @@ public class Job {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+//    @JoinColumn(name = "JOB_ID")
+    private Client client;
+
     private String clientName;
     private String clientLastName;
     private String dateOfJob;
@@ -45,8 +49,5 @@ public class Job {
     )
     private List<Employee> employees = new ArrayList<>();
 
-    @ManyToOne
-//    @JoinColumn(name = "JOB_ID")
-    private Client client;
 
 }
