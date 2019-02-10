@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.sda.wrozki_chrzestne_v_2.client.Client;
 import pl.sda.wrozki_chrzestne_v_2.employee.Employee;
 
 import javax.persistence.*;
@@ -43,5 +44,9 @@ public class Job {
             inverseJoinColumns = {@JoinColumn(name = "EMPLOYEES_ID")}
     )
     private List<Employee> employees = new ArrayList<>();
+
+    @ManyToOne
+//    @JoinColumn(name = "JOB_ID")
+    private Client client;
 
 }

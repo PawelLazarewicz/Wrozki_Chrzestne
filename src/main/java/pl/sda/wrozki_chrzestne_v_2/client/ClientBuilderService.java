@@ -2,13 +2,20 @@ package pl.sda.wrozki_chrzestne_v_2.client;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.sda.wrozki_chrzestne_v_2.dto.ClientDto;
+import pl.sda.wrozki_chrzestne_v_2.job.Job;
+import pl.sda.wrozki_chrzestne_v_2.job.JobBuilderService;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ClientBuilderService {
 
     @Autowired
     private ClientRepository clientRepository;
+
+    @Autowired
+    private JobBuilderService jobBuilderService;
 
     public Client entityFromDto(ClientDto clientDto) {
         Client client = new Client();
@@ -21,6 +28,13 @@ public class ClientBuilderService {
         client.setPostalCode(clientDto.getPostalCode());
         client.setTelephoneNumber(clientDto.getTelephoneNumber());
         client.setMail(clientDto.getMail());
+
+        List<Job> jobs = clientDto.getJobs()
+                .stream()
+                .map(e -> jobBuilderService.entityFromDto(e))
+                .collect(Collectors.toList());
+
+        client.setJobs(jobs);
 
         return client;
     }

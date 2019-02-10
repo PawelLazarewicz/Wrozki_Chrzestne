@@ -1,6 +1,8 @@
 package pl.sda.wrozki_chrzestne_v_2.job;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import pl.sda.wrozki_chrzestne_v_2.client.Client;
+import pl.sda.wrozki_chrzestne_v_2.client.ClientBuilderService;
 import pl.sda.wrozki_chrzestne_v_2.dto.EmployeeDto;
 import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
 import pl.sda.wrozki_chrzestne_v_2.employee.Employee;
@@ -17,6 +19,9 @@ public class JobBuilderService {
 
     @Autowired
     private EmployeeBuilderService employeeBuilderService;
+
+    @Autowired
+    private ClientBuilderService clientBuilderService;
 
     public Job entityFromDto(JobDto jobDto) {
         Job job = new Job();
@@ -38,6 +43,9 @@ public class JobBuilderService {
                 .collect(Collectors.toList());
 
         job.setEmployees(employees);
+
+        Client client = clientBuilderService.entityFromDto(jobDto.getClient());
+        job.setClient(client);
 
         return job;
     }

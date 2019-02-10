@@ -32,4 +32,5 @@ public class JobDto {
     private int numberOfChildren;
 
     private List<EmployeeDto> employees = new ArrayList<>();
+    private ClientDto client;
 }
