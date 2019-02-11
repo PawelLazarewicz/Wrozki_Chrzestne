@@ -32,6 +32,6 @@ public class Client {
     private String mail;
 
     @OneToMany
-//    @JoinColumn(name = "CLIENT_ID")
+    @JoinColumn(name = "CLIENT_ID")
     private List<Job> jobs = new ArrayList<>();
 }

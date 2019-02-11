@@ -23,11 +23,11 @@ public class Job {
     private Long id;
 
     @ManyToOne
-//    @JoinColumn(name = "JOB_ID")
+    @JoinColumn(name = "CLIENT_ID")
     private Client client;
 
-    private String clientName;
-    private String clientLastName;
+//    private String clientName;
+//    private String clientLastName;
     private String dateOfJob;
     private String city;
 
