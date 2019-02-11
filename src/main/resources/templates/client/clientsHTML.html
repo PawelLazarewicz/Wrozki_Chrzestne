@@ -46,6 +46,7 @@
                 <th><code>Miasto</code></th>
                 <th><code>Telefon</code></th>
                 <th><code>mail</code></th>
+                <th><code>Zlecenia</code></th>
             </tr>
             <tr th:each="client : ${clientsDtos}">
                 <td><span th:text="${clientStat.count}"></span></td>
@@ -54,7 +55,7 @@
                 <td><span th:text="${client.city}"></span></td>
                 <td><span th:text="${client.telephoneNumber}"></span></td>
                 <td><span th:text="${client.mail}"></span></td>
-                <!--<td><span th:text="${client.employees.size()}"></span></td>-->
+                <td><span th:text="${client.jobs.size()}"></span></td>
                 <td><a th:href="${'/Client/' + client.id + '/show'}"><button type="submit" class="btn btn-info">Wyświetl</button></a></td>
                 <td><a th:href="${'/Client/' + client.id + '/edit'}"><button type="submit" class="btn btn-info">Edytuj</button></a></td>
                 <td><a th:href="${'/Client/' + client.id + '/delete'}"><button type="submit" class="btn btn-danger">Usuń</button></a></td>

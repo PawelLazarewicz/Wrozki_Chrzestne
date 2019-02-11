@@ -50,7 +50,7 @@
         </tr>
             <tr th:each="job : ${jobsDtos}">
                 <td><span th:text="${jobStat.count}"></span></td>
-                <td><span th:text="${job.clientLastName}"></span></td>
+                <td><span th:text="${job.client.lastName}"></span></td>
                 <td><span th:text="${job.dateOfJob}"></span></td>
                 <td><span th:text="${job.city}"></span></td>
                 <td><span th:text="${job.sortOfJob}"></span></td>
@@ -81,7 +81,7 @@
             </tr>
             <tr th:each="job : ${completedJobsDto}">
                 <td><span th:text="${jobStat.count}"></span></td>
-                <td><span th:text="${job.clientLastName}"></span></td>
+                <td><span th:text="${job.client.lastName}"></span></td>
                 <td><span th:text="${job.dateOfJob}"></span></td>
                 <td><span th:text="${job.city}"></span></td>
                 <td><span th:text="${job.sortOfJob}"></span></td>

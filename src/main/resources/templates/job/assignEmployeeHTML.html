@@ -10,7 +10,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title th:text="Job + ' ' +  ${jobForAssign.clientName}"></title>
+    <title th:text="Job + ' ' +  ${jobForAssign.client.lastName}"></title>
 
 </head>
 <body>
@@ -25,7 +25,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Imię :</label>
                     <div class="col-sm-9">
-                        <p class="form-control-static" th:text="${jobForAssign.clientName}"></p>
+                        <p class="form-control-static" th:text="${jobForAssign.client.lastName}"></p>
                     </div>
                 </div>
             </form>

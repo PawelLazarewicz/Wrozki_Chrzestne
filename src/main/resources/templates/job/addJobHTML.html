@@ -21,16 +21,10 @@
 
     <form class="form-horizontal" th:action="@{/Job/listJobs}" th:object="${job}" method="post">
         <div class="form-group">
-            <label class="control-label col-sm-3">Imię klienta:</label>
-            <div class="col-sm-9">
-                <input type="text" class="form-control" th:field="*{clientName}" placeholder="Imię"></label>
-            </div>
-        </div>
-
-        <div class="form-group">
             <label class="control-label col-sm-3">Nazwisko klienta (nazwa Firmy):</label>
             <div class="col-sm-9">
-                <input type="text" class="form-control" th:field="*{clientLastName}" placeholder="Nazwisko (nazwa Firmy)"></label>
+                <input type="text" class="form-control" th:field="*{client.lastName}"
+                       placeholder="Nazwisko (nazwa Firmy)"></label>
             </div>
         </div>
 
