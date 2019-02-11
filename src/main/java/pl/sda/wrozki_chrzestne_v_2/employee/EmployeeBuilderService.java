@@ -66,7 +66,7 @@ public class EmployeeBuilderService {
 
         List<JobDto> jobs = employee.getWorkedJobs()
                 .stream()
-                .map(e -> jobBuilderService.DtoFromEntity(e))
+                .map(e -> jobBuilderService.dtoFromEntity(e))
                 .collect(Collectors.toList());
 
         employeeDto.setWorkedJobs(jobs);

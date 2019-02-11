@@ -40,7 +40,7 @@ public class ClientController {
         List<Client> clients = clientRepository.findAll();
 
         List<ClientDto> clientDtos = clients.stream()
-                .map(e -> clientBuilderService.DtoFromEntity(e))
+                .map(e -> clientBuilderService.dtoFromEntity(e))
                 .collect(Collectors.toList());
 
         model.addAttribute("clientsDtos", clientDtos);
@@ -52,7 +52,7 @@ public class ClientController {
     public String getClient(@PathVariable Long id, Model model) {
         Client selectedClient = clientBuilderService.selectClient(id);
 
-        ClientDto selectedClientDto = clientBuilderService.DtoFromEntity(selectedClient);
+        ClientDto selectedClientDto = clientBuilderService.dtoFromEntity(selectedClient);
 
         model.addAttribute("client", selectedClientDto);
 
@@ -63,7 +63,7 @@ public class ClientController {
     public String deleteClient(@PathVariable Long id, Model model){
         Client selectedClient = clientBuilderService.selectClient(id);
 
-        ClientDto selectedClientDto = clientBuilderService.DtoFromEntity(selectedClient);
+        ClientDto selectedClientDto = clientBuilderService.dtoFromEntity(selectedClient);
 
         clientRepository.delete(selectedClient);
 
@@ -75,7 +75,7 @@ public class ClientController {
     @RequestMapping("Client/{id}/edit")
     public String editClient(@PathVariable Long id, Model model){
         editedClient = clientBuilderService.selectClient(id);
-        ClientDto editedClientDto = clientBuilderService.DtoFromEntity(editedClient);
+        ClientDto editedClientDto = clientBuilderService.dtoFromEntity(editedClient);
 
         model.addAttribute("editedClient", editedClientDto);
 

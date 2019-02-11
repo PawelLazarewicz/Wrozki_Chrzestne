@@ -2,6 +2,7 @@ package pl.sda.wrozki_chrzestne_v_2.client;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.sda.wrozki_chrzestne_v_2.dto.ClientDto;
+import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
 import pl.sda.wrozki_chrzestne_v_2.job.Job;
 import pl.sda.wrozki_chrzestne_v_2.job.JobBuilderService;
 
@@ -39,7 +40,7 @@ public class ClientBuilderService {
         return client;
     }
 
-    public ClientDto DtoFromEntity(Client client) {
+    public ClientDto dtoFromEntity(Client client) {
         ClientDto clientDto = new ClientDto();
 
         clientDto.setId(client.getId());
@@ -50,6 +51,28 @@ public class ClientBuilderService {
         clientDto.setPostalCode(client.getPostalCode());
         clientDto.setTelephoneNumber(client.getTelephoneNumber());
         clientDto.setMail(client.getMail());
+
+        return clientDto;
+    }
+
+    public ClientDto dtoFromEntityWithJobs(Client client) {
+        ClientDto clientDto = new ClientDto();
+
+        clientDto.setId(client.getId());
+        clientDto.setName(client.getName());
+        clientDto.setLastName(client.getLastName());
+        clientDto.setCity(client.getCity());
+        clientDto.setAddress(client.getAddress());
+        clientDto.setPostalCode(client.getPostalCode());
+        clientDto.setTelephoneNumber(client.getTelephoneNumber());
+        clientDto.setMail(client.getMail());
+
+        List<JobDto> jobsDto = client.getJobs()
+                .stream()
+                .map(e -> jobBuilderService.dtoFromEntity(e))
+                .collect(Collectors.toList());
+
+        clientDto.setJobs(jobsDto);
 
         return clientDto;
     }
@@ -71,6 +94,13 @@ public class ClientBuilderService {
         client.setPostalCode(clientDto.getPostalCode());
         client.setTelephoneNumber(clientDto.getTelephoneNumber());
         client.setMail(clientDto.getMail());
+
+        List<Job> jobs = clientDto.getJobs()
+                .stream()
+                .map(e -> jobBuilderService.entityFromDto(e))
+                .collect(Collectors.toList());
+
+        client.setJobs(jobs);
 
         return client;
     }
