@@ -30,7 +30,8 @@
         <div class="form-group">
             <label class="control-label col-sm-3">Nazwisko klienta (nazwa Firmy):</label>
             <div class="col-sm-9">
-                <input type="text" class="form-control" th:field="*{clientLastName}" placeholder="Nazwisko (nazwa Firmy)"></label>
+                <input type="text" class="form-control" th:field="*{clientLastName}"
+                       placeholder="Nazwisko (nazwa Firmy)"></label>
             </div>
         </div>
 
@@ -65,11 +66,11 @@
         <div class="form-group">
             <label class="control-label col-sm-3">Rodzaj implezy:</label>
             <div class="col-sm-9">
-                <select class="form-control" th:name="*{sortOfJob}">
+                <select class="form-control" th:field="*{sortOfJob}">
                     <option th:value="NONE" selected="selected">---- Wybierz ----</option>
-                    <option th:value="NONE">WESELE</option>
-                    <option th:value="NONE">FESTYN</option>
-                    <option th:value="NONE">URODZINY</option>
+                    <option th:each="sort:${sorts}"
+                            th:value="${sort}"
+                            th:text="${sort.name}"></option><!--</th:block>-->
                 </select>
             </div>
         </div>
