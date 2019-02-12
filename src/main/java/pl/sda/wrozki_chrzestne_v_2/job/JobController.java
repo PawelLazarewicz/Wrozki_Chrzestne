@@ -43,6 +43,7 @@ public class JobController {
     @RequestMapping("/Job/addJob")
     public String addJobForm(Model model) {
         model.addAttribute("job", new JobDto());
+        model.addAttribute("sorts", SortOfJobs.values());
         return "job/addJobHTML";
     }
 
