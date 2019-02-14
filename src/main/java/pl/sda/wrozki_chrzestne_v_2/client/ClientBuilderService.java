@@ -104,4 +104,8 @@ public class ClientBuilderService {
 
         return client;
     }
+
+    public Client selectClientFromDto(ClientDto clientDto) {
+        return selectClient(clientDto.getId());
+    }
 }
