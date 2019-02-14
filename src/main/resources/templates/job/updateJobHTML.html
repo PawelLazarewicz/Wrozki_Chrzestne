@@ -20,13 +20,7 @@
 <div class="container">
     <h1 th:text="'Edycja zlecenia'"></h1>
 
-    <form class="form-horizontal" th:action="@{/Job/listJobs}" th:object="${editedJob}" method="post">
-        <!--<div class="form-group">-->
-            <!--<label class="control-label col-sm-2">Imię klienta:</label>-->
-            <!--<div class="col-sm-10">-->
-                <!--<input type="text" class="form-control" th:field="*{clientName}"></label>-->
-            <!--</div>-->
-        <!--</div>-->
+    <form class="form-horizontal" th:action="@{/Job/updateJob}" th:object="${editedJob}" method="post">
 
         <div class="form-group">
             <label class="control-label col-sm-3">Klient (nazwa Firmy):</label>
@@ -66,7 +60,13 @@
         <div class="form-group">
             <label class="control-label col-sm-2">Rodzaj implezy:</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" th:field="*{sortOfJob}"></label>
+                <select class="form-control" th:field="*{sortOfJob}">
+                    <option th:value="NONE" selected="selected">---- Wybierz ----</option>
+                    <option th:each="sort:${sorts}"
+                            th:value="${sort}"
+                            th:text="${sort.name}"></option>
+                </select>
+                <!--<input type="text" class="form-control" th:field="*{sortOfJob}"></label>-->
             </div>
         </div>
 
