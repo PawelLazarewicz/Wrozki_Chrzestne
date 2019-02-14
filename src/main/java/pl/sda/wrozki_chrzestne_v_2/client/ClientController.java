@@ -91,4 +91,13 @@ public class ClientController {
 
         return "redirect:/Client/listClients";
     }
+
+    public List<ClientDto> getAllClients(){
+        List<Client> clients = clientRepository.findAll();
+
+        List<ClientDto> clientDtos = clients.stream()
+                .map(e -> clientBuilderService.dtoFromEntity(e))
+                .collect(Collectors.toList());
+        return clientDtos;
+    }
 }
