@@ -27,4 +27,14 @@ public class ClientDto {
     private String mail;
 
     private List<JobDto> jobs = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return name + " " +
+                lastName + "; " +
+                city + "; " + address + "; " +
+                postalCode + "; " +
+                telephoneNumber + "; " +
+                mail;
+    }
 }
