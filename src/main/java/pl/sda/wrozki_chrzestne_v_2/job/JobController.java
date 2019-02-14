@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import pl.sda.wrozki_chrzestne_v_2.client.Client;
 import pl.sda.wrozki_chrzestne_v_2.client.ClientBuilderService;
+import pl.sda.wrozki_chrzestne_v_2.client.ClientController;
+import pl.sda.wrozki_chrzestne_v_2.dto.ClientDto;
 import pl.sda.wrozki_chrzestne_v_2.dto.EmployeeDto;
 import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
 import pl.sda.wrozki_chrzestne_v_2.employee.Employee;
@@ -33,6 +36,9 @@ public class JobController {
     @Autowired
     private ClientBuilderService clientBuilderService;
 
+    @Autowired
+    private ClientController clientController;
+
     private List<Job> completedJobs = new ArrayList<>();
     private List<Job> uncompletedJobs = new ArrayList<>();
     private Job editedJob;
@@ -44,6 +50,7 @@ public class JobController {
     public String addJobForm(Model model) {
         model.addAttribute("job", new JobDto());
         model.addAttribute("sorts", SortOfJobs.values());
+        model.addAttribute("clients", clientController.getAllClients());
         return "job/addJobHTML";
     }
 
@@ -133,6 +140,8 @@ public class JobController {
         JobDto editedJobDto = jobBuilderService.dtoFromEntityWithEmployees(editedJob);
 
         model.addAttribute("editedJob", editedJobDto);
+        model.addAttribute("sorts", SortOfJobs.values());
+        model.addAttribute("clients", clientController.getAllClients());
 
         return "job/updateJobHTML";
     }
@@ -145,6 +154,23 @@ public class JobController {
         allJobs(model);
 
         return "redirect:/Job/listJobs";
+    }
+
+    @RequestMapping(value = "Job/selectClient/{id}", method = RequestMethod.POST)
+    public String selectClient(@ModelAttribute JobDto jobDto, @ModelAttribute ClientDto clientDto, Model model){
+        Client selectedClient = clientBuilderService.selectClient(clientDto.getId());
+        ClientDto selectedClientDto = clientBuilderService.dtoFromEntity(selectedClient);
+        jobDto.setClient(selectedClientDto);
+
+        Job newJob = jobBuilderService.entityFromDtoWithUpdatingClient(jobDto, selectedClientDto);
+        jobRepository.save(newJob);
+
+        editedJob = jobBuilderService.updateEntityFromDto(jobDto, newJob);
+        jobRepository.save(editedJob);
+
+        allJobs(model);
+
+        return "redirect:/Job/" +  newJob.getId()+ "/edit";
     }
 
     @RequestMapping("Job/{id}/assignEmployee")

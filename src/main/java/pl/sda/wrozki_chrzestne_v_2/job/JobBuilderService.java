@@ -124,4 +124,32 @@ public class JobBuilderService {
 
         return job;
     }
+
+    public Job entityFromDtoWithUpdatingClient(JobDto jobDto, ClientDto clientDto) {
+        Job job = new Job();
+
+        job.setId(null);
+
+        Client client = clientBuilderService.selectClientFromDto(clientDto);
+        job.setClient(client);
+
+//        job.setClientName(jobDto.getClientName());
+//        job.setClientLastName(jobDto.getClientLastName());
+        job.setDateOfJob(jobDto.getDateOfJob());
+        job.setCity(jobDto.getCity());
+        job.setJobsAddress(jobDto.getJobsAddress());
+        job.setJobsPostalCode(jobDto.getJobsPostalCode());
+        job.setSortOfJob(jobDto.getSortOfJob());
+        job.setEstimatedTime(jobDto.getEstimatedTime());
+        job.setNumberOfChildren(jobDto.getNumberOfChildren());
+
+        List<Employee> employees = jobDto.getEmployees()
+                .stream()
+                .map(e->employeeBuilderService.entityFromDto(e))
+                .collect(Collectors.toList());
+
+        job.setEmployees(employees);
+
+        return job;
+    }
 }
