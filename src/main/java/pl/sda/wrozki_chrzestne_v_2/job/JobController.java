@@ -45,6 +45,7 @@ public class JobController {
     private Job selectedJob;
     private List<Employee> assignedEmployeesForActiveJob = new ArrayList<>();
     private List<Employee> assignedEmployeesForCompletedJob = new ArrayList<>();
+    private Client selectedClient;
 
     @RequestMapping("/Job/addJob")
     public String addJobForm(Model model) {
@@ -141,7 +142,18 @@ public class JobController {
 
         model.addAttribute("editedJob", editedJobDto);
         model.addAttribute("sorts", SortOfJobs.values());
-        model.addAttribute("clients", clientController.getAllClients());
+
+        List<ClientDto> clientsToChange = clientController.getAllClients();
+        selectedClient = editedJob.getClient();
+
+        for (ClientDto clientDto : clientsToChange) {
+            if (clientDto.getId().equals(selectedClient.getId())) {
+                clientsToChange.remove(clientDto);
+                break;
+            }
+        }
+
+        model.addAttribute("clients", clientsToChange);
 
         return "job/updateJobHTML";
     }
@@ -158,7 +170,7 @@ public class JobController {
 
     @RequestMapping(value = "Job/selectClient/{id}", method = RequestMethod.POST)
     public String selectClient(@ModelAttribute JobDto jobDto, @ModelAttribute ClientDto clientDto, Model model) {
-        Client selectedClient = clientBuilderService.selectClient(clientDto.getId());
+        selectedClient = clientBuilderService.selectClient(clientDto.getId());
         ClientDto selectedClientDto = clientBuilderService.dtoFromEntity(selectedClient);
         jobDto.setClient(selectedClientDto);
 
@@ -172,7 +184,7 @@ public class JobController {
 
     @RequestMapping(value = "Job/{idJob}/selectClient/{id}", method = RequestMethod.POST)
     public String changeSelectedClient(@PathVariable Long idJob, @ModelAttribute ClientDto clientDto, Model model) {
-        Client selectedClient = clientBuilderService.selectClient(clientDto.getId());
+        selectedClient = clientBuilderService.selectClient(clientDto.getId());
         ClientDto selectedClientDto = clientBuilderService.dtoFromEntity(selectedClient);
 
         editedJob = jobBuilderService.selectJob(idJob);
@@ -180,11 +192,9 @@ public class JobController {
         JobDto editedJobDto = jobBuilderService.dtoFromEntityWithEmployees(editedJob);
         editedJobDto.setClient(selectedClientDto);
 
-        editedJob = jobBuilderService.updateEntityFromDtoWithClient(editedJobDto,editedJob);
+        editedJob = jobBuilderService.updateEntityFromDtoWithClient(editedJobDto, editedJob);
 
         jobRepository.save(editedJob);
-
-//        updateJob(editedJobDto, model);
 
         return "redirect:/Job/" + idJob + "/edit";
     }
@@ -280,7 +290,7 @@ public class JobController {
         return uncompletedJobs;
     }
 
-    public List<Job> getCompletedJobList(){
+    public List<Job> getCompletedJobList() {
         return completedJobs;
     }
 
