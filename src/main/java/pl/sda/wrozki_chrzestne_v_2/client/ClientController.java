@@ -114,10 +114,12 @@ public class ClientController {
     @RequestMapping("Client/{id}/delete")
     public String deleteClient(@PathVariable Long id, Model model) {
         Client selectedClient = clientBuilderService.selectClient(id);
-
         ClientDto selectedClientDto = clientBuilderService.dtoFromEntity(selectedClient);
 
+        if (activeJobsForClientMap.get(selectedClient.getId()).isEmpty()){
         clientRepository.delete(selectedClient);
+        }
+
 
         model.addAttribute("client", selectedClientDto);
 
