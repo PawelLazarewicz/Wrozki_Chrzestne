@@ -20,14 +20,28 @@
 <div class="container">
     <h1 th:text="'Edycja zlecenia'"></h1>
 
-    <form class="form-horizontal" th:action="@{/Job/updateJob}" th:object="${editedJob}" method="post">
-
+    <form class="form-horizontal" th:action="@{/Job/{idJob}/selectClient/{id}(idJob=${editedJob.getId()})}" th:object="${editedJob}" method="post">
         <div class="form-group">
-            <label class="control-label col-sm-3">Klient (nazwa Firmy):</label>
-            <div class="col-sm-7">
-                <input type="text" class="form-control" th:field="*{client.lastName}"></label>
+            <label class="control-label col-sm-2">Klient (nazwa Firmy):</label>
+            <div class="col-sm-8">
+                <!--<input type="text" class="form-control" th:field="*{client.lastName}"></label>-->
+                <select class="form-control" name="id" id="id" required="required">
+                    <option th:value="${editedJob.client.id}"
+                            th:text="${editedJob.client}" selected="selected"></option>
+                    <option th:each="client : ${clients}"
+                            th:value="${client.id}"
+                            th:text="${client}"></option>
+                </select>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn btn-success">Zmień klienta</button>
             </div>
         </div>
+
+    </form>
+
+    <form class="form-horizontal" th:action="@{/Job/updateJob}" th:object="${editedJob}" method="post">
 
         <div class="form-group">
             <label class="control-label col-sm-2">Data zlecenia:</label>
@@ -79,7 +93,8 @@
         <div class="form-group">
             <label class="control-label col-sm-2">Liczba dzieci:</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" th:field="*{numberOfChildren}" placeholder="Liczba dzieci"></label>
+                <input type="text" class="form-control" th:field="*{numberOfChildren}"
+                       placeholder="Liczba dzieci"></label>
             </div>
         </div>
 

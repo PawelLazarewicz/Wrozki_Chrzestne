@@ -170,6 +170,21 @@ public class JobController {
         return "redirect:/Job/" + newJob.getId() + "/edit";
     }
 
+    @RequestMapping(value = "Job/{idJob}/selectClient/{id}", method = RequestMethod.POST)
+    public String changeSelectedClient(@PathVariable Long idJob, @ModelAttribute ClientDto clientDto, Model model) {
+        Client selectedClient = clientBuilderService.selectClient(clientDto.getId());
+        ClientDto selectedClientDto = clientBuilderService.dtoFromEntity(selectedClient);
+
+        editedJob = jobBuilderService.selectJob(idJob);
+        JobDto editedJobDto = jobBuilderService.dtoFromEntityWithEmployees(editedJob);
+
+        editedJobDto.setClient(selectedClientDto);
+
+        updateJob(editedJobDto, model);
+
+        return "redirect:/Job/" + idJob + "/edit";
+    }
+
     @RequestMapping("Job/{id}/assignEmployee")
     public String assignEmployee(@PathVariable Long id, Model model) {
         selectedJob = jobBuilderService.selectJob(id);

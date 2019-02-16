@@ -32,8 +32,6 @@ public class JobBuilderService {
         Client client = clientBuilderService.entityFromDto(jobDto.getClient());
         job.setClient(client);
 
-//        job.setClientName(jobDto.getClientName());
-//        job.setClientLastName(jobDto.getClientLastName());
         job.setDateOfJob(jobDto.getDateOfJob());
         job.setCity(jobDto.getCity());
         job.setJobsAddress(jobDto.getJobsAddress());
@@ -60,8 +58,6 @@ public class JobBuilderService {
         ClientDto clientDto = clientBuilderService.dtoFromEntity(job.getClient());
         jobDto.setClient(clientDto);
 
-//        jobDto.setClientName(job.getClientName());
-//        jobDto.setClientLastName(job.getClientLastName());
         jobDto.setDateOfJob(job.getDateOfJob());
         jobDto.setCity(job.getCity());
         jobDto.setJobsAddress(job.getJobsAddress());
@@ -81,8 +77,6 @@ public class JobBuilderService {
         ClientDto clientDto = clientBuilderService.dtoFromEntity(job.getClient());
         jobDto.setClient(clientDto);
 
-//        jobDto.setClientName(job.getClientName());
-//        jobDto.setClientLastName(job.getClientLastName());
         jobDto.setDateOfJob(job.getDateOfJob());
         jobDto.setCity(job.getCity());
         jobDto.setJobsAddress(job.getJobsAddress());
@@ -111,9 +105,10 @@ public class JobBuilderService {
     public Job updateEntityFromDto(JobDto jobDto, Job job) {
 
         job.setId(job.getId());
-        job.setClient(job.getClient());
-//        job.setClientName(jobDto.getClientName());
-//        job.setClientLastName(jobDto.getClientLastName());
+
+        Client client = clientBuilderService.selectClientFromDto(jobDto.getClient());
+        job.setClient(client);
+
         job.setDateOfJob(jobDto.getDateOfJob());
         job.setCity(jobDto.getCity());
         job.setJobsAddress(jobDto.getJobsAddress());
@@ -133,8 +128,6 @@ public class JobBuilderService {
         Client client = clientBuilderService.selectClientFromDto(clientDto);
         job.setClient(client);
 
-//        job.setClientName(jobDto.getClientName());
-//        job.setClientLastName(jobDto.getClientLastName());
         job.setDateOfJob(jobDto.getDateOfJob());
         job.setCity(jobDto.getCity());
         job.setJobsAddress(jobDto.getJobsAddress());
