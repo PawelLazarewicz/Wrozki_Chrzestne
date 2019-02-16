@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.sda.wrozki_chrzestne_v_2.client.Client;
 import pl.sda.wrozki_chrzestne_v_2.employee.Employee;
 
 import javax.persistence.*;
@@ -21,8 +22,12 @@ public class Job {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String clientName;
-    private String clientLastName;
+    @ManyToOne
+    @JoinColumn(name = "CLIENT_ID")
+    private Client client;
+
+//    private String clientName;
+//    private String clientLastName;
     private String dateOfJob;
     private String city;
 
@@ -43,5 +48,6 @@ public class Job {
             inverseJoinColumns = {@JoinColumn(name = "EMPLOYEES_ID")}
     )
     private List<Employee> employees = new ArrayList<>();
+
 
 }

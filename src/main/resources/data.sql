@@ -4,14 +4,21 @@ INSERT INTO EMPLOYEES (name, last_Name, city, age, telephone_Number, mail) VALUE
 INSERT INTO EMPLOYEES (name, last_Name, city, age, telephone_Number, mail) VALUES ('Edek', 'Ziuk', 'Gdańsk', 40, 444, 'ez@o2.pl');
 INSERT INTO EMPLOYEES (name, last_Name, city, age, telephone_Number, mail) VALUES ('Jim', 'Kowal', 'Warszawa', 18, 555, 'jk@o2.pl');
 
-INSERT INTO JOBS (client_Name, client_Last_Name, city, date_Of_Job, jobs_Address, jobs_Postal_Code, sort_Of_Job, estimated_Time, number_Of_Children) VALUES ('Marian', 'Pol', 'Jelenia Góra', '2019-01-01', 'Długa 11/11', '00-999', 'WESELE', 6, 10);
-INSERT INTO JOBS (client_Name, client_Last_Name, city, date_Of_Job, jobs_Address, jobs_Postal_Code, sort_Of_Job, estimated_Time, number_Of_Children) VALUES ('Marianna', 'Bęc', 'Wrocław', '2019-12-25', 'Krótka 22/22', '99-000', 'URODZINY', 2, 5);
-INSERT INTO JOBS (client_Name, client_Last_Name, city, date_Of_Job, jobs_Address, jobs_Postal_Code, sort_Of_Job, estimated_Time, number_Of_Children) VALUES ('Stefan', 'Duży', 'Poznań', '2019-09-10', 'Długa 33/33', '22-333', 'FESTYN', 1, 3);
-INSERT INTO JOBS (client_Name, client_Last_Name, city, date_Of_Job, jobs_Address, jobs_Postal_Code, sort_Of_Job, estimated_Time, number_Of_Children) VALUES ('Tomasz', 'Mały', 'Warszawa', '2019-06-21', 'Słoneczna 5', '44-444', 'WESELE', 5, 9);
-INSERT INTO JOBS (client_Name, client_Last_Name, city, date_Of_Job, jobs_Address, jobs_Postal_Code, sort_Of_Job, estimated_Time, number_Of_Children) VALUES ('Ariel', 'Nijaki', 'Bydgoszcz', '2019-03-31', 'Miłą 55', '55-555', 'URODZINY', 3, 4);
-
 INSERT INTO CLIENTS (name, last_Name, city, address, postal_Code, telephone_Number, mail) VALUES ('Ben', 'Benek', 'Koziegłowy', 'Cienka 10a/155', '22-222', '999', 'BB@wp.pl');
 INSERT INTO CLIENTS (name, last_Name, city, address, postal_Code, telephone_Number, mail) VALUES ('Zuza', 'Zuz', 'Suchy Las', 'Słoneczna 5', '33-333', '555', 'zz@gmail.pl');
+
+INSERT INTO JOBS (city, date_Of_Job, jobs_Address, jobs_Postal_Code, sort_Of_Job, estimated_Time, number_Of_Children, CLIENT_ID) VALUES ('Jelenia Góra', '2019-01-01', 'Długa 11/11', '00-999', 'WESELE', 6, 10, 1);
+INSERT INTO JOBS (city, date_Of_Job, jobs_Address, jobs_Postal_Code, sort_Of_Job, estimated_Time, number_Of_Children, CLIENT_ID) VALUES ('Wrocław', '2019-12-25', 'Krótka 22/22', '99-000', 'URODZINY', 2, 5, 1);
+INSERT INTO JOBS (city, date_Of_Job, jobs_Address, jobs_Postal_Code, sort_Of_Job, estimated_Time, number_Of_Children, CLIENT_ID) VALUES ('Poznań', '2019-09-10', 'Długa 33/33', '22-333', 'FESTYN', 1, 3, 1);
+INSERT INTO JOBS (city, date_Of_Job, jobs_Address, jobs_Postal_Code, sort_Of_Job, estimated_Time, number_Of_Children, CLIENT_ID) VALUES ('Warszawa', '2019-06-21', 'Słoneczna 5', '44-444', 'WESELE', 5, 9, 2);
+INSERT INTO JOBS (city, date_Of_Job, jobs_Address, jobs_Postal_Code, sort_Of_Job, estimated_Time, number_Of_Children, CLIENT_ID) VALUES ('Bydgoszcz', '2019-03-31', 'Miłą 55', '55-555', 'URODZINY', 3, 4, 2);
+
+
+-- INSERT INTO CLIENTS_JOBS (CLIENT_ID, JOBS_ID) VALUES (1, 1);
+-- INSERT INTO CLIENTS_JOBS (CLIENT_ID, JOBS_ID) VALUES (1, 2);
+-- INSERT INTO CLIENTS_JOBS (CLIENT_ID, JOBS_ID) VALUES (1, 3);
+-- INSERT INTO CLIENTS_JOBS (CLIENT_ID, JOBS_ID) VALUES (2, 4);
+-- INSERT INTO CLIENTS_JOBS (CLIENT_ID, JOBS_ID) VALUES (2, 5);
 
 -- INSERT INTO JOBS_EMPLOYEES (WORKED_JOBS_ID, EMPLOYEES_ID) VALUES (1, 1);
 -- INSERT INTO JOBS_EMPLOYEES (WORKED_JOBS_ID, EMPLOYEES_ID) VALUES (2, 1);

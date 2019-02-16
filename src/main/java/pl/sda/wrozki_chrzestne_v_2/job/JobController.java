@@ -4,6 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import pl.sda.wrozki_chrzestne_v_2.client.Client;
+import pl.sda.wrozki_chrzestne_v_2.client.ClientBuilderService;
+import pl.sda.wrozki_chrzestne_v_2.client.ClientController;
+import pl.sda.wrozki_chrzestne_v_2.dto.ClientDto;
 import pl.sda.wrozki_chrzestne_v_2.dto.EmployeeDto;
 import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
 import pl.sda.wrozki_chrzestne_v_2.employee.Employee;
@@ -29,17 +33,25 @@ public class JobController {
     @Autowired
     private EmployeeController employeeController;
 
+    @Autowired
+    private ClientBuilderService clientBuilderService;
+
+    @Autowired
+    private ClientController clientController;
+
     private List<Job> completedJobs = new ArrayList<>();
     private List<Job> uncompletedJobs = new ArrayList<>();
     private Job editedJob;
     private Job selectedJob;
     private List<Employee> assignedEmployeesForActiveJob = new ArrayList<>();
     private List<Employee> assignedEmployeesForCompletedJob = new ArrayList<>();
+    private Client selectedClient;
 
     @RequestMapping("/Job/addJob")
     public String addJobForm(Model model) {
         model.addAttribute("job", new JobDto());
         model.addAttribute("sorts", SortOfJobs.values());
+        model.addAttribute("clients", clientController.getAllClients());
         return "job/addJobHTML";
     }
 
@@ -129,6 +141,19 @@ public class JobController {
         JobDto editedJobDto = jobBuilderService.dtoFromEntityWithEmployees(editedJob);
 
         model.addAttribute("editedJob", editedJobDto);
+        model.addAttribute("sorts", SortOfJobs.values());
+
+        List<ClientDto> clientsToChange = clientController.getAllClients();
+        selectedClient = editedJob.getClient();
+
+        for (ClientDto clientDto : clientsToChange) {
+            if (clientDto.getId().equals(selectedClient.getId())) {
+                clientsToChange.remove(clientDto);
+                break;
+            }
+        }
+
+        model.addAttribute("clients", clientsToChange);
 
         return "job/updateJobHTML";
     }
@@ -141,6 +166,37 @@ public class JobController {
         allJobs(model);
 
         return "redirect:/Job/listJobs";
+    }
+
+    @RequestMapping(value = "Job/selectClient/{id}", method = RequestMethod.POST)
+    public String selectClient(@ModelAttribute JobDto jobDto, @ModelAttribute ClientDto clientDto, Model model) {
+        selectedClient = clientBuilderService.selectClient(clientDto.getId());
+        ClientDto selectedClientDto = clientBuilderService.dtoFromEntity(selectedClient);
+        jobDto.setClient(selectedClientDto);
+
+        Job newJob = jobBuilderService.entityFromDtoWithUpdatingClient(jobDto, selectedClientDto);
+        jobRepository.save(newJob);
+
+        allJobs(model);
+
+        return "redirect:/Job/" + newJob.getId() + "/edit";
+    }
+
+    @RequestMapping(value = "Job/{idJob}/selectClient/{id}", method = RequestMethod.POST)
+    public String changeSelectedClient(@PathVariable Long idJob, @ModelAttribute ClientDto clientDto, Model model) {
+        selectedClient = clientBuilderService.selectClient(clientDto.getId());
+        ClientDto selectedClientDto = clientBuilderService.dtoFromEntity(selectedClient);
+
+        editedJob = jobBuilderService.selectJob(idJob);
+
+        JobDto editedJobDto = jobBuilderService.dtoFromEntityWithEmployees(editedJob);
+        editedJobDto.setClient(selectedClientDto);
+
+        editedJob = jobBuilderService.updateEntityFromDtoWithClient(editedJobDto, editedJob);
+
+        jobRepository.save(editedJob);
+
+        return "redirect:/Job/" + idJob + "/edit";
     }
 
     @RequestMapping("Job/{id}/assignEmployee")
@@ -187,26 +243,6 @@ public class JobController {
 
         assignedEmployeesForActiveJob.add(employeeToAssign);
 
-//        Employee employeeAbleToAssign = employeeToAssign;
-//        if (assignedEmployeesForActiveJob.isEmpty()) {
-//            assignedEmployeesForActiveJob.add(employeeBuilderService.selectEmployee(employeeDto.getId()));
-//            employeeAbleToAssign = null;
-//        } else {
-//            for (Employee assignedEmployee : assignedEmployeesForActiveJob) {
-//                if (assignedEmployee.getId().equals(employeeToAssign.getId())) {
-//                    employeeAbleToAssign = null;
-//                    break;
-//                } else {
-//                    employeeAbleToAssign = employeeToAssign;
-//                }
-//            }
-//        }
-//
-//
-//        if (employeeAbleToAssign != null) {
-//            assignedEmployeesForActiveJob.add(employeeBuilderService.selectEmployee(employeeDto.getId()));
-//        }
-
         allJobs(model);
 
         return "redirect:/Job/" + selectedJob.getId() + "/assignEmployee";
@@ -252,6 +288,10 @@ public class JobController {
             }
         }
         return uncompletedJobs;
+    }
+
+    public List<Job> getCompletedJobList() {
+        return completedJobs;
     }
 
     public List<Employee> getAssignedEmployeesForActiveJob() {

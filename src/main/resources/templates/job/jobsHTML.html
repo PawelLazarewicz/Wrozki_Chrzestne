@@ -45,17 +45,17 @@
             <th><code>Nazwisko klienta (nazwa Firmy)</code></th>
             <th><code>Data zlecenia</code></th>
             <th><code>Miejsce Zlecenia</code></th>
-            <th><code>Rodzaj implezy</code></th>
+            <th><code>Rodzaj imprezy</code></th>
             <th><code>Liczba pracowników</code></th>
         </tr>
             <tr th:each="job : ${jobsDtos}">
                 <td><span th:text="${jobStat.count}"></span></td>
-                <td><span th:text="${job.clientLastName}"></span></td>
+                <td><span th:text="${job.client.lastName}"></span></td>
                 <td><span th:text="${job.dateOfJob}"></span></td>
                 <td><span th:text="${job.city}"></span></td>
                 <td><span th:text="${job.sortOfJob}"></span></td>
                 <td><span th:text="${job.employees.size()}"></span></td>
-                <td><a th:href="${'/Job/' + job.id + '/show'}"><button type="submit" class="btn btn-info">Wyświetl</button></a></td>
+                <td><a th:href="${'/Job/' + job.id + '/show'}"><button type="submit" class="btn btn-default">Wyświetl</button></a></td>
                 <td><a th:href="${'/Job/' + job.id + '/edit'}"><button type="submit" class="btn btn-info">Edytuj</button></a></td>
                 <td><a th:href="${'/Job/' + job.id + '/assignEmployee'}"><button type="submit" class="btn btn-warning">Przypisz pracownika</button></a></td>
                 <td><a th:href="${'/Job/' + job.id + '/move'}"><button type="submit" class="btn btn-danger">Ukończone</button></a></td>
@@ -81,7 +81,7 @@
             </tr>
             <tr th:each="job : ${completedJobsDto}">
                 <td><span th:text="${jobStat.count}"></span></td>
-                <td><span th:text="${job.clientLastName}"></span></td>
+                <td><span th:text="${job.client.lastName}"></span></td>
                 <td><span th:text="${job.dateOfJob}"></span></td>
                 <td><span th:text="${job.city}"></span></td>
                 <td><span th:text="${job.sortOfJob}"></span></td>

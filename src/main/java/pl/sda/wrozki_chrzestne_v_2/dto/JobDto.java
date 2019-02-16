@@ -19,8 +19,9 @@ public class JobDto {
 
     private Long id;
 
-    private String clientName;
-    private String clientLastName;
+    private ClientDto client;
+//    private String clientName;
+//    private String clientLastName;
     private String dateOfJob;
     private String city;
 
