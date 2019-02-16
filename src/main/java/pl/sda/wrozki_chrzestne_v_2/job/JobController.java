@@ -157,7 +157,7 @@ public class JobController {
     }
 
     @RequestMapping(value = "Job/selectClient/{id}", method = RequestMethod.POST)
-    public String selectClient(@ModelAttribute JobDto jobDto, @ModelAttribute ClientDto clientDto, Model model){
+    public String selectClient(@ModelAttribute JobDto jobDto, @ModelAttribute ClientDto clientDto, Model model) {
         Client selectedClient = clientBuilderService.selectClient(clientDto.getId());
         ClientDto selectedClientDto = clientBuilderService.dtoFromEntity(selectedClient);
         jobDto.setClient(selectedClientDto);
@@ -165,12 +165,9 @@ public class JobController {
         Job newJob = jobBuilderService.entityFromDtoWithUpdatingClient(jobDto, selectedClientDto);
         jobRepository.save(newJob);
 
-        editedJob = jobBuilderService.updateEntityFromDto(jobDto, newJob);
-        jobRepository.save(editedJob);
-
         allJobs(model);
 
-        return "redirect:/Job/" +  newJob.getId()+ "/edit";
+        return "redirect:/Job/" + newJob.getId() + "/edit";
     }
 
     @RequestMapping("Job/{id}/assignEmployee")
@@ -217,26 +214,6 @@ public class JobController {
 
         assignedEmployeesForActiveJob.add(employeeToAssign);
 
-//        Employee employeeAbleToAssign = employeeToAssign;
-//        if (assignedEmployeesForActiveJob.isEmpty()) {
-//            assignedEmployeesForActiveJob.add(employeeBuilderService.selectEmployee(employeeDto.getId()));
-//            employeeAbleToAssign = null;
-//        } else {
-//            for (Employee assignedEmployee : assignedEmployeesForActiveJob) {
-//                if (assignedEmployee.getId().equals(employeeToAssign.getId())) {
-//                    employeeAbleToAssign = null;
-//                    break;
-//                } else {
-//                    employeeAbleToAssign = employeeToAssign;
-//                }
-//            }
-//        }
-//
-//
-//        if (employeeAbleToAssign != null) {
-//            assignedEmployeesForActiveJob.add(employeeBuilderService.selectEmployee(employeeDto.getId()));
-//        }
-
         allJobs(model);
 
         return "redirect:/Job/" + selectedJob.getId() + "/assignEmployee";
@@ -282,6 +259,10 @@ public class JobController {
             }
         }
         return uncompletedJobs;
+    }
+
+    public List<Job> getCompletedJobList(){
+        return completedJobs;
     }
 
     public List<Employee> getAssignedEmployeesForActiveJob() {
