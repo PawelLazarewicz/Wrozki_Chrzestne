@@ -61,7 +61,7 @@
             <label class="control-label col-sm-2">Rodzaj implezy:</label>
             <div class="col-sm-10">
                 <select class="form-control" th:field="*{sortOfJob}">
-                    <option th:value="NONE" selected="selected">---- Wybierz ----</option>
+                    <option th:value="null" selected="selected">---- Wybierz ----</option>
                     <option th:each="sort:${sorts}"
                             th:value="${sort}"
                             th:text="${sort.name}"></option>
