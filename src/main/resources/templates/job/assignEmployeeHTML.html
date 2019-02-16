@@ -54,7 +54,8 @@
     </div>
 
     <form th:action="@{/Job/{id}/assigningEmployee}" th:object="${jobForAssign}" method="post">
-        <select th:field="*{id}">
+        <select name="id" id="id" required="required">
+            <option th:value="NONE" selected="selected" disabled="disabled">---- Wybierz ----</option>
             <option th:each="employee : ${employeesDtoAvailableToAssign}"
                     th:value="${employee.id}"
                     th:text="${employee.name} + '; ' + ${employee.age}"></option>
