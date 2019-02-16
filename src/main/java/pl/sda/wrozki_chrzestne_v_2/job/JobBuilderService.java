@@ -105,6 +105,22 @@ public class JobBuilderService {
     public Job updateEntityFromDto(JobDto jobDto, Job job) {
 
         job.setId(job.getId());
+        job.setClient(job.getClient());
+
+        job.setDateOfJob(jobDto.getDateOfJob());
+        job.setCity(jobDto.getCity());
+        job.setJobsAddress(jobDto.getJobsAddress());
+        job.setJobsPostalCode(jobDto.getJobsPostalCode());
+        job.setSortOfJob(jobDto.getSortOfJob());
+        job.setEstimatedTime(jobDto.getEstimatedTime());
+        job.setNumberOfChildren(jobDto.getNumberOfChildren());
+
+        return job;
+    }
+
+    public Job updateEntityFromDtoWithClient(JobDto jobDto, Job job) {
+
+        job.setId(job.getId());
 
         Client client = clientBuilderService.selectClientFromDto(jobDto.getClient());
         job.setClient(client);

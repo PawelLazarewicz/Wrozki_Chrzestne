@@ -176,11 +176,15 @@ public class JobController {
         ClientDto selectedClientDto = clientBuilderService.dtoFromEntity(selectedClient);
 
         editedJob = jobBuilderService.selectJob(idJob);
-        JobDto editedJobDto = jobBuilderService.dtoFromEntityWithEmployees(editedJob);
 
+        JobDto editedJobDto = jobBuilderService.dtoFromEntityWithEmployees(editedJob);
         editedJobDto.setClient(selectedClientDto);
 
-        updateJob(editedJobDto, model);
+        editedJob = jobBuilderService.updateEntityFromDtoWithClient(editedJobDto,editedJob);
+
+        jobRepository.save(editedJob);
+
+//        updateJob(editedJobDto, model);
 
         return "redirect:/Job/" + idJob + "/edit";
     }
