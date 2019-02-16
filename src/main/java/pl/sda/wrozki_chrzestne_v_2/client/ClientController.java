@@ -40,7 +40,7 @@ public class ClientController {
         List<Client> clients = clientRepository.findAll();
 
         List<ClientDto> clientDtos = clients.stream()
-                .map(e -> clientBuilderService.dtoFromEntity(e))
+                .map(e -> clientBuilderService.dtoFromEntityWithJobs(e))
                 .collect(Collectors.toList());
 
         model.addAttribute("clientsDtos", clientDtos);
