@@ -84,14 +84,13 @@ public class JobController {
 
         model.addAttribute("job", selectedJobDto);
 
-        List<Employee> employeesList = employeeController.getActiveEmployeeList();
-        List<EmployeeDto> employeesDtos = employeesList
-                .stream()
-                .map(e -> employeeBuilderService.dtoFromEntityWithJobs(e))
-                .collect(Collectors.toList());
+        List<EmployeeDto> activeEmployeesDtos = employeeController.getActiveEmployeeList();
+        model.addAttribute("employees", activeEmployeesDtos);
 
-        model.addAttribute("employees", employeesDtos);
-
+//        List<EmployeeDto> employeesDtos = employeesList
+//                .stream()
+//                .map(e -> employeeBuilderService.dtoFromEntityWithJobs(e))
+//                .collect(Collectors.toList());
         return "job/jobHTML";
     }
 
@@ -178,11 +177,11 @@ public class JobController {
 
         model.addAttribute("jobForAssign", selectedJobDto);
 
-        List<Employee> employeesList = employeeController.getActiveEmployeeList();
-        List<EmployeeDto> activeEmployeesDtos = employeesList
-                .stream()
-                .map(e -> employeeBuilderService.dtoFromEntityWithJobs(e))
-                .collect(Collectors.toList());
+        List<EmployeeDto> activeEmployeesDtos = employeeController.getActiveEmployeeList();
+//        List<EmployeeDto> activeEmployeesDtos = employeesList
+//                .stream()
+//                .map(e -> employeeBuilderService.dtoFromEntityWithJobs(e))
+//                .collect(Collectors.toList());
 
         List<EmployeeDto> alreadyAssignedEmployeesDto = selectedJobDto.getEmployees();
         List<EmployeeDto> employeesDtoAvailableToAssign = new ArrayList<>(activeEmployeesDtos);

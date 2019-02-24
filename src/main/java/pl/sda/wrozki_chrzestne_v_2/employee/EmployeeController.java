@@ -22,8 +22,8 @@ public class EmployeeController {
     @Autowired
     private JobController jobController;
 
-    private List<Employee> inactiveEmployeeList = new ArrayList<>();
-    private List<Employee> activeEmployeeList = new ArrayList<>();
+    private List<EmployeeDto> inactiveEmployeeList = new ArrayList<>();
+    private List<EmployeeDto> activeEmployeeList = new ArrayList<>();
     private Employee editedEmployee;
     private Map<Long, List<EmployeeDto>> assignedEmployeesForActiveJobMap = new HashMap<>();
     private Map<Long, List<EmployeeDto>> assignedEmployeesForCompletedJobMap = new HashMap<>();
@@ -46,25 +46,18 @@ public class EmployeeController {
 
     @RequestMapping("/Employee/listEmployees")
     public String allEmployees(Model model) {
-        List<EmployeeDto> employeeDtos = getActiveEmployeeList().stream()
-                .map(e -> employeeBuilderService.dtoFromEntityWithJobs(e))
-                .collect(Collectors.toList());
+        activeEmployeeList = getActiveEmployeeList();
+        model.addAttribute("activeEmployeesDtos", activeEmployeeList);
 
-        model.addAttribute("employeesDtos", employeeDtos);
-
-        List<EmployeeDto> inactiveEmployeeDtos = inactiveEmployeeList.stream()
-                .map(e -> employeeBuilderService.dtoFromEntityWithJobs(e))
-                .collect(Collectors.toList());
-
-        model.addAttribute("inactiveEmployeesDtos", inactiveEmployeeDtos);
+        inactiveEmployeeList = getInactiveEmployeeList();
+        model.addAttribute("inactiveEmployeesDtos", inactiveEmployeeList);
 
         List<Employee> assignedEmployeesForActiveJob = jobController.getAssignedEmployeesForActiveJob();
-
-        for (EmployeeDto employee : employeeDtos) {
+        for (EmployeeDto employee : activeEmployeeList) {
             assignedEmployeesForActiveJobMap.put(employee.getId(), new ArrayList<>());
         }
 
-        for (EmployeeDto employee : employeeDtos) {
+        for (EmployeeDto employee : activeEmployeeList) {
             for (Employee assignedEmployeeForActiveJob : assignedEmployeesForActiveJob) {
                 if (employee.getId().equals(assignedEmployeeForActiveJob.getId())) {
                     for (Map.Entry entry : assignedEmployeesForActiveJobMap.entrySet()) {
@@ -80,12 +73,11 @@ public class EmployeeController {
 
 
         List<Employee> assignedEmployeesForCompletedJob = jobController.getAssignedEmployeesForCompletedJob();
-
-        for (EmployeeDto employee : employeeDtos) {
+        for (EmployeeDto employee : activeEmployeeList) {
             assignedEmployeesForCompletedJobMap.put(employee.getId(), new ArrayList<>());
         }
 
-        for (EmployeeDto employee : employeeDtos) {
+        for (EmployeeDto employee : activeEmployeeList) {
             for (Employee assignedEmployeeForCompletedJob : assignedEmployeesForCompletedJob) {
                 if (employee.getId().equals(assignedEmployeeForCompletedJob.getId())) {
                     for (Map.Entry entry : assignedEmployeesForCompletedJobMap.entrySet()) {
@@ -104,34 +96,36 @@ public class EmployeeController {
 
     @RequestMapping("Employee/{id}/move_Inactive")
     public String moveEmployeeInactive(@PathVariable Long id, Model model) {
-        Employee selectedEmployee = employeeBuilderService.selectEmployee(id);
+        editedEmployee = employeeBuilderService.selectEmployee(id);
+        editedEmployee.setEmployeeStatus(EmployeeStatus.INACTIVE);
+        employeeRepository.save(editedEmployee);
 
-        Employee employeeToMoveInactive = selectedEmployee;
-        for (Employee assignedEmployee : jobController.getAssignedEmployeesForActiveJob()) {
-            if (selectedEmployee.getId().equals(assignedEmployee.getId())) {
-                employeeToMoveInactive = null;
-                break;
-            } else {
-                employeeToMoveInactive = selectedEmployee;
-            }
-        }
+//        Employee employeeToMoveInactive = selectedEmployee;
+//        for (Employee assignedEmployee : jobController.getAssignedEmployeesForActiveJob()) {
+//            if (selectedEmployee.getId().equals(assignedEmployee.getId())) {
+//                employeeToMoveInactive = null;
+//                break;
+//            } else {
+//                employeeToMoveInactive = selectedEmployee;
+//            }
+//        }
+//
+//        if (employeeToMoveInactive != null) {
+//            if (inactiveEmployeeList.isEmpty()) {
+//                inactiveEmployeeList.add(employeeToMoveInactive);
+//            } else {
+//                for (Employee inactiveEmployee : inactiveEmployeeList) {
+//                    if (inactiveEmployee.getId().equals(employeeToMoveInactive.getId())) {
+//                        break;
+//                    }
+//                }
+//                inactiveEmployeeList.add(employeeToMoveInactive);
+//            }
+//        }
+//
+//        EmployeeDto selectedEmployeeDto = employeeBuilderService.dtoFromEntityWithJobs(selectedEmployee);
 
-        if (employeeToMoveInactive != null) {
-            if (inactiveEmployeeList.isEmpty()) {
-                inactiveEmployeeList.add(employeeToMoveInactive);
-            } else {
-                for (Employee inactiveEmployee : inactiveEmployeeList) {
-                    if (inactiveEmployee.getId().equals(employeeToMoveInactive.getId())) {
-                        break;
-                    }
-                }
-                inactiveEmployeeList.add(employeeToMoveInactive);
-            }
-        }
-
-        EmployeeDto selectedEmployeeDto = employeeBuilderService.dtoFromEntityWithJobs(selectedEmployee);
-
-        model.addAttribute("employee", selectedEmployeeDto);
+//        model.addAttribute("employee", selectedEmployeeDto);
 
         return "redirect:/Employee/listEmployees";
     }
@@ -148,49 +142,52 @@ public class EmployeeController {
 
     @RequestMapping("Employee/{id}/delete")
     public String deleteEmployee(@PathVariable Long id, Model model) {
-        Employee employee = employeeBuilderService.selectEmployee(id);
-        EmployeeDto employeeDto = employeeBuilderService.dtoFromEntityWithJobs(employee);
+        editedEmployee = employeeBuilderService.selectEmployee(id);
+        employeeRepository.delete(editedEmployee);
 
-        for (Employee inactiveEmployee : inactiveEmployeeList) {
-            if (inactiveEmployee.getId().equals(employee.getId())) {
-                inactiveEmployeeList.remove(inactiveEmployee);
-                break;
-            }
-        }
-
-        model.addAttribute("employee", employeeDto);
-
-        Employee employeeToDelete = employee;
-        for (Employee assignedEmployee : jobController.getAssignedEmployeesForActiveJob()) {
-            if (employee.getId().equals(assignedEmployee.getId())) {
-                employeeToDelete = null;
-                break;
-            } else {
-                employeeToDelete = employee;
-            }
-        }
-
-        if (employeeToDelete != null) {
-            employeeRepository.delete(employeeToDelete);
-        }
+        //EmployeeDto employeeDto = employeeBuilderService.dtoFromEntityWithJobs(employee);
+//        for (Employee inactiveEmployee : inactiveEmployeeList) {
+//            if (inactiveEmployee.getId().equals(employee.getId())) {
+//                inactiveEmployeeList.remove(inactiveEmployee);
+//                break;
+//            }
+//        }
+//
+//        model.addAttribute("employee", employeeDto);
+//
+//        Employee employeeToDelete = employee;
+//        for (Employee assignedEmployee : jobController.getAssignedEmployeesForActiveJob()) {
+//            if (employee.getId().equals(assignedEmployee.getId())) {
+//                employeeToDelete = null;
+//                break;
+//            } else {
+//                employeeToDelete = employee;
+//            }
+//        }
+//
+//        if (employeeToDelete != null) {
+//            employeeRepository.delete(employeeToDelete);
+//        }
 
         return "redirect:/Employee/listEmployees";
     }
 
     @RequestMapping("Employee/{id}/move_Active")
     public String moveEmployeeActive(@PathVariable Long id, Model model) {
-        Employee selectedEmployee = employeeBuilderService.selectEmployee(id);
+        editedEmployee = employeeBuilderService.selectEmployee(id);
+        editedEmployee.setEmployeeStatus(EmployeeStatus.ACTIVE);
+        employeeRepository.save(editedEmployee);
 
-        for (Employee inactiveEmployee : inactiveEmployeeList) {
-            if (inactiveEmployee.getId().equals(selectedEmployee.getId())) {
-                inactiveEmployeeList.remove(inactiveEmployee);
-                break;
-            }
-        }
-
-        EmployeeDto selectedEmployeeDto = employeeBuilderService.dtoFromEntityWithJobs(selectedEmployee);
-
-        model.addAttribute("employee", selectedEmployeeDto);
+//        for (Employee inactiveEmployee : inactiveEmployeeList) {
+//            if (inactiveEmployee.getId().equals(selectedEmployee.getId())) {
+//                inactiveEmployeeList.remove(inactiveEmployee);
+//                break;
+//            }
+//        }
+//
+//        EmployeeDto selectedEmployeeDto = employeeBuilderService.dtoFromEntityWithJobs(selectedEmployee);
+//
+//        model.addAttribute("employee", selectedEmployeeDto);
 
         return "redirect:/Employee/listEmployees";
     }
@@ -215,17 +212,31 @@ public class EmployeeController {
         return "redirect:/Employee/listEmployees";
     }
 
-    public List<Employee> getActiveEmployeeList() {
-        activeEmployeeList = employeeRepository.findAll();
+    public List<EmployeeDto> getActiveEmployeeList() {
+        activeEmployeeList = employeeRepository.findAll()
+                .stream()
+                .filter(employee -> employee.getEmployeeStatus().equals(EmployeeStatus.ACTIVE))
+                .map(e -> employeeBuilderService.dtoFromEntityWithJobs(e))
+                .collect(Collectors.toList());
 
-        for (Employee inactiveEmployee : inactiveEmployeeList) {
-            for (Employee activeEmployee : activeEmployeeList) {
-                if ((activeEmployee.getId()).equals(inactiveEmployee.getId())) {
-                    activeEmployeeList.remove(activeEmployee);
-                    break;
-                }
-            }
-        }
         return activeEmployeeList;
+//        for (Employee inactiveEmployee : inactiveEmployeeList) {
+//            for (Employee activeEmployee : activeEmployeeList) {
+//                if ((activeEmployee.getId()).equals(inactiveEmployee.getId())) {
+//                    activeEmployeeList.remove(activeEmployee);
+//                    break;
+//                }
+//            }
+//        }
+    }
+
+    public List<EmployeeDto> getInactiveEmployeeList() {
+        inactiveEmployeeList = employeeRepository.findAll()
+                .stream()
+                .filter(employee -> employee.getEmployeeStatus().equals(EmployeeStatus.INACTIVE))
+                .map(e -> employeeBuilderService.dtoFromEntityWithJobs(e))
+                .collect(Collectors.toList());
+
+        return inactiveEmployeeList;
     }
 }

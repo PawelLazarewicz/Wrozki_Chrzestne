@@ -39,7 +39,7 @@
 <div class="container">
     <h1>Aktywni pracownicy</h1>
     <table class="table table-striped table-bordered">
-        <div th:if="${not #lists.isEmpty(employeesDtos)}">
+        <div th:if="${not #lists.isEmpty(activeEmployeesDtos)}">
             <tr>
                 <th><code>Lp.</code></th>
                 <th><code>Imię</code></th>
@@ -48,7 +48,7 @@
                 <th><code>Bieżące Zlecenia</code></th>
                 <th><code>Wykonane Zlecenia</code></th>
             </tr>
-            <tr th:each="employee : ${employeesDtos}">
+            <tr th:each="employee : ${activeEmployeesDtos}">
                 <td><span th:text="${employeeStat.count}"></span></td>
                 <td><span th:text="${employee.name}"></span></td>
                 <td><span th:text="${employee.lastName}"></span></td>
@@ -61,7 +61,7 @@
                 <td><a th:href="${'/Employee/' + employee.id + '/delete'}"><button type="submit" class="btn btn-danger">Usuń</button></a></td>
             </tr>
         </div>
-        <div th:if="${#lists.isEmpty(employeesDtos)}">
+        <div th:if="${#lists.isEmpty(activeEmployeesDtos)}">
             <h5><kbd>Brak aktywnych pracowników</kbd></h5>
         </div>
     </table>
