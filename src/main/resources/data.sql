@@ -1,8 +1,8 @@
-INSERT INTO EMPLOYEES (name, last_Name, city, age, telephone_Number, mail) VALUES ('Anna', 'Nowak', 'Poznań', 30, 792, 'an@gmail.com');
-INSERT INTO EMPLOYEES (name, last_Name, city, age, telephone_Number, mail) VALUES ('Zofia', 'Kowalska', 'Kraków', 50, 111, 'zk@o2.pl');
-INSERT INTO EMPLOYEES (name, last_Name, city, age, telephone_Number, mail) VALUES ('Marian', 'Pach', 'Wrocław', 20, 333, 'mp@wp.pl');
-INSERT INTO EMPLOYEES (name, last_Name, city, age, telephone_Number, mail) VALUES ('Edek', 'Ziuk', 'Gdańsk', 40, 444, 'ez@o2.pl');
-INSERT INTO EMPLOYEES (name, last_Name, city, age, telephone_Number, mail) VALUES ('Jim', 'Kowal', 'Warszawa', 18, 555, 'jk@o2.pl');
+INSERT INTO EMPLOYEES (name, last_Name, city, age, telephone_Number, mail, 	EMPLOYEE_STATUS) VALUES ('Anna', 'Nowak', 'Poznań', 30, 792, 'an@gmail.com', 'ACTIVE');
+INSERT INTO EMPLOYEES (name, last_Name, city, age, telephone_Number, mail, 	EMPLOYEE_STATUS) VALUES ('Zofia', 'Kowalska', 'Kraków', 50, 111, 'zk@o2.pl', 'ACTIVE');
+INSERT INTO EMPLOYEES (name, last_Name, city, age, telephone_Number, mail, 	EMPLOYEE_STATUS) VALUES ('Marian', 'Pach', 'Wrocław', 20, 333, 'mp@wp.pl', 'ACTIVE');
+INSERT INTO EMPLOYEES (name, last_Name, city, age, telephone_Number, mail, 	EMPLOYEE_STATUS) VALUES ('Edek', 'Ziuk', 'Gdańsk', 40, 444, 'ez@o2.pl', 'ACTIVE');
+INSERT INTO EMPLOYEES (name, last_Name, city, age, telephone_Number, mail, 	EMPLOYEE_STATUS) VALUES ('Jim', 'Kowal', 'Warszawa', 18, 555, 'jk@o2.pl', 'ACTIVE');
 
 INSERT INTO CLIENTS (name, last_Name, city, address, postal_Code, telephone_Number, mail) VALUES ('Ben', 'Benek', 'Koziegłowy', 'Cienka 10a/155', '22-222', '999', 'BB@wp.pl');
 INSERT INTO CLIENTS (name, last_Name, city, address, postal_Code, telephone_Number, mail) VALUES ('Zuza', 'Zuz', 'Suchy Las', 'Słoneczna 5', '33-333', '555', 'zz@gmail.pl');
