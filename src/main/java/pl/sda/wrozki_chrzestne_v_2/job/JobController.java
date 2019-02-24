@@ -100,33 +100,9 @@ public class JobController {
         editedJob = jobBuilderService.selectJob(id);
         editedJob.setJobStatus(JobStatus.COMPLETED);
         jobRepository.save(editedJob);
-        JobDto editedJobDto = jobBuilderService.dtoFromEntityWithEmployees(editedJob);
 
-
-//        if (completedJobs.isEmpty()) {
-//            completedJobs.add(selectedJob);
-//        } else {
-//            for (Job completedJob : completedJobs) {
-//                if (completedJob.getId().equals(selectedJob.getId())) {
-//                    break;
-//                }
-//            }
-//            completedJobs.add(selectedJob);
-//        }
-//
-//        List<Employee> assignedEmployeesForJobBeingCompleted = selectedJob.getEmployees();
-//
-//        for (Employee assignedEmployeeForJobBeingCompleted : assignedEmployeesForJobBeingCompleted) {
-//            for (Employee assignedEmployeeForActiveJob : assignedEmployeesForActiveJob) {
-//                if (assignedEmployeeForActiveJob.getId().equals(assignedEmployeeForJobBeingCompleted.getId())) {
-//                    assignedEmployeesForCompletedJob.add(assignedEmployeeForActiveJob);
-//                    break;
-//                }
-//            }
-//        }
-//        assignedEmployeesForActiveJob.removeAll(assignedEmployeesForCompletedJob);
-
-        model.addAttribute("job", editedJobDto);
+//        JobDto editedJobDto = jobBuilderService.dtoFromEntityWithEmployees(editedJob);
+//        model.addAttribute("job", editedJobDto);
 
         return "redirect:/Job/listJobs";
     }
