@@ -37,7 +37,8 @@ public class Job {
     private int estimatedTime;
     private int numberOfChildren;
 
-    private JobStatus jobStatus;
+    @Enumerated(EnumType.STRING)
+    private JobStatus jobStatus = JobStatus.ACTIVE;
 
     @ManyToMany(
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,}
