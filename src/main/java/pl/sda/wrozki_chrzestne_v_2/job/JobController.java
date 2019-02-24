@@ -39,8 +39,8 @@ public class JobController {
     @Autowired
     private ClientController clientController;
 
-    private List<Job> completedJobs = new ArrayList<>();
-    private List<Job> uncompletedJobs = new ArrayList<>();
+    private List<JobDto> completedJobs = new ArrayList<>();
+    private List<JobDto> uncompletedJobs = new ArrayList<>();
     private Job editedJob;
     private Job selectedJob;
     private List<Employee> assignedEmployeesForActiveJob = new ArrayList<>();
@@ -67,21 +67,12 @@ public class JobController {
 
     @RequestMapping("/Job/listJobs")
     public String allJobs(Model model) {
-        List<JobDto> activeJobsDto = jobRepository.findAll()
-                .stream()
-                .filter(job -> job.getJobStatus().equals(JobStatus.ACTIVE))
-                .map(e -> jobBuilderService.dtoFromEntityWithEmployees(e))
-                .collect(Collectors.toList());
 
-        model.addAttribute("activeJobsDto", activeJobsDto);
+        uncompletedJobs = getUncompletedJobList();
+        model.addAttribute("activeJobsDto", uncompletedJobs);
 
-        List<JobDto> completedJobsDto = jobRepository.findAll()
-                .stream()
-                .filter(job -> job.getJobStatus().equals(JobStatus.COMPLETED))
-                .map(e -> jobBuilderService.dtoFromEntityWithEmployees(e))
-                .collect(Collectors.toList());
-
-        model.addAttribute("completedJobsDto", completedJobsDto);
+        completedJobs = getCompletedJobList();
+        model.addAttribute("completedJobsDto", completedJobs);
 
         return "job/jobsHTML";
     }
@@ -110,7 +101,6 @@ public class JobController {
         editedJob.setJobStatus(JobStatus.COMPLETED);
         jobRepository.save(editedJob);
         JobDto editedJobDto = jobBuilderService.dtoFromEntityWithEmployees(editedJob);
-
 
 
 //        if (completedJobs.isEmpty()) {
@@ -282,21 +272,23 @@ public class JobController {
         return "redirect:/Job/" + selectedJob.getId() + "/assignEmployee";
     }
 
-    public List<Job> getUncompletedJobList() {
-        uncompletedJobs = jobRepository.findAll();
+    public List<JobDto> getUncompletedJobList() {
+        uncompletedJobs = jobRepository.findAll()
+                .stream()
+                .filter(job -> job.getJobStatus().equals(JobStatus.ACTIVE))
+                .map(e -> jobBuilderService.dtoFromEntityWithEmployees(e))
+                .collect(Collectors.toList());
 
-        for (Job completedJob : completedJobs) {
-            for (Job uncompletedJob : uncompletedJobs) {
-                if ((uncompletedJob.getId()).equals(completedJob.getId())) {
-                    uncompletedJobs.remove(uncompletedJob);
-                    break;
-                }
-            }
-        }
         return uncompletedJobs;
     }
 
-    public List<Job> getCompletedJobList() {
+    public List<JobDto> getCompletedJobList() {
+        completedJobs = jobRepository.findAll()
+                .stream()
+                .filter(job -> job.getJobStatus().equals(JobStatus.COMPLETED))
+                .map(e -> jobBuilderService.dtoFromEntityWithEmployees(e))
+                .collect(Collectors.toList());
+
         return completedJobs;
     }
 
