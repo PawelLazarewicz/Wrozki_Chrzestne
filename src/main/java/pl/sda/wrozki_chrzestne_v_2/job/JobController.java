@@ -50,7 +50,7 @@ public class JobController {
     @RequestMapping("/Job/addJob")
     public String addJobForm(Model model) {
         model.addAttribute("job", new JobDto());
-        model.addAttribute("sorts", SortOfJobs.values());
+//        model.addAttribute("sorts", SortOfJobs.values());
         model.addAttribute("clients", clientController.getAllClients());
         return "job/addJobHTML";
     }
@@ -67,15 +67,17 @@ public class JobController {
 
     @RequestMapping("/Job/listJobs")
     public String allJobs(Model model) {
-        List<JobDto> jobsDtos = getUncompletedJobList()
+        List<JobDto> activeJobsDto = jobRepository.findAll()
                 .stream()
+                .filter(job -> job.getJobStatus().equals(JobStatus.ACTIVE))
                 .map(e -> jobBuilderService.dtoFromEntityWithEmployees(e))
                 .collect(Collectors.toList());
 
-        model.addAttribute("jobsDtos", jobsDtos);
+        model.addAttribute("activeJobsDto", activeJobsDto);
 
-        List<JobDto> completedJobsDto = completedJobs
+        List<JobDto> completedJobsDto = jobRepository.findAll()
                 .stream()
+                .filter(job -> job.getJobStatus().equals(JobStatus.COMPLETED))
                 .map(e -> jobBuilderService.dtoFromEntityWithEmployees(e))
                 .collect(Collectors.toList());
 
@@ -104,33 +106,37 @@ public class JobController {
 
     @GetMapping("Job/{id}/move")
     public String moveJobCompleted(@PathVariable Long id, Model model) {
-        Job selectedJob = jobBuilderService.selectJob(id);
-        JobDto selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(selectedJob);
+        editedJob = jobBuilderService.selectJob(id);
+        editedJob.setJobStatus(JobStatus.COMPLETED);
+        jobRepository.save(editedJob);
+        JobDto editedJobDto = jobBuilderService.dtoFromEntityWithEmployees(editedJob);
 
-        if (completedJobs.isEmpty()) {
-            completedJobs.add(selectedJob);
-        } else {
-            for (Job completedJob : completedJobs) {
-                if (completedJob.getId().equals(selectedJob.getId())) {
-                    break;
-                }
-            }
-            completedJobs.add(selectedJob);
-        }
 
-        List<Employee> assignedEmployeesForJobBeingCompleted = selectedJob.getEmployees();
 
-        for (Employee assignedEmployeeForJobBeingCompleted : assignedEmployeesForJobBeingCompleted) {
-            for (Employee assignedEmployeeForActiveJob : assignedEmployeesForActiveJob) {
-                if (assignedEmployeeForActiveJob.getId().equals(assignedEmployeeForJobBeingCompleted.getId())) {
-                    assignedEmployeesForCompletedJob.add(assignedEmployeeForActiveJob);
-                    break;
-                }
-            }
-        }
-        assignedEmployeesForActiveJob.removeAll(assignedEmployeesForCompletedJob);
+//        if (completedJobs.isEmpty()) {
+//            completedJobs.add(selectedJob);
+//        } else {
+//            for (Job completedJob : completedJobs) {
+//                if (completedJob.getId().equals(selectedJob.getId())) {
+//                    break;
+//                }
+//            }
+//            completedJobs.add(selectedJob);
+//        }
+//
+//        List<Employee> assignedEmployeesForJobBeingCompleted = selectedJob.getEmployees();
+//
+//        for (Employee assignedEmployeeForJobBeingCompleted : assignedEmployeesForJobBeingCompleted) {
+//            for (Employee assignedEmployeeForActiveJob : assignedEmployeesForActiveJob) {
+//                if (assignedEmployeeForActiveJob.getId().equals(assignedEmployeeForJobBeingCompleted.getId())) {
+//                    assignedEmployeesForCompletedJob.add(assignedEmployeeForActiveJob);
+//                    break;
+//                }
+//            }
+//        }
+//        assignedEmployeesForActiveJob.removeAll(assignedEmployeesForCompletedJob);
 
-        model.addAttribute("job", selectedJobDto);
+        model.addAttribute("job", editedJobDto);
 
         return "redirect:/Job/listJobs";
     }
