@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.sda.wrozki_chrzestne_v_2.employee.Employee;
+import pl.sda.wrozki_chrzestne_v_2.job.JobStatus;
 import pl.sda.wrozki_chrzestne_v_2.job.SortOfJobs;
 
 import java.util.ArrayList;
@@ -20,8 +21,6 @@ public class JobDto {
     private Long id;
 
     private ClientDto client;
-//    private String clientName;
-//    private String clientLastName;
     private String dateOfJob;
     private String city;
 
@@ -31,6 +30,8 @@ public class JobDto {
     private SortOfJobs sortOfJob;
     private int estimatedTime;
     private int numberOfChildren;
+
+    private JobStatus jobStatus = JobStatus.ACTIVE;
 
     private List<EmployeeDto> employees = new ArrayList<>();
 }

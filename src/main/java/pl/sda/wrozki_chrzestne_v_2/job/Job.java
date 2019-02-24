@@ -26,8 +26,6 @@ public class Job {
     @JoinColumn(name = "CLIENT_ID")
     private Client client;
 
-//    private String clientName;
-//    private String clientLastName;
     private String dateOfJob;
     private String city;
 
@@ -38,6 +36,8 @@ public class Job {
     private SortOfJobs sortOfJob;
     private int estimatedTime;
     private int numberOfChildren;
+
+    private JobStatus jobStatus;
 
     @ManyToMany(
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,}
