@@ -30,6 +30,9 @@ public class Employee {
     private int telephoneNumber;
     private String mail;
 
+    @Enumerated(EnumType.STRING)
+    private EmployeeStatus employeeStatus = EmployeeStatus.ACTIVE;
+
     @ManyToMany(
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,}
             )
