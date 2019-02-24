@@ -28,8 +28,8 @@ public class ClientController {
     private JobController jobController;
 
     private Client editedClient;
-    private Map<Long, List<Job>> activeJobsForClientMap = new HashMap<>();
-    private Map<Long, List<Job>> completedJobsForClientMap = new HashMap<>();
+    private Map<Long, List<JobDto>> activeJobsForClientMap = new HashMap<>();
+    private Map<Long, List<JobDto>> completedJobsForClientMap = new HashMap<>();
 
     @RequestMapping("/Client/addClient")
     public String addClientForm(Model model) {
@@ -57,14 +57,14 @@ public class ClientController {
 
         model.addAttribute("clientsDtos", clientDtos);
 
-        List<Job> uncompletedJobs = jobController.getUncompletedJobList();
+        List<JobDto> uncompletedJobs = jobController.getUncompletedJobList();
 
         for (ClientDto clientDto : clientDtos) {
             activeJobsForClientMap.put(clientDto.getId(), new ArrayList<>());
         }
 
         for (ClientDto clientDto : clientDtos) {
-            for (Job uncompletedJob : uncompletedJobs) {
+            for (JobDto uncompletedJob : uncompletedJobs) {
                 if (clientDto.getId().equals(uncompletedJob.getClient().getId())) {
                     for (Map.Entry entry : activeJobsForClientMap.entrySet()) {
                         if (entry.getKey().equals(clientDto.getId())) {
@@ -77,14 +77,14 @@ public class ClientController {
 
         model.addAttribute("activeJobsForClientMap", activeJobsForClientMap);
 
-        List<Job> completeJobs = jobController.getCompletedJobList();
+        List<JobDto> completeJobs = jobController.getCompletedJobList();
 
         for (ClientDto clientDto : clientDtos) {
                 completedJobsForClientMap.put(clientDto.getId(), new ArrayList<>());
         }
 
         for (ClientDto clientDto : clientDtos) {
-            for (Job completedJob : completeJobs) {
+            for (JobDto completedJob : completeJobs) {
                 if (clientDto.getId().equals(completedJob.getClient().getId())) {
                     for (Map.Entry entry : completedJobsForClientMap.entrySet()) {
                         if (entry.getKey().equals(clientDto.getId())) {
