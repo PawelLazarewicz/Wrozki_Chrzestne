@@ -48,21 +48,17 @@ public class ClientController {
 
     @RequestMapping("/Client/listClients")
     public String allClients(Model model) {
-        List<Client> clients = clientRepository.findAll();
 
-        List<ClientDto> clientDtos = clients.stream()
-                .map(e -> clientBuilderService.dtoFromEntityWithJobs(e))
-                .collect(Collectors.toList());
-
-        model.addAttribute("clientsDtos", clientDtos);
+        List<ClientDto> allClientDtos = getAllClients();
+        model.addAttribute("clientsDtos", allClientDtos);
 
         List<JobDto> uncompletedJobs = jobController.getUncompletedJobList();
 
-        for (ClientDto clientDto : clientDtos) {
+        for (ClientDto clientDto : allClientDtos) {
             activeJobsForClientMap.put(clientDto.getId(), new ArrayList<>());
         }
 
-        for (ClientDto clientDto : clientDtos) {
+        for (ClientDto clientDto : allClientDtos) {
             for (JobDto uncompletedJob : uncompletedJobs) {
                 if (clientDto.getId().equals(uncompletedJob.getClient().getId())) {
                     for (Map.Entry entry : activeJobsForClientMap.entrySet()) {
@@ -78,11 +74,11 @@ public class ClientController {
 
         List<JobDto> completeJobs = jobController.getCompletedJobList();
 
-        for (ClientDto clientDto : clientDtos) {
-                completedJobsForClientMap.put(clientDto.getId(), new ArrayList<>());
+        for (ClientDto clientDto : allClientDtos) {
+            completedJobsForClientMap.put(clientDto.getId(), new ArrayList<>());
         }
 
-        for (ClientDto clientDto : clientDtos) {
+        for (ClientDto clientDto : allClientDtos) {
             for (JobDto completedJob : completeJobs) {
                 if (clientDto.getId().equals(completedJob.getClient().getId())) {
                     for (Map.Entry entry : completedJobsForClientMap.entrySet()) {
@@ -115,8 +111,8 @@ public class ClientController {
         Client selectedClient = clientBuilderService.selectClient(id);
         ClientDto selectedClientDto = clientBuilderService.dtoFromEntity(selectedClient);
 
-        if (activeJobsForClientMap.get(selectedClient.getId()).isEmpty()){
-        clientRepository.delete(selectedClient);
+        if (activeJobsForClientMap.get(selectedClient.getId()).isEmpty()) {
+            clientRepository.delete(selectedClient);
         }
 
 
@@ -147,11 +143,9 @@ public class ClientController {
     }
 
     public List<ClientDto> getAllClients() {
-        List<Client> clients = clientRepository.findAll();
-
-        List<ClientDto> clientDtos = clients.stream()
+        return clientRepository.findAll()
+                .stream()
                 .map(e -> clientBuilderService.dtoFromEntity(e))
                 .collect(Collectors.toList());
-        return clientDtos;
     }
 }
