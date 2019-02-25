@@ -11,7 +11,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title th:text="Employee + ' ' +  ${editedEmployee.name}"></title>
+    <title th:text="Employee + ' ' +  ${employee.name}"></title>
 
 </head>
 <body>
@@ -21,7 +21,7 @@
 <div class="container">
     <h1 th:text="'Edycja pracownika'"></h1>
 
-    <form class="form-horizontal" th:action="@{/Employee/updateEmployee}" th:object="${editedEmployee}" method="post">
+    <form class="form-horizontal" th:action="@{/Employee/updateEmployee}" th:object="${employee}" method="post">
         <div class="form-group">
             <label class="control-label col-sm-2">Imię:</label>
             <div class="col-sm-10">

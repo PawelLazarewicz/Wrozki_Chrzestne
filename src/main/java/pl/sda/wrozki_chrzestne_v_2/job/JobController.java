@@ -100,10 +100,48 @@ public class JobController {
         editedJob.setJobStatus(JobStatus.COMPLETED);
         jobRepository.save(editedJob);
 
+        JobDto jobToMoveCompleted = jobBuilderService.dtoFromEntityWithEmployees(editedJob);
+
+        if (completedJobs.isEmpty()) {
+            completedJobs.add(jobToMoveCompleted);
+        } else {
+            for (JobDto completedJob : completedJobs) {
+                if (completedJob.getId().equals(jobToMoveCompleted.getId())) {
+                    break;
+                }
+            }
+            completedJobs.add(jobToMoveCompleted);
+        }
+
+        List<EmployeeDto> assignedEmployeesForJobBeingCompleted = jobToMoveCompleted.getEmployees();
+
+        for (EmployeeDto assignedEmployeeForJobBeingCompleted : assignedEmployeesForJobBeingCompleted) {
+            for (Employee assignedEmployeeForActiveJob : assignedEmployeesForActiveJob) {
+                if (assignedEmployeeForActiveJob.getId().equals(assignedEmployeeForJobBeingCompleted.getId())) {
+                    assignedEmployeesForCompletedJob.add(assignedEmployeeForActiveJob);
+                    break;
+                }
+            }
+        }
+        assignedEmployeesForActiveJob.removeAll(assignedEmployeesForCompletedJob);
+
+        model.addAttribute("job", jobToMoveCompleted);
+
+        return "redirect:/Job/listJobs";
+
+//        editedJob = jobBuilderService.selectJob(id);
+//        editedJob.setJobStatus(JobStatus.COMPLETED);
+//        jobRepository.save(editedJob);
+//
+//        assignedEmployeesForCompletedJob.addAll(editedJob.getEmployees());
+//
+//        assignedEmployeesForActiveJob.removeAll(editedJob.getEmployees());
+//
+//        allJobs(model);
+
 //        JobDto editedJobDto = jobBuilderService.dtoFromEntityWithEmployees(editedJob);
 //        model.addAttribute("job", editedJobDto);
 
-        return "redirect:/Job/listJobs";
     }
 
     @RequestMapping("Job/{id}/edit")
