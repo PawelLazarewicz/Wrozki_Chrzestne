@@ -10,7 +10,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title th:text="Client + ' ' +  ${editedClient.name}">Title</title>
+    <title th:text="Client + ' ' +  ${selectedClient.name}">Title</title>
 
 </head>
 <body>
@@ -20,7 +20,7 @@
 </div><div class="container">
     <h1 th:text="'Edycja klienta'"></h1>
 
-    <form class="form-horizontal" th:action="@{/Client/updateClient}" th:object="${editedClient}" method="post">
+    <form class="form-horizontal" th:action="@{/Client/updateClient}" th:object="${selectedClient}" method="post">
         <div class="form-group">
             <label class="control-label col-sm-2">Imię:</label>
             <div class="col-sm-10">

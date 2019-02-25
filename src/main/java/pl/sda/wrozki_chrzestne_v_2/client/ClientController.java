@@ -6,7 +6,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.sda.wrozki_chrzestne_v_2.dto.ClientDto;
 import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
-import pl.sda.wrozki_chrzestne_v_2.job.Job;
 import pl.sda.wrozki_chrzestne_v_2.job.JobController;
 
 import java.util.ArrayList;
@@ -27,7 +26,7 @@ public class ClientController {
     @Autowired
     private JobController jobController;
 
-    private Client editedClient;
+    private ClientDto selectedClient;
     private Map<Long, List<JobDto>> activeJobsForClientMap = new HashMap<>();
     private Map<Long, List<JobDto>> completedJobsForClientMap = new HashMap<>();
 
@@ -128,18 +127,19 @@ public class ClientController {
 
     @RequestMapping("Client/{id}/edit")
     public String editClient(@PathVariable Long id, Model model) {
-        editedClient = clientBuilderService.selectClient(id);
-        ClientDto editedClientDto = clientBuilderService.dtoFromEntity(editedClient);
+        Client clientToEdit = clientBuilderService.selectClient(id);
+        selectedClient = clientBuilderService.dtoFromEntity(clientToEdit);
 
-        model.addAttribute("editedClient", editedClientDto);
+        model.addAttribute("selectedClient", selectedClient);
 
         return "client/updateClientHTML";
     }
 
     @RequestMapping(value = "/Client/updateClient", method = RequestMethod.POST)
-    public String updateClient(@ModelAttribute ClientDto jobDto, Model model) {
-        editedClient = clientBuilderService.updateEntityFromDto(jobDto, editedClient);
-        clientRepository.save(editedClient);
+    public String updateClient(@ModelAttribute ClientDto clientDto, Model model) {
+        Client editedClientToSave = clientBuilderService.selectClientFromDto(selectedClient);
+        editedClientToSave = clientBuilderService.updateEntityFromDto(clientDto, editedClientToSave);
+        clientRepository.save(editedClientToSave);
 
         allClients(model);
 

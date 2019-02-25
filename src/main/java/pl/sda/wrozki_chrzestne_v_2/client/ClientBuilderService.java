@@ -95,12 +95,14 @@ public class ClientBuilderService {
         client.setTelephoneNumber(clientDto.getTelephoneNumber());
         client.setMail(clientDto.getMail());
 
-        List<Job> jobs = clientDto.getJobs()
-                .stream()
-                .map(e -> jobBuilderService.entityFromDto(e))
-                .collect(Collectors.toList());
+        client.setJobs(client.getJobs());
 
-        client.setJobs(jobs);
+//        List<Job> jobs = clientDto.getJobs()
+//                .stream()
+//                .map(e -> jobBuilderService.entityFromDto(e))
+//                .collect(Collectors.toList());
+//
+//        client.setJobs(jobs);
 
         return client;
     }
