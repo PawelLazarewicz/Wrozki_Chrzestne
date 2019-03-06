@@ -65,6 +65,7 @@ public class JobBuilderService {
         jobDto.setSortOfJob(job.getSortOfJob());
         jobDto.setEstimatedTime(job.getEstimatedTime());
         jobDto.setNumberOfChildren(job.getNumberOfChildren());
+        jobDto.setJobStatus(job.getJobStatus());
 
         return jobDto;
     }

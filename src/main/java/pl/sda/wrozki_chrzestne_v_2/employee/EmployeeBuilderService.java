@@ -70,6 +70,7 @@ public class EmployeeBuilderService {
                 .collect(Collectors.toList());
 
         employeeDto.setWorkedJobs(jobs);
+        employeeDto.setAssignedForJobs(employee.isAssignedForJobs());
 
         return employeeDto;
     }
