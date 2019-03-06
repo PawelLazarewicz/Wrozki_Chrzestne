@@ -26,6 +26,7 @@ public class EmployeeDto {
     private String mail;
 
     private EmployeeStatus employeeStatus = EmployeeStatus.ACTIVE;
+    private boolean assignedForJobs = false;
 
     private List<JobDto> workedJobs = new ArrayList<>();
 }

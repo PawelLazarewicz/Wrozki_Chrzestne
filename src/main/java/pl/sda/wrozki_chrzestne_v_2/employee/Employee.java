@@ -42,4 +42,5 @@ public class Employee {
             joinColumns = {@JoinColumn(name = "EMPLOYEES_ID")}
     )
     private List<Job> workedJobs = new ArrayList<>();
+    private boolean assignedForJobs = false;
 }
