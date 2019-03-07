@@ -98,6 +98,25 @@ public class JobController {
     public String moveJobCompleted(@PathVariable Long id, Model model) {
         editedJob = jobBuilderService.selectJob(id);
         editedJob.setJobStatus(JobStatus.COMPLETED);
+
+        // lambda for set employee assigned for job as FALSE
+
+        editedJob.getEmployees()
+                .stream()
+                .filter(employee -> employee.getWorkedJobs()
+                        .stream()
+                        .allMatch(job -> job.getJobStatus().equals(JobStatus.COMPLETED)))
+                .peek(employee -> employee.setAssignedForJobs(false))
+                .collect(Collectors.toList());
+
+        //.peek(employee -> employee.setAssignedForJobs(false));
+//        editedJob.getEmployees()
+//                .stream()
+//                .forEach(employee -> employee.getWorkedJobs()
+//                        .stream()
+//                        .allMatch(job -> job.getJobStatus().equals(JobStatus.COMPLETED)));
+
+        //.map(employee -> !employee.isAssignedForJobs().).collect(Collectors.toList());
         jobRepository.save(editedJob);
 
         JobDto jobToMoveCompleted = jobBuilderService.dtoFromEntityWithEmployees(editedJob);
@@ -247,6 +266,7 @@ public class JobController {
     @RequestMapping(value = "/Job/{id}/assigningEmployee", method = RequestMethod.POST)
     public String assignEmployeeForJob(@ModelAttribute EmployeeDto employeeDto, Model model) {
         Employee employeeToAssign = employeeBuilderService.selectEmployee(employeeDto.getId());
+        employeeToAssign.setAssignedForJobs(true);
         selectedJob.getEmployees().add(employeeToAssign);
         jobRepository.save(selectedJob);
 
@@ -262,23 +282,34 @@ public class JobController {
         Employee removedEmployee = employeeBuilderService.selectEmployee(idEmployee);
         List<Employee> assignedEmployeesForSelectedJob = selectedJob.getEmployees();
 
-        for (Employee assignedEmployeeJob : assignedEmployeesForSelectedJob) {
-
-            if (removedEmployee.getId().equals(assignedEmployeeJob.getId())) {
-                assignedEmployeesForSelectedJob.remove(assignedEmployeeJob);
-                break;
-            }
-        }
-
-
-        for (Employee assignedEmployee : assignedEmployeesForActiveJob) {
-            if (removedEmployee.getId().equals(assignedEmployee.getId())) {
-                assignedEmployeesForActiveJob.remove(assignedEmployee);
-                break;
-            }
-        }
+//        for (Employee assignedEmployeeJob : assignedEmployeesForSelectedJob) {
+//
+//            if (removedEmployee.getId().equals(assignedEmployeeJob.getId())) {
+//                assignedEmployeesForSelectedJob.remove(assignedEmployeeJob);
+//                break;
+//            }
+//        }
+//
+//
+//        for (Employee assignedEmployee : assignedEmployeesForActiveJob) {
+//            if (removedEmployee.getId().equals(assignedEmployee.getId())) {
+//                assignedEmployeesForActiveJob.remove(assignedEmployee);
+//                break;
+//            }
+//        }
 
         jobRepository.save(selectedJob);
+
+        // lambda for set employee assigned for job as FALSE
+
+        if (getUncompletedJobList()
+                .stream()
+                .filter(jobDto -> jobDto.getEmployees()
+                        .stream()
+                        .anyMatch(employeeDto -> employeeDto.getId().equals(removedEmployee.getId())))
+                .collect(Collectors.toList()).isEmpty()) {
+            removedEmployee.setAssignedForJobs(false);
+        }
 
         allJobs(model);
 
