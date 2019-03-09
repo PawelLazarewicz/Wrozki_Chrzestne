@@ -315,6 +315,13 @@ public class JobController {
             employeeRepository.save(removedEmployee);
         }
 
+        for (Employee employee : assignedEmployeesForActiveJob) {
+            if (employee.getId().equals(removedEmployee.getId())) {
+                assignedEmployeesForActiveJob.remove(employee);
+                break;
+            }
+        }
+
 //        if (getUncompletedJobList()
 //                .stream()
 //                .filter(jobDto -> jobDto.getEmployees()
