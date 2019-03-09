@@ -13,6 +13,7 @@ import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
 import pl.sda.wrozki_chrzestne_v_2.employee.Employee;
 import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeBuilderService;
 import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeController;
+import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,9 @@ public class JobController {
 
     @Autowired
     private JobBuilderService jobBuilderService;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     @Autowired
     private EmployeeBuilderService employeeBuilderService;
@@ -282,13 +286,13 @@ public class JobController {
         Employee removedEmployee = employeeBuilderService.selectEmployee(idEmployee);
         List<Employee> assignedEmployeesForSelectedJob = selectedJob.getEmployees();
 
-//        for (Employee assignedEmployeeJob : assignedEmployeesForSelectedJob) {
-//
-//            if (removedEmployee.getId().equals(assignedEmployeeJob.getId())) {
-//                assignedEmployeesForSelectedJob.remove(assignedEmployeeJob);
-//                break;
-//            }
-//        }
+        for (Employee assignedEmployeeJob : assignedEmployeesForSelectedJob) {
+
+            if (removedEmployee.getId().equals(assignedEmployeeJob.getId())) {
+                assignedEmployeesForSelectedJob.remove(assignedEmployeeJob);
+                break;
+            }
+        }
 //
 //
 //        for (Employee assignedEmployee : assignedEmployeesForActiveJob) {
@@ -302,14 +306,23 @@ public class JobController {
 
         // lambda for set employee assigned for job as FALSE
 
-        if (getUncompletedJobList()
+        if (removedEmployee.getWorkedJobs()
                 .stream()
-                .filter(jobDto -> jobDto.getEmployees()
-                        .stream()
-                        .anyMatch(employeeDto -> employeeDto.getId().equals(removedEmployee.getId())))
-                .collect(Collectors.toList()).isEmpty()) {
+                .filter(job -> job.getJobStatus().equals(JobStatus.ACTIVE))
+                .collect(Collectors.toList())
+                .isEmpty()) {
             removedEmployee.setAssignedForJobs(false);
+            employeeRepository.save(removedEmployee);
         }
+
+//        if (getUncompletedJobList()
+//                .stream()
+//                .filter(jobDto -> jobDto.getEmployees()
+//                        .stream()
+//                        .anyMatch(employeeDto -> employeeDto.getId().equals(removedEmployee.getId())))
+//                .collect(Collectors.toList()).isEmpty()) {
+//            removedEmployee.setAssignedForJobs(false);
+//        }
 
         allJobs(model);
 
