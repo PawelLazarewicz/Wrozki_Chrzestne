@@ -28,8 +28,8 @@ public class EmployeeController {
     private List<EmployeeDto> inactiveEmployeeList = new ArrayList<>();
     private List<EmployeeDto> activeEmployeeList = new ArrayList<>();
     private EmployeeDto selectedEmployee;
-    private Map<Long, Integer> assignedEmployeesForActiveJobMap = new HashMap<>();
-    private Map<Long, Integer> assignedEmployeesForCompletedJobMap = new HashMap<>();
+    private Map<Long, Long> assignedEmployeesForActiveJobMap = new HashMap<>();
+    private Map<Long, Long> assignedEmployeesForCompletedJobMap = new HashMap<>();
 
     @RequestMapping("/Employee/addEmployee")
     public String addEmployeeForm(Model model) {
@@ -56,8 +56,9 @@ public class EmployeeController {
         model.addAttribute("inactiveEmployeesDtos", inactiveEmployeeList);
 
         List<Employee> assignedEmployeesForActiveJob = jobController.getAssignedEmployeesForActiveJob();
+
         for (EmployeeDto employee : activeEmployeeList) {
-            assignedEmployeesForActiveJobMap.put(employee.getId(), 0);
+            assignedEmployeesForActiveJobMap.put(employee.getId(), 0L);
         }
 
         for (EmployeeDto employee : activeEmployeeList) {
@@ -65,11 +66,11 @@ public class EmployeeController {
                 if (employee.getId().equals(assignedEmployeeForActiveJob.getId())) {
                     for (Map.Entry entry : assignedEmployeesForActiveJobMap.entrySet()) {
                         if (entry.getKey().equals(employee.getId())) {
-                            List<JobDto> employeeActiveJobs = employee.getWorkedJobs()
+                            Long employeeActiveJobs = employee.getWorkedJobs()
                                     .stream()
                                     .filter(jobDto -> jobDto.getJobStatus().equals(JobStatus.ACTIVE))
-                                    .collect(Collectors.toList());
-                            assignedEmployeesForActiveJobMap.put(employee.getId(), employeeActiveJobs.size());
+                                    .count();
+                            assignedEmployeesForActiveJobMap.replace(employee.getId(), employeeActiveJobs);
                         }
                     }
                 }
@@ -81,7 +82,7 @@ public class EmployeeController {
 
         List<Employee> assignedEmployeesForCompletedJob = jobController.getAssignedEmployeesForCompletedJob();
         for (EmployeeDto employee : activeEmployeeList) {
-            assignedEmployeesForCompletedJobMap.put(employee.getId(), 0);
+            assignedEmployeesForCompletedJobMap.put(employee.getId(), 0L);
         }
 
         for (EmployeeDto employee : activeEmployeeList) {
@@ -89,11 +90,11 @@ public class EmployeeController {
                 if (employee.getId().equals(assignedEmployeeForCompletedJob.getId())) {
                     for (Map.Entry entry : assignedEmployeesForCompletedJobMap.entrySet()) {
                         if (entry.getKey().equals(employee.getId())) {
-                            List<JobDto> employeeCompletedJobs = employee.getWorkedJobs()
+                            Long employeeCompletedJobs = employee.getWorkedJobs()
                                     .stream()
                                     .filter(jobDto -> jobDto.getJobStatus().equals(JobStatus.COMPLETED))
-                                    .collect(Collectors.toList());
-                            assignedEmployeesForCompletedJobMap.put(employee.getId(), employeeCompletedJobs.size());
+                                    .count();
+                            assignedEmployeesForCompletedJobMap.replace(employee.getId(), employeeCompletedJobs);
                         }
                     }
                 }
