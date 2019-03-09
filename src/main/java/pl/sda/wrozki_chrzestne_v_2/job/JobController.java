@@ -10,10 +10,7 @@ import pl.sda.wrozki_chrzestne_v_2.client.ClientController;
 import pl.sda.wrozki_chrzestne_v_2.dto.ClientDto;
 import pl.sda.wrozki_chrzestne_v_2.dto.EmployeeDto;
 import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
-import pl.sda.wrozki_chrzestne_v_2.employee.Employee;
-import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeBuilderService;
-import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeController;
-import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeRepository;
+import pl.sda.wrozki_chrzestne_v_2.employee.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -274,7 +271,7 @@ public class JobController {
         selectedJob.getEmployees().add(employeeToAssign);
         jobRepository.save(selectedJob);
 
-        assignedEmployeesForActiveJob.add(employeeToAssign);
+        //assignedEmployeesForActiveJob.add(employeeToAssign);
 
         allJobs(model);
 
@@ -286,6 +283,8 @@ public class JobController {
         Employee removedEmployee = employeeBuilderService.selectEmployee(idEmployee);
         List<Employee> assignedEmployeesForSelectedJob = selectedJob.getEmployees();
 
+
+        //removing employee only from selectedJob
         for (Employee assignedEmployeeJob : assignedEmployeesForSelectedJob) {
 
             if (removedEmployee.getId().equals(assignedEmployeeJob.getId())) {
@@ -315,12 +314,12 @@ public class JobController {
             employeeRepository.save(removedEmployee);
         }
 
-        for (Employee employee : assignedEmployeesForActiveJob) {
-            if (employee.getId().equals(removedEmployee.getId())) {
-                assignedEmployeesForActiveJob.remove(employee);
-                break;
-            }
-        }
+//        for (Employee employee : assignedEmployeesForActiveJob) {
+//            if (employee.getId().equals(removedEmployee.getId())) {
+//                assignedEmployeesForActiveJob.remove(employee);
+//                break;
+//            }
+//        }
 
 //        if (getUncompletedJobList()
 //                .stream()
@@ -357,10 +356,16 @@ public class JobController {
     }
 
     public List<Employee> getAssignedEmployeesForActiveJob() {
+        assignedEmployeesForActiveJob = employeeRepository.findAll()
+                .stream()
+                .filter(employee -> employee.getEmployeeStatus().equals(EmployeeStatus.ACTIVE) && employee.isAssignedForJobs())
+                .collect(Collectors.toList());
+
         return assignedEmployeesForActiveJob;
     }
 
     public List<Employee> getAssignedEmployeesForCompletedJob() {
+
         return assignedEmployeesForCompletedJob;
     }
 
