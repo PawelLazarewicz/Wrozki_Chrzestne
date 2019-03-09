@@ -55,6 +55,7 @@ public class EmployeeController {
         inactiveEmployeeList = getInactiveEmployeeList();
         model.addAttribute("inactiveEmployeesDtos", inactiveEmployeeList);
 
+        //LOOPS for displaying counter of employee active jobs
         List<Employee> assignedEmployeesForActiveJob = jobController.getAssignedEmployeesForActiveJob();
 
         for (EmployeeDto employee : activeEmployeeList) {
@@ -79,7 +80,7 @@ public class EmployeeController {
 
         model.addAttribute("assignedEmployeesForActiveJobMap", assignedEmployeesForActiveJobMap);
 
-
+        //LOOPS for displaying counter of employee completed jobs
         List<Employee> assignedEmployeesForCompletedJob = jobController.getAssignedEmployeesForCompletedJob();
         for (EmployeeDto employee : activeEmployeeList) {
             assignedEmployeesForCompletedJobMap.put(employee.getId(), 0L);

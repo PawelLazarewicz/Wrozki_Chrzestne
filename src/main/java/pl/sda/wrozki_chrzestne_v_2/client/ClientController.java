@@ -27,8 +27,8 @@ public class ClientController {
     private JobController jobController;
 
     private ClientDto selectedClient;
-    private Map<Long, List<JobDto>> activeJobsForClientMap = new HashMap<>();
-    private Map<Long, List<JobDto>> completedJobsForClientMap = new HashMap<>();
+    private Map<Long, Long> activeJobsForClientMap = new HashMap<>();
+    private Map<Long, Long> completedJobsForClientMap = new HashMap<>();
 
     @RequestMapping("/Client/addClient")
     public String addClientForm(Model model) {
@@ -55,15 +55,17 @@ public class ClientController {
         List<JobDto> uncompletedJobs = jobController.getUncompletedJobList();
 
         for (ClientDto clientDto : allClientDtos) {
-            activeJobsForClientMap.put(clientDto.getId(), new ArrayList<>());
+            activeJobsForClientMap.put(clientDto.getId(), 0L);
         }
 
         for (ClientDto clientDto : allClientDtos) {
+            Long activeJobsCounter = 0L;
             for (JobDto uncompletedJob : uncompletedJobs) {
                 if (clientDto.getId().equals(uncompletedJob.getClient().getId())) {
                     for (Map.Entry entry : activeJobsForClientMap.entrySet()) {
                         if (entry.getKey().equals(clientDto.getId())) {
-                            activeJobsForClientMap.get(entry.getKey()).add(uncompletedJob);
+                            activeJobsCounter = activeJobsCounter + 1;
+                            activeJobsForClientMap.replace(clientDto.getId(), activeJobsCounter);
                         }
                     }
                 }
@@ -75,15 +77,17 @@ public class ClientController {
         List<JobDto> completeJobs = jobController.getCompletedJobList();
 
         for (ClientDto clientDto : allClientDtos) {
-            completedJobsForClientMap.put(clientDto.getId(), new ArrayList<>());
+            completedJobsForClientMap.put(clientDto.getId(), 0L);
         }
 
         for (ClientDto clientDto : allClientDtos) {
+            Long completedJobsCounter = 0L;
             for (JobDto completedJob : completeJobs) {
                 if (clientDto.getId().equals(completedJob.getClient().getId())) {
                     for (Map.Entry entry : completedJobsForClientMap.entrySet()) {
                         if (entry.getKey().equals(clientDto.getId())) {
-                            completedJobsForClientMap.get(entry.getKey()).add(completedJob);
+                            completedJobsCounter = completedJobsCounter + 1;
+                            completedJobsForClientMap.replace(clientDto.getId(), completedJobsCounter);
                         }
                     }
                 }
@@ -111,7 +115,7 @@ public class ClientController {
         Client selectedClient = clientBuilderService.selectClient(id);
         ClientDto selectedClientDto = clientBuilderService.dtoFromEntity(selectedClient);
 
-        if (activeJobsForClientMap.get(selectedClient.getId()).isEmpty()) {
+        if (activeJobsForClientMap.get(selectedClient.getId()).equals(0)) {
             clientRepository.delete(selectedClient);
         }
 
