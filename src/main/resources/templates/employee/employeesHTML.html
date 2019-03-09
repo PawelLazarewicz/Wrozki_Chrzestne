@@ -53,8 +53,8 @@
                 <td><span th:text="${employee.name}"></span></td>
                 <td><span th:text="${employee.lastName}"></span></td>
                 <td><span th:text="${employee.city}"></span></td>
-                <td><span th:text="${assignedEmployeesForActiveJobMap.get(employee.getId()).size()}"></span></td>
-                <td><span th:text="${assignedEmployeesForCompletedJobMap.get(employee.getId()).size()}"></span></td>
+                <td><span th:text="${assignedEmployeesForActiveJobMap.get(employee.getId()).intValue()}"></span></td>
+                <td><span th:text="${assignedEmployeesForCompletedJobMap.get(employee.getId()).intValue()}"></span></td>
                 <td><a th:href="${'/Employee/' + employee.id + '/show'}"><button type="button" class="btn btn-default">Wyświetl</button></a></td>
                 <td><a th:href="${'/Employee/' + employee.id + '/edit'}"><button type="submit" class="btn btn-info">Edytuj</button></a></td>
                 <td><a th:href="${'/Employee/' + employee.id + '/move_Inactive'}"><button type="submit" class="btn btn-warning">Dezaktywuj</button></a></td>

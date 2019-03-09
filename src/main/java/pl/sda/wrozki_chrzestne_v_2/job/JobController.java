@@ -365,6 +365,12 @@ public class JobController {
     }
 
     public List<Employee> getAssignedEmployeesForCompletedJob() {
+        assignedEmployeesForCompletedJob = employeeRepository.findAll()
+                .stream()
+                .filter(employee -> employee.getWorkedJobs()
+                        .stream()
+                        .anyMatch(job -> job.getJobStatus().equals(JobStatus.COMPLETED)))
+                .collect(Collectors.toList());
 
         return assignedEmployeesForCompletedJob;
     }
