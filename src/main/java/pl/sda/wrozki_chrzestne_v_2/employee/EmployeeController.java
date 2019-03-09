@@ -100,6 +100,10 @@ public class EmployeeController {
     @RequestMapping("Employee/{id}/move_Inactive")
     public String moveEmployeeInactive(@PathVariable Long id, Model model) {
         Employee employeeToMoveInactive = employeeBuilderService.selectEmployee(id);
+        if (!employeeToMoveInactive.isAssignedForJobs()){
+            employeeToMoveInactive.setEmployeeStatus(EmployeeStatus.INACTIVE);
+            employeeRepository.save(employeeToMoveInactive);
+        }
 
 //        List<JobDto> uncompletedJobList = jobController.getUncompletedJobList();
 //
@@ -111,17 +115,19 @@ public class EmployeeController {
 //                .collect(Collectors.toList());
 //
 //        System.out.println(jobsWithAssignedEmployees);
+        System.out.println();
+//        if (jobController.getUncompletedJobList().stream()
+//                .filter(jobDto -> jobDto.getEmployees()
+//                        .stream()
+//                        .anyMatch(employeeDto -> employeeDto.getId().equals(employeeToMoveInactive.getId())))
+//                .collect(Collectors.toList()).isEmpty()) {
+//
+//            employeeToMoveInactive.setEmployeeStatus(EmployeeStatus.INACTIVE);
+//            employeeRepository.save(employeeToMoveInactive);
+//
+//        }
 
-        if (jobController.getUncompletedJobList().stream()
-                .filter(jobDto -> jobDto.getEmployees()
-                        .stream()
-                        .anyMatch(employeeDto -> employeeDto.getId().equals(employeeToMoveInactive.getId())))
-                .collect(Collectors.toList()).isEmpty()) {
-
-            employeeToMoveInactive.setEmployeeStatus(EmployeeStatus.INACTIVE);
-            employeeRepository.save(employeeToMoveInactive);
-
-        }
+        System.out.println();
 //        for (Employee assignedEmployee : jobController.getAssignedEmployeesForActiveJob()) {
 //            if (employeeToMoveInactive.getId().equals(assignedEmployee.getId())) {
 //                employeeToMoveInactive = null;
