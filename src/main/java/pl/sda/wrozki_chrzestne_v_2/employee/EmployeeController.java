@@ -36,6 +36,8 @@ public class EmployeeController {
         this.jobController = jobController;
     }
 
+    private static final String LIST_EMPLOYEES = "redirect:/Employee/listEmployees";
+
     private List<EmployeeDto> inactiveEmployeeList = new ArrayList<>();
     private List<EmployeeDto> activeEmployeeList = new ArrayList<>();
     private EmployeeDto selectedEmployee;
@@ -44,7 +46,7 @@ public class EmployeeController {
 
     @RequestMapping("/Employee/addEmployee")
     public String addEmployeeForm(Model model) {
-        model.addAttribute("employee", new EmployeeDto());
+        model.addAttribute("newEmployee", new EmployeeDto());
         return "employee/addEmployeeHTML";
     }
 
@@ -55,7 +57,7 @@ public class EmployeeController {
 
         allEmployees(model);
 
-        return "redirect:/Employee/listEmployees";
+        return LIST_EMPLOYEES;
     }
 
     @RequestMapping("/Employee/listEmployees")
@@ -125,7 +127,7 @@ public class EmployeeController {
             employeeRepository.save(employeeToMoveInactive);
         }
 
-        return "redirect:/Employee/listEmployees";
+        return LIST_EMPLOYEES;
     }
 
     @RequestMapping("Employee/{id}/show")
@@ -154,7 +156,7 @@ public class EmployeeController {
             employeeRepository.delete(employeeToDelete);
         }
 
-        return "redirect:/Employee/listEmployees";
+        return LIST_EMPLOYEES;
     }
 
     @RequestMapping("Employee/{id}/move_Active")
@@ -163,7 +165,7 @@ public class EmployeeController {
         employeeToMoveActive.setEmployeeStatus(EmployeeStatus.ACTIVE);
         employeeRepository.save(employeeToMoveActive);
 
-        return "redirect:/Employee/listEmployees";
+        return LIST_EMPLOYEES;
     }
 
     @RequestMapping("Employee/{id}/edit")
@@ -184,7 +186,7 @@ public class EmployeeController {
 
         allEmployees(model);
 
-        return "redirect:/Employee/listEmployees";
+        return LIST_EMPLOYEES;
     }
 
     public List<EmployeeDto> getActiveEmployeeList() {

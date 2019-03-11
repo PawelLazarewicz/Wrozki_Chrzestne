@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 @Controller
 public class JobController {
 
+    private static final String JOB_LIST = "redirect:/Job/listJobs";
     private JobRepository jobRepository;
 
     private JobBuilderService jobBuilderService;
@@ -90,7 +91,7 @@ public class JobController {
 
         allJobs(model);
 
-        return "redirect:/Job/listJobs";
+        return JOB_LIST;
     }
 
     @RequestMapping("/Job/listJobs")
@@ -174,7 +175,7 @@ public class JobController {
 
         model.addAttribute("job", jobToMoveCompleted);
 
-        return "redirect:/Job/listJobs";
+        return JOB_LIST;
 
     }
 
@@ -209,7 +210,7 @@ public class JobController {
 
         allJobs(model);
 
-        return "redirect:/Job/listJobs";
+        return JOB_LIST;
     }
 
     @RequestMapping(value = "Job/selectClient/{id}", method = RequestMethod.POST)

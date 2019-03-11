@@ -20,7 +20,7 @@
 <div class="container">
     <h1 th:text="'Dodaj nowego pracownika'"></h1>
 
-        <form class="form-horizontal" th:action="@{/Employee/listEmployees}" th:object="${employee}" method="post">
+        <form class="form-horizontal" th:action="@{/Employee/listEmployees}" th:object="${newEmployee}" method="post">
             <div class="form-group">
                 <label class="control-label col-sm-2">Imię:</label>
                 <div class="col-sm-10">

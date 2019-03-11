@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @Controller
 public class ClientController {
 
+    private static final String CLIENT_LIST = "redirect:/Client/listClients";
     private ClientRepository clientRepository;
 
     private ClientBuilderService clientBuilderService;
@@ -44,7 +45,7 @@ public class ClientController {
 
     @RequestMapping("/Client/addClient")
     public String addClientForm(Model model) {
-        model.addAttribute("client", new ClientDto());
+        model.addAttribute("newClient", new ClientDto());
         return "client/addClientHTML";
     }
 
@@ -55,7 +56,7 @@ public class ClientController {
 
         allClients(model);
 
-        return "redirect:/Client/listClients";
+        return CLIENT_LIST;
     }
 
     @RequestMapping("/Client/listClients")
@@ -114,9 +115,9 @@ public class ClientController {
     @RequestMapping("Client/{id}/show")
     public String getClient(@PathVariable Long id, Model model) {
         Client selectedClient = clientBuilderService.selectClient(id);
-        ClientDto selectedClientDto = clientBuilderService.dtoFromEntity(selectedClient);
+        ClientDto clientToselectDto = clientBuilderService.dtoFromEntity(selectedClient);
 
-        model.addAttribute("client", selectedClientDto);
+        model.addAttribute("client", clientToselectDto);
 
         return "client/clientHTML";
     }
@@ -134,7 +135,7 @@ public class ClientController {
 
         model.addAttribute("client", selectedClientDto);
 
-        return "redirect:/Client/listClients";
+        return CLIENT_LIST;
     }
 
     @RequestMapping("Client/{id}/edit")
@@ -155,7 +156,7 @@ public class ClientController {
 
         allClients(model);
 
-        return "redirect:/Client/listClients";
+        return CLIENT_LIST;
     }
 
     public List<ClientDto> getAllClients() {
