@@ -5,7 +5,10 @@ import pl.sda.wrozki_chrzestne_v_2.dto.EmployeeDto;
 import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
 import pl.sda.wrozki_chrzestne_v_2.job.Job;
 import pl.sda.wrozki_chrzestne_v_2.job.JobBuilderService;
+import pl.sda.wrozki_chrzestne_v_2.job.JobController;
+import pl.sda.wrozki_chrzestne_v_2.job.JobStatus;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,6 +20,9 @@ public class EmployeeBuilderService {
 
     @Autowired
     private JobBuilderService jobBuilderService;
+
+    @Autowired
+    private JobController jobController;
 
     public Employee entityFromDto(EmployeeDto employeeDto) {
         Employee employee = new Employee();
@@ -64,12 +70,20 @@ public class EmployeeBuilderService {
         employeeDto.setTelephoneNumber(employee.getTelephoneNumber());
         employeeDto.setMail(employee.getMail());
 
-        List<JobDto> jobs = employee.getWorkedJobs()
+        List<JobDto> activeJobs = employee.getWorkedJobs()
                 .stream()
+                .filter(job -> job.getJobStatus().equals(JobStatus.ACTIVE))
                 .map(e -> jobBuilderService.dtoFromEntity(e))
                 .collect(Collectors.toList());
 
-        employeeDto.setWorkedJobs(jobs);
+        List<JobDto> completedJobs = jobController.getCompletedJobList();
+
+        List<JobDto> allJobs = new ArrayList<>();
+        allJobs.addAll(activeJobs);
+        allJobs.addAll(completedJobs);
+
+        employeeDto.setWorkedJobs(allJobs);
+        employeeDto.setAssignedForJobs(employee.isAssignedForJobs());
 
         return employeeDto;
     }
