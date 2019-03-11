@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.sda.wrozki_chrzestne_v_2.dto.ClientDto;
 import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
 import pl.sda.wrozki_chrzestne_v_2.job.JobController;
+import pl.sda.wrozki_chrzestne_v_2.job.JobStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -112,10 +113,13 @@ public class ClientController {
 
     @RequestMapping("Client/{id}/delete")
     public String deleteClient(@PathVariable Long id, Model model) {
+        //TODO: delete not working
         Client selectedClient = clientBuilderService.selectClient(id);
         ClientDto selectedClientDto = clientBuilderService.dtoFromEntity(selectedClient);
 
-        if (activeJobsForClientMap.get(selectedClient.getId()).equals(0)) {
+        if (selectedClient.getJobs()
+                .stream()
+                .anyMatch(job -> !job.getJobStatus().equals(JobStatus.ACTIVE))) {
             clientRepository.delete(selectedClient);
         }
 
