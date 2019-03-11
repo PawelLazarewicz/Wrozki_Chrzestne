@@ -10,7 +10,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title th:text="Job + ' ' +  ${selectedJob.client.lastName}"></title>
+    <title th:text="Job + ' ' +  ${selectedJobDto.client.lastName}"></title>
 
 </head>
 <body>
@@ -20,14 +20,14 @@
 <div class="container">
     <h1 th:text="'Edycja zlecenia'"></h1>
 
-    <form class="form-horizontal" th:action="@{/Job/{idJob}/selectClient/{id}(idJob=${selectedJob.getId()})}" th:object="${selectedJob}" method="post">
+    <form class="form-horizontal" th:action="@{/Job/{idJob}/selectClient/{id}(idJob=${selectedJobDto.getId()})}" th:object="${selectedJob}" method="post">
         <div class="form-group">
             <label class="control-label col-sm-2">Klient (nazwa Firmy):</label>
             <div class="col-sm-8">
                 <!--<input type="text" class="form-control" th:field="*{client.lastName}"></label>-->
                 <select class="form-control" name="id" id="id" required="required">
-                    <option th:value="${selectedJob.client.id}"
-                            th:text="${selectedJob.client}" selected="selected"></option>
+                    <option th:value="${selectedJobDto.client.id}"
+                            th:text="${selectedJobDto.client}" selected="selected"></option>
                     <option th:each="client : ${clients}"
                             th:value="${client.id}"
                             th:text="${client}"></option>
@@ -41,7 +41,7 @@
 
     </form>
 
-    <form class="form-horizontal" th:action="@{/Job/updateJob}" th:object="${selectedJob}" method="post">
+    <form class="form-horizontal" th:action="@{/Job/updateJob}" th:object="${selectedJobDto}" method="post">
 
         <div class="form-group">
             <label class="control-label col-sm-2">Data zlecenia:</label>

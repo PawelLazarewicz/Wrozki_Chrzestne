@@ -117,7 +117,7 @@ public class ClientController {
 
         if (selectedClient.getJobs()
                 .stream()
-                .anyMatch(job -> !job.getJobStatus().equals(JobStatus.ACTIVE))) {
+                .noneMatch(job -> job.getJobStatus().equals(JobStatus.ACTIVE))) {
             clientRepository.delete(selectedClient);
         }
 

@@ -56,14 +56,14 @@ public class EmployeeController {
         model.addAttribute("inactiveEmployeesDtos", inactiveEmployeeList);
 
         //LOOPS for displaying counter of employee active jobs
-        List<Employee> assignedEmployeesForActiveJob = jobController.getAssignedEmployeesForActiveJob();
+        List<EmployeeDto> assignedEmployeesForActiveJob = jobController.getAssignedEmployeesForActiveJob();
 
         for (EmployeeDto employee : activeEmployeeList) {
             assignedEmployeesForActiveJobMap.put(employee.getId(), 0L);
         }
 
         for (EmployeeDto employee : activeEmployeeList) {
-            for (Employee assignedEmployeeForActiveJob : assignedEmployeesForActiveJob) {
+            for (EmployeeDto assignedEmployeeForActiveJob : assignedEmployeesForActiveJob) {
                 if (employee.getId().equals(assignedEmployeeForActiveJob.getId())) {
                     for (Map.Entry entry : assignedEmployeesForActiveJobMap.entrySet()) {
                         if (entry.getKey().equals(employee.getId())) {
@@ -81,13 +81,13 @@ public class EmployeeController {
         model.addAttribute("assignedEmployeesForActiveJobMap", assignedEmployeesForActiveJobMap);
 
         //LOOPS for displaying counter of employee completed jobs
-        List<Employee> assignedEmployeesForCompletedJob = jobController.getAssignedEmployeesForCompletedJob();
+        List<EmployeeDto> assignedEmployeesForCompletedJob = jobController.getAssignedEmployeesForCompletedJob();
         for (EmployeeDto employee : activeEmployeeList) {
             assignedEmployeesForCompletedJobMap.put(employee.getId(), 0L);
         }
 
         for (EmployeeDto employee : activeEmployeeList) {
-            for (Employee assignedEmployeeForCompletedJob : assignedEmployeesForCompletedJob) {
+            for (EmployeeDto assignedEmployeeForCompletedJob : assignedEmployeesForCompletedJob) {
                 if (employee.getId().equals(assignedEmployeeForCompletedJob.getId())) {
                     for (Map.Entry entry : assignedEmployeesForCompletedJobMap.entrySet()) {
                         if (entry.getKey().equals(employee.getId())) {
