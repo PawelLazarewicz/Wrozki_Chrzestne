@@ -112,7 +112,6 @@ public class ClientController {
 
     @RequestMapping("Client/{id}/delete")
     public String deleteClient(@PathVariable Long id, Model model) {
-        //TODO: delete not working
         Client selectedClient = clientBuilderService.selectClient(id);
         selectedClientDto = clientBuilderService.dtoFromEntity(selectedClient);
 

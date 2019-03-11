@@ -14,6 +14,7 @@ import pl.sda.wrozki_chrzestne_v_2.employee.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -81,7 +82,19 @@ public class JobController {
     @RequestMapping("Job/{id}/show")
     public String getJob(@PathVariable Long id, Model model) {
         selectedJob = jobBuilderService.selectJob(id);
-        JobDto selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(selectedJob);
+        JobDto selectedJobDto;
+
+        Optional<JobDto> completedJobToShow = completedJobs
+                .stream()
+                .filter(jobDto -> jobDto.getId().equals(selectedJob.getId()))
+                .findFirst();
+
+        if (completedJobToShow.isPresent()) {
+            selectedJobDto = completedJobToShow.get();
+        } else {
+            selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(selectedJob);
+        }
+
 
         model.addAttribute("job", selectedJobDto);
 
