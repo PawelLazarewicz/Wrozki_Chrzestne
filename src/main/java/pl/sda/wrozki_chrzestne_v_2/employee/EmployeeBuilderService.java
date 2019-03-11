@@ -76,7 +76,12 @@ public class EmployeeBuilderService {
                 .map(e -> jobBuilderService.dtoFromEntity(e))
                 .collect(Collectors.toList());
 
-        List<JobDto> completedJobs = jobController.getCompletedJobList();
+        List<JobDto> completedJobs = jobController.getCompletedJobList()
+                .stream()
+                .filter(jobDto -> jobDto.getEmployees()
+                        .stream()
+                        .anyMatch(employeeDto1 -> employeeDto1.getId().equals(employeeDto.getId())))
+                .collect(Collectors.toList());
 
         List<JobDto> allJobs = new ArrayList<>();
         allJobs.addAll(activeJobs);
