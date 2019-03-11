@@ -43,16 +43,14 @@ public class JobController {
 
     private List<JobDto> completedJobs = new ArrayList<>();
     private List<JobDto> uncompletedJobs = new ArrayList<>();
-    private Job editedJob;
-    private Job selectedJob;
-    private List<Employee> assignedEmployeesForActiveJob = new ArrayList<>();
-    private List<Employee> assignedEmployeesForCompletedJob = new ArrayList<>();
-    private Client selectedClient;
+    private JobDto selectedJobDto;
+    private List<EmployeeDto> assignedEmployeesForActiveJob = new ArrayList<>();
+    private List<EmployeeDto> assignedEmployeesForCompletedJob = new ArrayList<>();
+    private ClientDto selectedClientDto;
 
     @RequestMapping("/Job/addJob")
     public String addJobForm(Model model) {
         model.addAttribute("job", new JobDto());
-//        model.addAttribute("sorts", SortOfJobs.values());
         model.addAttribute("clients", clientController.getAllClients());
         return "job/addJobHTML";
     }
@@ -81,41 +79,36 @@ public class JobController {
 
     @RequestMapping("Job/{id}/show")
     public String getJob(@PathVariable Long id, Model model) {
-        selectedJob = jobBuilderService.selectJob(id);
-        JobDto selectedJobDto;
+        Job job = jobBuilderService.selectJob(id);
+        selectedJobDto = jobBuilderService.dtoFromEntity(job);
 
         Optional<JobDto> completedJobToShow = completedJobs
                 .stream()
-                .filter(jobDto -> jobDto.getId().equals(selectedJob.getId()))
+                .filter(jobDto -> jobDto.getId().equals(selectedJobDto.getId()))
                 .findFirst();
 
         if (completedJobToShow.isPresent()) {
             selectedJobDto = completedJobToShow.get();
         } else {
-            selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(selectedJob);
+            selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(job);
         }
-
 
         model.addAttribute("job", selectedJobDto);
 
         List<EmployeeDto> activeEmployeesDtos = employeeController.getActiveEmployeeList();
         model.addAttribute("employees", activeEmployeesDtos);
 
-//        List<EmployeeDto> employeesDtos = employeesList
-//                .stream()
-//                .map(e -> employeeBuilderService.dtoFromEntityWithJobs(e))
-//                .collect(Collectors.toList());
         return "job/jobHTML";
     }
 
     @GetMapping("Job/{id}/move")
     public String moveJobCompleted(@PathVariable Long id, Model model) {
-        editedJob = jobBuilderService.selectJob(id);
-        editedJob.setJobStatus(JobStatus.COMPLETED);
+        Job jobToMove = jobBuilderService.selectJob(id);
+        selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(jobToMove);
+        selectedJobDto.setJobStatus(JobStatus.COMPLETED);
 
         // lambda for set employee assigned for job as FALSE
-
-        editedJob.getEmployees()
+        selectedJobDto.getEmployees()
                 .stream()
                 .filter(employee -> employee.getWorkedJobs()
                         .stream()
@@ -123,17 +116,10 @@ public class JobController {
                 .peek(employee -> employee.setAssignedForJobs(false))
                 .collect(Collectors.toList());
 
-        //.peek(employee -> employee.setAssignedForJobs(false));
-//        editedJob.getEmployees()
-//                .stream()
-//                .forEach(employee -> employee.getWorkedJobs()
-//                        .stream()
-//                        .allMatch(job -> job.getJobStatus().equals(JobStatus.COMPLETED)));
+        jobToMove = jobBuilderService.updateEntityFromDto(selectedJobDto, jobToMove);
+        jobRepository.save(jobToMove);
 
-        //.map(employee -> !employee.isAssignedForJobs().).collect(Collectors.toList());
-        jobRepository.save(editedJob);
-
-        JobDto jobToMoveCompleted = jobBuilderService.dtoFromEntityWithEmployees(editedJob);
+        JobDto jobToMoveCompleted = jobBuilderService.dtoFromEntityWithEmployees(jobToMove);
 
         if (completedJobs.isEmpty()) {
             completedJobs.add(jobToMoveCompleted);
@@ -149,7 +135,7 @@ public class JobController {
         List<EmployeeDto> assignedEmployeesForJobBeingCompleted = jobToMoveCompleted.getEmployees();
 
         for (EmployeeDto assignedEmployeeForJobBeingCompleted : assignedEmployeesForJobBeingCompleted) {
-            for (Employee assignedEmployeeForActiveJob : assignedEmployeesForActiveJob) {
+            for (EmployeeDto assignedEmployeeForActiveJob : assignedEmployeesForActiveJob) {
                 if (assignedEmployeeForActiveJob.getId().equals(assignedEmployeeForJobBeingCompleted.getId())) {
                     assignedEmployeesForCompletedJob.add(assignedEmployeeForActiveJob);
                     break;
@@ -162,34 +148,21 @@ public class JobController {
 
         return "redirect:/Job/listJobs";
 
-//        editedJob = jobBuilderService.selectJob(id);
-//        editedJob.setJobStatus(JobStatus.COMPLETED);
-//        jobRepository.save(editedJob);
-//
-//        assignedEmployeesForCompletedJob.addAll(editedJob.getEmployees());
-//
-//        assignedEmployeesForActiveJob.removeAll(editedJob.getEmployees());
-//
-//        allJobs(model);
-
-//        JobDto editedJobDto = jobBuilderService.dtoFromEntityWithEmployees(editedJob);
-//        model.addAttribute("job", editedJobDto);
-
     }
 
     @RequestMapping("Job/{id}/edit")
     public String editJob(@PathVariable Long id, Model model) {
-        editedJob = jobBuilderService.selectJob(id);
-        JobDto editedJobDto = jobBuilderService.dtoFromEntityWithEmployees(editedJob);
+        Job job = jobBuilderService.selectJob(id);
+        selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(job);
 
-        model.addAttribute("editedJob", editedJobDto);
+        model.addAttribute("selectedJobDto", selectedJobDto);
         model.addAttribute("sorts", SortOfJobs.values());
 
         List<ClientDto> clientsToChange = clientController.getAllClients();
-        selectedClient = editedJob.getClient();
+        selectedClientDto = selectedJobDto.getClient();
 
         for (ClientDto clientDto : clientsToChange) {
-            if (clientDto.getId().equals(selectedClient.getId())) {
+            if (clientDto.getId().equals(selectedClientDto.getId())) {
                 clientsToChange.remove(clientDto);
                 break;
             }
@@ -202,8 +175,9 @@ public class JobController {
 
     @RequestMapping(value = "/Job/updateJob", method = RequestMethod.POST)
     public String updateJob(@ModelAttribute JobDto jobDto, Model model) {
-        editedJob = jobBuilderService.updateEntityFromDto(jobDto, editedJob);
-        jobRepository.save(editedJob);
+        Job job = jobBuilderService.selectJob(jobDto.getId());
+        job = jobBuilderService.updateEntityFromDto(jobDto, job);
+        jobRepository.save(job);
 
         allJobs(model);
 
@@ -212,8 +186,8 @@ public class JobController {
 
     @RequestMapping(value = "Job/selectClient/{id}", method = RequestMethod.POST)
     public String selectClient(@ModelAttribute JobDto jobDto, @ModelAttribute ClientDto clientDto, Model model) {
-        selectedClient = clientBuilderService.selectClient(clientDto.getId());
-        ClientDto selectedClientDto = clientBuilderService.dtoFromEntity(selectedClient);
+        Client client = clientBuilderService.selectClient(clientDto.getId());
+        selectedClientDto = clientBuilderService.dtoFromEntity(client);
         jobDto.setClient(selectedClientDto);
 
         Job newJob = jobBuilderService.entityFromDtoWithUpdatingClient(jobDto, selectedClientDto);
@@ -226,37 +200,30 @@ public class JobController {
 
     @RequestMapping(value = "Job/{idJob}/selectClient/{id}", method = RequestMethod.POST)
     public String changeSelectedClient(@PathVariable Long idJob, @ModelAttribute ClientDto clientDto, Model model) {
-        selectedClient = clientBuilderService.selectClient(clientDto.getId());
-        ClientDto selectedClientDto = clientBuilderService.dtoFromEntity(selectedClient);
+        Client client = clientBuilderService.selectClient(clientDto.getId());
+        selectedClientDto = clientBuilderService.dtoFromEntity(client);
 
-        editedJob = jobBuilderService.selectJob(idJob);
-
-        JobDto editedJobDto = jobBuilderService.dtoFromEntityWithEmployees(editedJob);
+        Job job = jobBuilderService.selectJob(idJob);
+        JobDto editedJobDto = jobBuilderService.dtoFromEntityWithEmployees(job);
         editedJobDto.setClient(selectedClientDto);
 
-        editedJob = jobBuilderService.updateEntityFromDtoWithClient(editedJobDto, editedJob);
-
-        jobRepository.save(editedJob);
+        job = jobBuilderService.updateEntityFromDtoWithClient(editedJobDto, job);
+        jobRepository.save(job);
 
         return "redirect:/Job/" + idJob + "/edit";
     }
 
     @RequestMapping("Job/{id}/assignEmployee")
     public String assignEmployee(@PathVariable Long id, Model model) {
-        selectedJob = jobBuilderService.selectJob(id);
-        JobDto selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(selectedJob);
+        Job job = jobBuilderService.selectJob(id);
+        selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(job);
 
         model.addAttribute("jobForAssign", selectedJobDto);
 
         List<EmployeeDto> activeEmployeesDtos = employeeController.getActiveEmployeeList();
-//        List<EmployeeDto> activeEmployeesDtos = employeesList
-//                .stream()
-//                .map(e -> employeeBuilderService.dtoFromEntityWithJobs(e))
-//                .collect(Collectors.toList());
 
         List<EmployeeDto> alreadyAssignedEmployeesDto = selectedJobDto.getEmployees();
         List<EmployeeDto> employeesDtoAvailableToAssign = new ArrayList<>(activeEmployeesDtos);
-
 
         for (EmployeeDto employeeAssigned : alreadyAssignedEmployeesDto) {
             if (!employeesDtoAvailableToAssign.isEmpty()) {
@@ -269,7 +236,6 @@ public class JobController {
             } else {
                 employeesDtoAvailableToAssign = new ArrayList<>();
             }
-
         }
 
         model.addAttribute("employeesDtoAvailableToAssign", employeesDtoAvailableToAssign);
@@ -278,26 +244,27 @@ public class JobController {
     }
 
     @RequestMapping(value = "/Job/{id}/assigningEmployee", method = RequestMethod.POST)
-    public String assignEmployeeForJob(@ModelAttribute EmployeeDto employeeDto, Model model) {
+    public String assignEmployeeForJob(@ModelAttribute EmployeeDto employeeDto, @PathVariable Long id, Model model) {
         Employee employeeToAssign = employeeBuilderService.selectEmployee(employeeDto.getId());
         employeeToAssign.setAssignedForJobs(true);
-        selectedJob.getEmployees().add(employeeToAssign);
-        jobRepository.save(selectedJob);
 
-        //assignedEmployeesForActiveJob.add(employeeToAssign);
+        Job job = jobBuilderService.selectJob(id);
+        job.getEmployees().add(employeeToAssign);
+        jobRepository.save(job);
 
         allJobs(model);
 
-        return "redirect:/Job/" + selectedJob.getId() + "/assignEmployee";
+        return "redirect:/Job/" + selectedJobDto.getId() + "/assignEmployee";
     }
 
     @RequestMapping(value = "/Job/{id}/removeAssignedEmployee/{idEmployee}", method = RequestMethod.POST)
-    public String removeAssignedEmployeeFromJob(@PathVariable Long idEmployee, Model model) {
+    public String removeAssignedEmployeeFromJob(@PathVariable Long id, @PathVariable Long idEmployee, Model model) {
         Employee removedEmployee = employeeBuilderService.selectEmployee(idEmployee);
-        List<Employee> assignedEmployeesForSelectedJob = selectedJob.getEmployees();
+        Job job = jobBuilderService.selectJob(id);
 
+        List<Employee> assignedEmployeesForSelectedJob = job.getEmployees();
 
-        //removing employee only from selectedJob
+        //removing employee only from selectedJobDto
         for (Employee assignedEmployeeJob : assignedEmployeesForSelectedJob) {
 
             if (removedEmployee.getId().equals(assignedEmployeeJob.getId())) {
@@ -305,47 +272,22 @@ public class JobController {
                 break;
             }
         }
-//
-//
-//        for (Employee assignedEmployee : assignedEmployeesForActiveJob) {
-//            if (removedEmployee.getId().equals(assignedEmployee.getId())) {
-//                assignedEmployeesForActiveJob.remove(assignedEmployee);
-//                break;
-//            }
-//        }
 
-        jobRepository.save(selectedJob);
+        jobRepository.save(job);
 
         // lambda for set employee assigned for job as FALSE
-
         if (removedEmployee.getWorkedJobs()
                 .stream()
-                .filter(job -> job.getJobStatus().equals(JobStatus.ACTIVE))
+                .filter(job1 -> job1.getJobStatus().equals(JobStatus.ACTIVE))
                 .collect(Collectors.toList())
                 .isEmpty()) {
             removedEmployee.setAssignedForJobs(false);
             employeeRepository.save(removedEmployee);
         }
 
-//        for (Employee employee : assignedEmployeesForActiveJob) {
-//            if (employee.getId().equals(removedEmployee.getId())) {
-//                assignedEmployeesForActiveJob.remove(employee);
-//                break;
-//            }
-//        }
-
-//        if (getUncompletedJobList()
-//                .stream()
-//                .filter(jobDto -> jobDto.getEmployees()
-//                        .stream()
-//                        .anyMatch(employeeDto -> employeeDto.getId().equals(removedEmployee.getId())))
-//                .collect(Collectors.toList()).isEmpty()) {
-//            removedEmployee.setAssignedForJobs(false);
-//        }
-
         allJobs(model);
 
-        return "redirect:/Job/" + selectedJob.getId() + "/assignEmployee";
+        return "redirect:/Job/" + selectedJobDto.getId() + "/assignEmployee";
     }
 
     public List<JobDto> getUncompletedJobList() {
@@ -359,33 +301,28 @@ public class JobController {
     }
 
     public List<JobDto> getCompletedJobList() {
-//        completedJobs = jobRepository.findAll()
-//                .stream()
-//                .filter(job -> job.getJobStatus().equals(JobStatus.COMPLETED))
-//                .map(e -> jobBuilderService.dtoFromEntityWithEmployees(e))
-//                .collect(Collectors.toList());
-
         return completedJobs;
     }
 
-    public List<Employee> getAssignedEmployeesForActiveJob() {
+    public List<EmployeeDto> getAssignedEmployeesForActiveJob() {
         assignedEmployeesForActiveJob = employeeRepository.findAll()
                 .stream()
                 .filter(employee -> employee.getEmployeeStatus().equals(EmployeeStatus.ACTIVE) && employee.isAssignedForJobs())
+                .map(employee -> employeeBuilderService.dtoFromEntityWithJobs(employee))
                 .collect(Collectors.toList());
 
         return assignedEmployeesForActiveJob;
     }
 
-    public List<Employee> getAssignedEmployeesForCompletedJob() {
+    public List<EmployeeDto> getAssignedEmployeesForCompletedJob() {
         assignedEmployeesForCompletedJob = employeeRepository.findAll()
                 .stream()
                 .filter(employee -> employee.getWorkedJobs()
                         .stream()
                         .anyMatch(job -> job.getJobStatus().equals(JobStatus.COMPLETED)))
+                .map(employee -> employeeBuilderService.dtoFromEntityWithJobs(employee))
                 .collect(Collectors.toList());
 
         return assignedEmployeesForCompletedJob;
     }
-
 }

@@ -34,13 +34,14 @@ public class EmployeeBuilderService {
         employee.setAge(employeeDto.getAge());
         employee.setTelephoneNumber(employeeDto.getTelephoneNumber());
         employee.setMail(employeeDto.getMail());
+        employee.setAssignedForJobs(employeeDto.isAssignedForJobs());
 
-        List<Job> jobs = employeeDto.getWorkedJobs()
-                .stream()
-                .map(e -> jobBuilderService.entityFromDto(e))
-                .collect(Collectors.toList());
-
-        employee.setWorkedJobs(jobs);
+//        List<Job> jobs = employeeDto.getWorkedJobs()
+//                .stream()
+//                .map(e -> jobBuilderService.entityFromDto(e))
+//                .collect(Collectors.toList());
+//
+//        employee.setWorkedJobs(jobs);
 
         return employee;
     }
@@ -76,7 +77,12 @@ public class EmployeeBuilderService {
                 .map(e -> jobBuilderService.dtoFromEntity(e))
                 .collect(Collectors.toList());
 
-        List<JobDto> completedJobs = jobController.getCompletedJobList();
+        List<JobDto> completedJobs = jobController.getCompletedJobList()
+                .stream()
+                .filter(jobDto -> jobDto.getEmployees()
+                        .stream()
+                        .anyMatch(employeeDto1 -> employeeDto1.getId().equals(employeeDto.getId())))
+                .collect(Collectors.toList());
 
         List<JobDto> allJobs = new ArrayList<>();
         allJobs.addAll(activeJobs);
@@ -104,6 +110,7 @@ public class EmployeeBuilderService {
         employee.setAge(employeeDto.getAge());
         employee.setTelephoneNumber(employeeDto.getTelephoneNumber());
         employee.setMail(employeeDto.getMail());
+        employee.setAssignedForJobs(employeeDto.isAssignedForJobs());
 
         return employee;
     }
