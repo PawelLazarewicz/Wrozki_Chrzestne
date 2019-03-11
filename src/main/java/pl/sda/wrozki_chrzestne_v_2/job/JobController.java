@@ -110,9 +110,8 @@ public class JobController {
 
     @GetMapping("Job/{id}/move")
     public String moveJobCompleted(@PathVariable Long id, Model model) {
-        //TODO: change status to COMPLETED
         Job jobToMove = jobBuilderService.selectJob(id);
-        selectedJobDto = jobBuilderService.dtoFromEntity(jobToMove);
+        selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(jobToMove);
         selectedJobDto.setJobStatus(JobStatus.COMPLETED);
 
         // lambda for set employee assigned for job as FALSE
@@ -133,6 +132,8 @@ public class JobController {
 //                        .allMatch(job -> job.getJobStatus().equals(JobStatus.COMPLETED)));
 
         //.map(employee -> !employee.isAssignedForJobs().).collect(Collectors.toList());
+
+        jobToMove = jobBuilderService.updateEntityFromDto(selectedJobDto, jobToMove);
         jobRepository.save(jobToMove);
 
         JobDto jobToMoveCompleted = jobBuilderService.dtoFromEntityWithEmployees(jobToMove);
@@ -283,7 +284,6 @@ public class JobController {
 
     @RequestMapping(value = "/Job/{id}/assigningEmployee", method = RequestMethod.POST)
     public String assignEmployeeForJob(@ModelAttribute EmployeeDto employeeDto, @PathVariable Long id, Model model) {
-        //TODO NOT WORKING
         Employee employeeToAssign = employeeBuilderService.selectEmployee(employeeDto.getId());
         employeeToAssign.setAssignedForJobs(true);
         //EmployeeDto employeeToAssignDto = employeeBuilderService.dtoFromEntityWithJobs(employeeToAssign);

@@ -42,7 +42,7 @@ public class JobBuilderService {
 
         List<Employee> employees = jobDto.getEmployees()
                 .stream()
-                .map(e->employeeBuilderService.entityFromDto(e))
+                .map(e -> employeeBuilderService.entityFromDto(e))
                 .collect(Collectors.toList());
 
         job.setEmployees(employees);
@@ -116,6 +116,16 @@ public class JobBuilderService {
         job.setSortOfJob(jobDto.getSortOfJob());
         job.setEstimatedTime(jobDto.getEstimatedTime());
         job.setNumberOfChildren(jobDto.getNumberOfChildren());
+        job.setJobStatus(jobDto.getJobStatus());
+
+        List<Employee> employees = jobDto.getEmployees()
+                .stream()
+                .map(e -> employeeBuilderService.updateEntityFromDto(e, job.getEmployees()
+                        .stream()
+                        .filter(employee -> employee.getId().equals(e.getId())).findFirst().get()))
+                .collect(Collectors.toList());
+
+        job.setEmployees(employees);
 
         return job;
     }
@@ -156,7 +166,7 @@ public class JobBuilderService {
 
         List<Employee> employees = jobDto.getEmployees()
                 .stream()
-                .map(e->employeeBuilderService.entityFromDto(e))
+                .map(e -> employeeBuilderService.entityFromDto(e))
                 .collect(Collectors.toList());
 
         job.setEmployees(employees);
