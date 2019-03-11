@@ -17,14 +17,26 @@ import java.util.stream.Collectors;
 @Controller
 public class ClientController {
 
-    @Autowired
     private ClientRepository clientRepository;
 
-    @Autowired
     private ClientBuilderService clientBuilderService;
 
-    @Autowired
     private JobController jobController;
+
+    @Autowired
+    public void setClientRepository(ClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
+    }
+
+    @Autowired
+    public void setClientBuilderService(ClientBuilderService clientBuilderService) {
+        this.clientBuilderService = clientBuilderService;
+    }
+
+    @Autowired
+    public void setJobController(JobController jobController) {
+        this.jobController = jobController;
+    }
 
     private ClientDto selectedClientDto;
     private Map<Long, Long> activeJobsForClientMap = new HashMap<>();

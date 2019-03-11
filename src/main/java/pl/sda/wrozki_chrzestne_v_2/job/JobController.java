@@ -20,26 +20,54 @@ import java.util.stream.Collectors;
 @Controller
 public class JobController {
 
-    @Autowired
     private JobRepository jobRepository;
 
-    @Autowired
     private JobBuilderService jobBuilderService;
 
-    @Autowired
     private EmployeeRepository employeeRepository;
 
-    @Autowired
     private EmployeeBuilderService employeeBuilderService;
 
-    @Autowired
     private EmployeeController employeeController;
 
-    @Autowired
     private ClientBuilderService clientBuilderService;
 
-    @Autowired
     private ClientController clientController;
+
+    @Autowired
+    public void setJobRepository(JobRepository jobRepository) {
+        this.jobRepository = jobRepository;
+    }
+
+    @Autowired
+    public void setJobBuilderService(JobBuilderService jobBuilderService) {
+        this.jobBuilderService = jobBuilderService;
+    }
+
+    @Autowired
+    public void setEmployeeRepository(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
+    }
+
+    @Autowired
+    public void setEmployeeBuilderService(EmployeeBuilderService employeeBuilderService) {
+        this.employeeBuilderService = employeeBuilderService;
+    }
+
+    @Autowired
+    public void setEmployeeController(EmployeeController employeeController) {
+        this.employeeController = employeeController;
+    }
+
+    @Autowired
+    public void setClientBuilderService(ClientBuilderService clientBuilderService) {
+        this.clientBuilderService = clientBuilderService;
+    }
+
+    @Autowired
+    public void setClientController(ClientController clientController) {
+        this.clientController = clientController;
+    }
 
     private List<JobDto> completedJobs = new ArrayList<>();
     private List<JobDto> uncompletedJobs = new ArrayList<>();

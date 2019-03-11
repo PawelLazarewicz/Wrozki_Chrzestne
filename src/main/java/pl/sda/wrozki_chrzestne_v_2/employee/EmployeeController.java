@@ -5,7 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.sda.wrozki_chrzestne_v_2.dto.EmployeeDto;
-import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
 import pl.sda.wrozki_chrzestne_v_2.job.Job;
 import pl.sda.wrozki_chrzestne_v_2.job.JobController;
 import pl.sda.wrozki_chrzestne_v_2.job.JobStatus;
@@ -16,14 +15,26 @@ import java.util.stream.Collectors;
 @Controller
 public class EmployeeController {
 
-    @Autowired
     private EmployeeRepository employeeRepository;
 
-    @Autowired
     private EmployeeBuilderService employeeBuilderService;
 
-    @Autowired
     private JobController jobController;
+
+    @Autowired
+    public void setEmployeeRepository(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
+    }
+
+    @Autowired
+    public void setEmployeeBuilderService(EmployeeBuilderService employeeBuilderService) {
+        this.employeeBuilderService = employeeBuilderService;
+    }
+
+    @Autowired
+    public void setJobController(JobController jobController) {
+        this.jobController = jobController;
+    }
 
     private List<EmployeeDto> inactiveEmployeeList = new ArrayList<>();
     private List<EmployeeDto> activeEmployeeList = new ArrayList<>();
