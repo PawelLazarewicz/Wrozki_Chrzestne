@@ -9,7 +9,6 @@ import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
 import pl.sda.wrozki_chrzestne_v_2.job.JobController;
 import pl.sda.wrozki_chrzestne_v_2.job.JobStatus;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,7 @@ public class ClientController {
     @Autowired
     private JobController jobController;
 
-    private ClientDto selectedClient;
+    private ClientDto selectedClientDto;
     private Map<Long, Long> activeJobsForClientMap = new HashMap<>();
     private Map<Long, Long> completedJobsForClientMap = new HashMap<>();
 
@@ -115,7 +114,7 @@ public class ClientController {
     public String deleteClient(@PathVariable Long id, Model model) {
         //TODO: delete not working
         Client selectedClient = clientBuilderService.selectClient(id);
-        ClientDto selectedClientDto = clientBuilderService.dtoFromEntity(selectedClient);
+        selectedClientDto = clientBuilderService.dtoFromEntity(selectedClient);
 
         if (selectedClient.getJobs()
                 .stream()
@@ -132,16 +131,16 @@ public class ClientController {
     @RequestMapping("Client/{id}/edit")
     public String editClient(@PathVariable Long id, Model model) {
         Client clientToEdit = clientBuilderService.selectClient(id);
-        selectedClient = clientBuilderService.dtoFromEntity(clientToEdit);
+        selectedClientDto = clientBuilderService.dtoFromEntity(clientToEdit);
 
-        model.addAttribute("selectedClient", selectedClient);
+        model.addAttribute("selectedClient", selectedClientDto);
 
         return "client/updateClientHTML";
     }
 
     @RequestMapping(value = "/Client/updateClient", method = RequestMethod.POST)
     public String updateClient(@ModelAttribute ClientDto clientDto, Model model) {
-        Client editedClientToSave = clientBuilderService.selectClientFromDto(selectedClient);
+        Client editedClientToSave = clientBuilderService.selectClientFromDto(selectedClientDto);
         editedClientToSave = clientBuilderService.updateEntityFromDto(clientDto, editedClientToSave);
         clientRepository.save(editedClientToSave);
 

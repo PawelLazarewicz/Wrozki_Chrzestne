@@ -346,11 +346,11 @@ public class JobController {
     }
 
     public List<JobDto> getCompletedJobList() {
-        completedJobs = jobRepository.findAll()
-                .stream()
-                .filter(job -> job.getJobStatus().equals(JobStatus.COMPLETED))
-                .map(e -> jobBuilderService.dtoFromEntityWithEmployees(e))
-                .collect(Collectors.toList());
+//        completedJobs = jobRepository.findAll()
+//                .stream()
+//                .filter(job -> job.getJobStatus().equals(JobStatus.COMPLETED))
+//                .map(e -> jobBuilderService.dtoFromEntityWithEmployees(e))
+//                .collect(Collectors.toList());
 
         return completedJobs;
     }
