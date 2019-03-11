@@ -102,7 +102,6 @@ public class ClientController {
     @RequestMapping("Client/{id}/show")
     public String getClient(@PathVariable Long id, Model model) {
         Client selectedClient = clientBuilderService.selectClient(id);
-
         ClientDto selectedClientDto = clientBuilderService.dtoFromEntity(selectedClient);
 
         model.addAttribute("client", selectedClientDto);
@@ -120,7 +119,6 @@ public class ClientController {
                 .noneMatch(job -> job.getJobStatus().equals(JobStatus.ACTIVE))) {
             clientRepository.delete(selectedClient);
         }
-
 
         model.addAttribute("client", selectedClientDto);
 
