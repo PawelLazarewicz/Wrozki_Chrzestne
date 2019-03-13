@@ -41,8 +41,8 @@ public class EmployeeController {
     private List<EmployeeDto> inactiveEmployeeList = new ArrayList<>();
     private List<EmployeeDto> activeEmployeeList = new ArrayList<>();
     private EmployeeDto selectedEmployee;
-    private Map<Long, Long> assignedEmployeesForActiveJobMap = new HashMap<>();
-    private Map<Long, Long> assignedEmployeesForCompletedJobMap = new HashMap<>();
+//    private Map<Long, Long> assignedEmployeesForActiveJobMap = new HashMap<>();
+//    private Map<Long, Long> assignedEmployeesForCompletedJobMap = new HashMap<>();
 
     @RequestMapping("/Employee/addEmployee")
     public String addEmployeeForm(Model model) {
@@ -68,53 +68,82 @@ public class EmployeeController {
         inactiveEmployeeList = getInactiveEmployeeList();
         model.addAttribute("inactiveEmployeesDtos", inactiveEmployeeList);
 
+        //LAMBDA for displaying counter for active employee active jobs
+        Map<Long, Long> countOfActiveJobsForActiveEmployee = new HashMap<>();
+        activeEmployeeList
+                .forEach(employeeDto -> countOfActiveJobsForActiveEmployee.put(employeeDto.getId(), employeeDto.getWorkedJobs()
+                        .stream()
+                        .filter(jobDto -> jobDto.getJobStatus().equals(JobStatus.ACTIVE))
+                        .count()));
+        model.addAttribute("countOfActiveJobsForActiveEmployee", countOfActiveJobsForActiveEmployee);
+
+        //LAMBDA for displaying counter for active employee completed jobs
+        Map<Long, Long> countOfCompletedJobsForActiveEmployee = new HashMap<>();
+        activeEmployeeList
+                .stream()
+                .forEach(employeeDto -> countOfCompletedJobsForActiveEmployee.put(employeeDto.getId(), employeeDto.getWorkedJobs()
+                        .stream()
+                        .filter(jobDto -> jobDto.getJobStatus().equals(JobStatus.COMPLETED))
+                        .count()));
+        model.addAttribute("countOfCompletedJobsForActiveEmployee", countOfCompletedJobsForActiveEmployee);
+
+        //LAMBDA for displaying counter for inactive employee completed jobs
+        Map<Long, Long> countOfCompletedJobsForInactiveEmployee = new HashMap<>();
+        inactiveEmployeeList
+                .stream()
+                .forEach(employeeDto -> countOfCompletedJobsForInactiveEmployee.put(employeeDto.getId(), employeeDto.getWorkedJobs()
+                        .stream()
+                        .filter(jobDto -> jobDto.getJobStatus().equals(JobStatus.COMPLETED))
+                        .count()));
+        model.addAttribute("countOfCompletedJobsForInactiveEmployee", countOfCompletedJobsForInactiveEmployee);
+
         //LOOPS for displaying counter of employee active jobs
-        List<EmployeeDto> assignedEmployeesForActiveJob = jobController.getAssignedEmployeesForActiveJob();
-        for (EmployeeDto employee : activeEmployeeList) {
-            assignedEmployeesForActiveJobMap.put(employee.getId(), 0L);
-        }
+//        List<EmployeeDto> assignedEmployeesForActiveJob = jobController.getAssignedEmployeesForActiveJob();
+//        for (EmployeeDto employee : activeEmployeeList) {
+//            assignedEmployeesForActiveJobMap.put(employee.getId(), 0L);
+//        }
+//
+//        for (EmployeeDto employee : activeEmployeeList) {
+//            for (EmployeeDto assignedEmployeeForActiveJob : assignedEmployeesForActiveJob) {
+//                if (employee.getId().equals(assignedEmployeeForActiveJob.getId())) {
+//                    for (Map.Entry entry : assignedEmployeesForActiveJobMap.entrySet()) {
+//                        if (entry.getKey().equals(employee.getId())) {
+//                            Long employeeActiveJobs = employee.getWorkedJobs()
+//                                    .stream()
+//                                    .filter(jobDto -> jobDto.getJobStatus().equals(JobStatus.ACTIVE))
+//                                    .count();
+//                            assignedEmployeesForActiveJobMap.replace(employee.getId(), employeeActiveJobs);
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
-        for (EmployeeDto employee : activeEmployeeList) {
-            for (EmployeeDto assignedEmployeeForActiveJob : assignedEmployeesForActiveJob) {
-                if (employee.getId().equals(assignedEmployeeForActiveJob.getId())) {
-                    for (Map.Entry entry : assignedEmployeesForActiveJobMap.entrySet()) {
-                        if (entry.getKey().equals(employee.getId())) {
-                            Long employeeActiveJobs = employee.getWorkedJobs()
-                                    .stream()
-                                    .filter(jobDto -> jobDto.getJobStatus().equals(JobStatus.ACTIVE))
-                                    .count();
-                            assignedEmployeesForActiveJobMap.replace(employee.getId(), employeeActiveJobs);
-                        }
-                    }
-                }
-            }
-        }
+        //model.addAttribute("assignedEmployeesForActiveJobMap", assignedEmployeesForActiveJobMap);
 
-        model.addAttribute("assignedEmployeesForActiveJobMap", assignedEmployeesForActiveJobMap);
+//        //LOOPS for displaying counter of employee completed jobs
+//        List<EmployeeDto> assignedEmployeesForCompletedJob = jobController.getAssignedEmployeesForCompletedJob();
+//        for (EmployeeDto employee : activeEmployeeList) {
+//            assignedEmployeesForCompletedJobMap.put(employee.getId(), 0L);
+//        }
+//
+//        for (EmployeeDto employee : activeEmployeeList) {
+//            for (EmployeeDto assignedEmployeeForCompletedJob : assignedEmployeesForCompletedJob) {
+//                if (employee.getId().equals(assignedEmployeeForCompletedJob.getId())) {
+//                    for (Map.Entry entry : assignedEmployeesForCompletedJobMap.entrySet()) {
+//                        if (entry.getKey().equals(employee.getId())) {
+//                            Long employeeCompletedJobs = employee.getWorkedJobs()
+//                                    .stream()
+//                                    .filter(jobDto -> jobDto.getJobStatus().equals(JobStatus.COMPLETED))
+//                                    .count();
+//                            assignedEmployeesForCompletedJobMap.replace(employee.getId(), employeeCompletedJobs);
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
-        //LOOPS for displaying counter of employee completed jobs
-        List<EmployeeDto> assignedEmployeesForCompletedJob = jobController.getAssignedEmployeesForCompletedJob();
-        for (EmployeeDto employee : activeEmployeeList) {
-            assignedEmployeesForCompletedJobMap.put(employee.getId(), 0L);
-        }
-
-        for (EmployeeDto employee : activeEmployeeList) {
-            for (EmployeeDto assignedEmployeeForCompletedJob : assignedEmployeesForCompletedJob) {
-                if (employee.getId().equals(assignedEmployeeForCompletedJob.getId())) {
-                    for (Map.Entry entry : assignedEmployeesForCompletedJobMap.entrySet()) {
-                        if (entry.getKey().equals(employee.getId())) {
-                            Long employeeCompletedJobs = employee.getWorkedJobs()
-                                    .stream()
-                                    .filter(jobDto -> jobDto.getJobStatus().equals(JobStatus.COMPLETED))
-                                    .count();
-                            assignedEmployeesForCompletedJobMap.replace(employee.getId(), employeeCompletedJobs);
-                        }
-                    }
-                }
-            }
-        }
-
-        model.addAttribute("assignedEmployeesForCompletedJobMap", assignedEmployeesForCompletedJobMap);
+        //model.addAttribute("assignedEmployeesForCompletedJobMap", assignedEmployeesForCompletedJobMap);
 
         return "employee/employeesHTML";
     }
