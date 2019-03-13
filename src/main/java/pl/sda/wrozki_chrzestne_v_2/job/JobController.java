@@ -107,7 +107,7 @@ public class JobController {
     @RequestMapping("Job/{id}/show")
     public String getJob(@PathVariable Long id, Model model) {
         Job job = jobBuilderService.selectJob(id);
-        selectedJobDto = jobBuilderService.dtoFromEntity(job);
+        //selectedJobDto = jobBuilderService.dtoFromEntity(job);
 
         Optional<JobDto> completedJobToShow = completedJobs
                 .stream()
