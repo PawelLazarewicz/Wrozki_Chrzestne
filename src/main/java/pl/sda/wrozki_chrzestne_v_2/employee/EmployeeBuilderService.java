@@ -57,6 +57,10 @@ public class EmployeeBuilderService {
         employeeDto.setAge(employee.getAge());
         employeeDto.setTelephoneNumber(employee.getTelephoneNumber());
         employeeDto.setMail(employee.getMail());
+        employeeDto.setEmployeeStatus(employee.getEmployeeStatus());
+
+        employeeDto.setAssignedForJobs(employee.isAssignedForJobs());
+
 
         return employeeDto;
     }
