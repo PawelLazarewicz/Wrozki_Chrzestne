@@ -73,8 +73,6 @@ public class JobController {
     private List<JobDto> completedJobs = new ArrayList<>();
     private List<JobDto> uncompletedJobs = new ArrayList<>();
     private JobDto selectedJobDto;
-    private List<EmployeeDto> assignedEmployeesForActiveJob = new ArrayList<>();
-    private List<EmployeeDto> assignedEmployeesForCompletedJob = new ArrayList<>();
     private ClientDto selectedClientDto;
 
     @RequestMapping("/Job/addJob")
@@ -161,22 +159,7 @@ public class JobController {
             completedJobs.add(jobToMoveCompleted);
         }
 
-        List<EmployeeDto> assignedEmployeesForJobBeingCompleted = jobToMoveCompleted.getEmployees();
-
-        for (EmployeeDto assignedEmployeeForJobBeingCompleted : assignedEmployeesForJobBeingCompleted) {
-            for (EmployeeDto assignedEmployeeForActiveJob : assignedEmployeesForActiveJob) {
-                if (assignedEmployeeForActiveJob.getId().equals(assignedEmployeeForJobBeingCompleted.getId())) {
-                    assignedEmployeesForCompletedJob.add(assignedEmployeeForActiveJob);
-                    break;
-                }
-            }
-        }
-        assignedEmployeesForActiveJob.removeAll(assignedEmployeesForCompletedJob);
-
-        model.addAttribute("job", jobToMoveCompleted);
-
         return JOB_LIST;
-
     }
 
     @RequestMapping("Job/{id}/edit")
@@ -332,27 +315,5 @@ public class JobController {
 
     public List<JobDto> getCompletedJobList() {
         return completedJobs;
-    }
-
-    public List<EmployeeDto> getAssignedEmployeesForActiveJob() {
-        assignedEmployeesForActiveJob = employeeRepository.findAll()
-                .stream()
-                .filter(employee -> employee.getEmployeeStatus().equals(EmployeeStatus.ACTIVE) && employee.isAssignedForJobs())
-                .map(employee -> employeeBuilderService.dtoFromEntityWithJobs(employee))
-                .collect(Collectors.toList());
-
-        return assignedEmployeesForActiveJob;
-    }
-
-    public List<EmployeeDto> getAssignedEmployeesForCompletedJob() {
-        assignedEmployeesForCompletedJob = employeeRepository.findAll()
-                .stream()
-                .filter(employee -> employee.getWorkedJobs()
-                        .stream()
-                        .anyMatch(job -> job.getJobStatus().equals(JobStatus.COMPLETED)))
-                .map(employee -> employeeBuilderService.dtoFromEntityWithJobs(employee))
-                .collect(Collectors.toList());
-
-        return assignedEmployeesForCompletedJob;
     }
 }

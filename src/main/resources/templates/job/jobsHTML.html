@@ -40,14 +40,14 @@
         <h1>Bieżące zlecenia</h1>
     <table class="table table-striped table-bordered">
         <div th:if="${not #lists.isEmpty(activeJobsDto)}">
-        <tr>
-            <th><code>Lp.</code></th>
-            <th><code>Nazwisko klienta (nazwa Firmy)</code></th>
-            <th><code>Data zlecenia</code></th>
-            <th><code>Miejsce Zlecenia</code></th>
-            <th><code>Rodzaj imprezy</code></th>
-            <th><code>Liczba pracowników</code></th>
-        </tr>
+            <tr>
+                <th><code>Lp.</code></th>
+                <th><code>Nazwisko klienta (nazwa Firmy)</code></th>
+                <th><code>Data zlecenia</code></th>
+                <th><code>Miejsce Zlecenia</code></th>
+                <th><code>Rodzaj imprezy</code></th>
+                <th><code>Liczba pracowników</code></th>
+            </tr>
             <tr th:each="job : ${activeJobsDto}">
                 <td><span th:text="${jobStat.count}"></span></td>
                 <td><span th:text="${job.client.lastName}"></span></td>
@@ -60,6 +60,7 @@
                 <td><a th:href="${'/Job/' + job.id + '/assignEmployee'}"><button type="submit" class="btn btn-warning">Przypisz pracownika</button></a></td>
                 <td><a th:href="${'/Job/' + job.id + '/move'}"><button type="submit" class="btn btn-danger">Ukończone</button></a></td>
             </tr>
+        </div>
         <div th:if="${#lists.isEmpty(activeJobsDto)}">
             <h5><kbd>Brak bieżących zleceń</kbd></h5>
         </div>
