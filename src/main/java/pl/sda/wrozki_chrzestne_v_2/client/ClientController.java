@@ -5,8 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.sda.wrozki_chrzestne_v_2.dto.ClientDto;
-import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
-import pl.sda.wrozki_chrzestne_v_2.job.JobController;
 import pl.sda.wrozki_chrzestne_v_2.job.JobStatus;
 
 import java.util.HashMap;
@@ -22,8 +20,6 @@ public class ClientController {
 
     private ClientBuilderService clientBuilderService;
 
-    private JobController jobController;
-
     @Autowired
     public void setClientRepository(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
@@ -34,14 +30,7 @@ public class ClientController {
         this.clientBuilderService = clientBuilderService;
     }
 
-    @Autowired
-    public void setJobController(JobController jobController) {
-        this.jobController = jobController;
-    }
-
     private ClientDto selectedClientDto;
-//    private Map<Long, Long> activeJobsForClientMap = new HashMap<>();
-//    private Map<Long, Long> completedJobsForClientMap = new HashMap<>();
 
     @RequestMapping("/Client/addClient")
     public String addClientForm(Model model) {
@@ -82,50 +71,6 @@ public class ClientController {
                         .filter(jobDto -> jobDto.getJobStatus().equals(JobStatus.COMPLETED))
                         .count()));
         model.addAttribute("countOfCompletedJobsForClient", countOfCompletedJobsForClient);
-
-//        List<JobDto> uncompletedJobs = jobController.getUncompletedJobList();
-//
-//        for (ClientDto clientDto : allClientDtos) {
-//            activeJobsForClientMap.put(clientDto.getId(), 0L);
-//        }
-//
-//        for (ClientDto clientDto : allClientDtos) {
-//            Long activeJobsCounter = 0L;
-//            for (JobDto uncompletedJob : uncompletedJobs) {
-//                if (clientDto.getId().equals(uncompletedJob.getClient().getId())) {
-//                    for (Map.Entry entry : activeJobsForClientMap.entrySet()) {
-//                        if (entry.getKey().equals(clientDto.getId())) {
-//                            activeJobsCounter = activeJobsCounter + 1;
-//                            activeJobsForClientMap.replace(clientDto.getId(), activeJobsCounter);
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//        model.addAttribute("activeJobsForClientMap", activeJobsForClientMap);
-//
-//        List<JobDto> completeJobs = jobController.getCompletedJobList();
-//
-//        for (ClientDto clientDto : allClientDtos) {
-//            completedJobsForClientMap.put(clientDto.getId(), 0L);
-//        }
-//
-//        for (ClientDto clientDto : allClientDtos) {
-//            Long completedJobsCounter = 0L;
-//            for (JobDto completedJob : completeJobs) {
-//                if (clientDto.getId().equals(completedJob.getClient().getId())) {
-//                    for (Map.Entry entry : completedJobsForClientMap.entrySet()) {
-//                        if (entry.getKey().equals(clientDto.getId())) {
-//                            completedJobsCounter = completedJobsCounter + 1;
-//                            completedJobsForClientMap.replace(clientDto.getId(), completedJobsCounter);
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//        model.addAttribute("completedJobsForClientMap", completedJobsForClientMap);
 
         return "client/clientsHTML";
     }
