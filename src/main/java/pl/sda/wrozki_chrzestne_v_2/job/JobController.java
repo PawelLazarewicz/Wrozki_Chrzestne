@@ -202,10 +202,11 @@ public class JobController {
         return "job/updateJobHTML";
     }
 
-    @RequestMapping(value = "/Job/updateJob", method = RequestMethod.POST)
-    public String updateJob(@ModelAttribute JobDto jobDto, Model model) {
-        Job job = jobBuilderService.selectJob(jobDto.getId());
-        job = jobBuilderService.updateEntityFromDto(jobDto, job);
+    @RequestMapping(value = "/Job/updateJob/{idJob}", method = RequestMethod.POST)
+    public String updateJob(@PathVariable Long idJob, Model model) {
+        Job job = jobBuilderService.selectJob(idJob);
+        selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(job);
+        job = jobBuilderService.updateEntityFromDto(selectedJobDto, job);
         jobRepository.save(job);
 
         allJobs(model);
