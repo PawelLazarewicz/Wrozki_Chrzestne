@@ -41,7 +41,7 @@
 
     </form>
 
-    <form class="form-horizontal" th:action="@{/Job/updateJob/{idJob}(idJob=${selectedJobDto.getId()})}" th:object="${selectedJobDto}" method="post">
+    <form class="form-horizontal" th:action="@{/Job/updateJob}" th:object="${selectedJobDto}" method="post">
 
         <div class="form-group">
             <label class="control-label col-sm-2">Data zlecenia:</label>
