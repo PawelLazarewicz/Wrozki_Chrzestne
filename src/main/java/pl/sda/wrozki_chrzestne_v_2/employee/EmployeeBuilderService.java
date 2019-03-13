@@ -34,14 +34,15 @@ public class EmployeeBuilderService {
         employee.setAge(employeeDto.getAge());
         employee.setTelephoneNumber(employeeDto.getTelephoneNumber());
         employee.setMail(employeeDto.getMail());
-        employee.setAssignedForJobs(employeeDto.isAssignedForJobs());
+        employee.setEmployeeStatus(employeeDto.getEmployeeStatus());
 
-//        List<Job> jobs = employeeDto.getWorkedJobs()
-//                .stream()
-//                .map(e -> jobBuilderService.entityFromDto(e))
-//                .collect(Collectors.toList());
-//
-//        employee.setWorkedJobs(jobs);
+        List<Job> jobs = employeeDto.getWorkedJobs()
+                .stream()
+                .map(e -> jobBuilderService.entityFromDto(e))
+                .collect(Collectors.toList());
+
+        employee.setWorkedJobs(jobs);
+        employee.setAssignedForJobs(employeeDto.isAssignedForJobs());
 
         return employee;
     }
