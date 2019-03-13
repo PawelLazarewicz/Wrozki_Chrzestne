@@ -150,16 +150,16 @@ public class JobController {
 
         JobDto jobToMoveCompleted = jobBuilderService.dtoFromEntityWithEmployees(jobToMove);
 
-        if (completedJobs.isEmpty()) {
-            completedJobs.add(jobToMoveCompleted);
-        } else {
-            for (JobDto completedJob : completedJobs) {
-                if (completedJob.getId().equals(jobToMoveCompleted.getId())) {
-                    break;
-                }
-            }
-            completedJobs.add(jobToMoveCompleted);
-        }
+//        if (completedJobs.isEmpty()) {
+//            completedJobs.add(jobToMoveCompleted);
+//        } else {
+//            for (JobDto completedJob : completedJobs) {
+//                if (completedJob.getId().equals(jobToMoveCompleted.getId())) {
+//                    break;
+//                }
+//            }
+//            completedJobs.add(jobToMoveCompleted);
+//        }
 
 //        List<EmployeeDto> assignedEmployeesForJobBeingCompleted = jobToMoveCompleted.getEmployees();
 
@@ -330,6 +330,11 @@ public class JobController {
     }
 
     public List<JobDto> getCompletedJobList() {
+        completedJobs = jobRepository.findAll()
+                .stream()
+                .filter(job -> job.getJobStatus().equals(JobStatus.COMPLETED))
+                .map(e -> jobBuilderService.dtoFromEntityWithEmployees(e))
+                .collect(Collectors.toList());
         return completedJobs;
     }
 
