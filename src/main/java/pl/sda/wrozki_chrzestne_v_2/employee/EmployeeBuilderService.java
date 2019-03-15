@@ -28,7 +28,7 @@ public class EmployeeBuilderService {
         Employee employee = new Employee();
 
         employee.setId(null);
-        coreEntityFromDto(employee, employeeDto);
+        employeeCoreEntityFromDto(employee, employeeDto);
 //        employee.setName(employeeDto.getName());
 //        employee.setLastName(employeeDto.getLastName());
 //        employee.setCity(employeeDto.getCity());
@@ -110,7 +110,7 @@ public class EmployeeBuilderService {
     public Employee updateEntityFromDto(EmployeeDto employeeDto, Employee employee) {
 
         employee.setId(employee.getId());
-        coreEntityFromDto(employee, employeeDto);
+        employeeCoreEntityFromDto(employee, employeeDto);
 //        employee.setName(employeeDto.getName());
 //        employee.setLastName(employeeDto.getLastName());
 //        employee.setCity(employeeDto.getCity());
@@ -124,7 +124,7 @@ public class EmployeeBuilderService {
         return employee;
     }
 
-    public Employee coreEntityFromDto(Employee employee, EmployeeDto employeeDto) {
+    public Employee employeeCoreEntityFromDto(Employee employee, EmployeeDto employeeDto) {
         employee.setName(employeeDto.getName());
         employee.setLastName(employeeDto.getLastName());
         employee.setCity(employeeDto.getCity());
