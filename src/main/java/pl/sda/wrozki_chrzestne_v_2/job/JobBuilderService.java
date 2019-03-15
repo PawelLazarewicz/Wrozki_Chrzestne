@@ -32,13 +32,15 @@ public class JobBuilderService {
         Client client = clientBuilderService.entityFromDto(jobDto.getClient());
         job.setClient(client);
 
-        job.setDateOfJob(jobDto.getDateOfJob());
-        job.setCity(jobDto.getCity());
-        job.setJobsAddress(jobDto.getJobsAddress());
-        job.setJobsPostalCode(jobDto.getJobsPostalCode());
-        job.setSortOfJob(jobDto.getSortOfJob());
-        job.setEstimatedTime(jobDto.getEstimatedTime());
-        job.setNumberOfChildren(jobDto.getNumberOfChildren());
+        jobCoreEntityFromDto(job, jobDto);
+//        job.setDateOfJob(jobDto.getDateOfJob());
+//        job.setCity(jobDto.getCity());
+//        job.setJobsAddress(jobDto.getJobsAddress());
+//        job.setJobsPostalCode(jobDto.getJobsPostalCode());
+//        job.setSortOfJob(jobDto.getSortOfJob());
+//        job.setEstimatedTime(jobDto.getEstimatedTime());
+//        job.setNumberOfChildren(jobDto.getNumberOfChildren());
+//        job.setJobStatus(jobDto.getJobStatus());
 
         List<Employee> employees = jobDto.getEmployees()
                 .stream()
@@ -71,21 +73,20 @@ public class JobBuilderService {
     }
 
     public JobDto dtoFromEntityWithEmployees(Job job) {
-        JobDto jobDto = new JobDto();
-
-        jobDto.setId(job.getId());
-
-        ClientDto clientDto = clientBuilderService.dtoFromEntity(job.getClient());
-        jobDto.setClient(clientDto);
-
-        jobDto.setDateOfJob(job.getDateOfJob());
-        jobDto.setCity(job.getCity());
-        jobDto.setJobsAddress(job.getJobsAddress());
-        jobDto.setJobsPostalCode(job.getJobsPostalCode());
-        jobDto.setSortOfJob(job.getSortOfJob());
-        jobDto.setEstimatedTime(job.getEstimatedTime());
-        jobDto.setNumberOfChildren(job.getNumberOfChildren());
-        jobDto.setJobStatus(job.getJobStatus());
+        JobDto jobDto = dtoFromEntity(job);
+//        jobDto.setId(job.getId());
+//
+//        ClientDto clientDto = clientBuilderService.dtoFromEntity(job.getClient());
+//        jobDto.setClient(clientDto);
+//
+//        jobDto.setDateOfJob(job.getDateOfJob());
+//        jobDto.setCity(job.getCity());
+//        jobDto.setJobsAddress(job.getJobsAddress());
+//        jobDto.setJobsPostalCode(job.getJobsPostalCode());
+//        jobDto.setSortOfJob(job.getSortOfJob());
+//        jobDto.setEstimatedTime(job.getEstimatedTime());
+//        jobDto.setNumberOfChildren(job.getNumberOfChildren());
+//        jobDto.setJobStatus(job.getJobStatus());
 
         List<EmployeeDto> employeesDto = job.getEmployees()
                 .stream()
@@ -109,14 +110,15 @@ public class JobBuilderService {
         job.setId(job.getId());
         job.setClient(job.getClient());
 
-        job.setDateOfJob(jobDto.getDateOfJob());
-        job.setCity(jobDto.getCity());
-        job.setJobsAddress(jobDto.getJobsAddress());
-        job.setJobsPostalCode(jobDto.getJobsPostalCode());
-        job.setSortOfJob(jobDto.getSortOfJob());
-        job.setEstimatedTime(jobDto.getEstimatedTime());
-        job.setNumberOfChildren(jobDto.getNumberOfChildren());
-        job.setJobStatus(jobDto.getJobStatus());
+        jobCoreEntityFromDto(job, jobDto);
+//        job.setDateOfJob(jobDto.getDateOfJob());
+//        job.setCity(jobDto.getCity());
+//        job.setJobsAddress(jobDto.getJobsAddress());
+//        job.setJobsPostalCode(jobDto.getJobsPostalCode());
+//        job.setSortOfJob(jobDto.getSortOfJob());
+//        job.setEstimatedTime(jobDto.getEstimatedTime());
+//        job.setNumberOfChildren(jobDto.getNumberOfChildren());
+//        job.setJobStatus(jobDto.getJobStatus());
 
         List<Employee> employees = jobDto.getEmployees()
                 .stream()
@@ -137,13 +139,15 @@ public class JobBuilderService {
         Client client = clientBuilderService.selectClientFromDto(jobDto.getClient());
         job.setClient(client);
 
-        job.setDateOfJob(jobDto.getDateOfJob());
-        job.setCity(jobDto.getCity());
-        job.setJobsAddress(jobDto.getJobsAddress());
-        job.setJobsPostalCode(jobDto.getJobsPostalCode());
-        job.setSortOfJob(jobDto.getSortOfJob());
-        job.setEstimatedTime(jobDto.getEstimatedTime());
-        job.setNumberOfChildren(jobDto.getNumberOfChildren());
+        jobCoreEntityFromDto(job, jobDto);
+//        job.setDateOfJob(jobDto.getDateOfJob());
+//        job.setCity(jobDto.getCity());
+//        job.setJobsAddress(jobDto.getJobsAddress());
+//        job.setJobsPostalCode(jobDto.getJobsPostalCode());
+//        job.setSortOfJob(jobDto.getSortOfJob());
+//        job.setEstimatedTime(jobDto.getEstimatedTime());
+//        job.setNumberOfChildren(jobDto.getNumberOfChildren());
+//        job.setJobStatus(jobDto.getJobStatus());
 
         return job;
     }
@@ -156,13 +160,15 @@ public class JobBuilderService {
         Client client = clientBuilderService.selectClientFromDto(clientDto);
         job.setClient(client);
 
-        job.setDateOfJob(jobDto.getDateOfJob());
-        job.setCity(jobDto.getCity());
-        job.setJobsAddress(jobDto.getJobsAddress());
-        job.setJobsPostalCode(jobDto.getJobsPostalCode());
-        job.setSortOfJob(jobDto.getSortOfJob());
-        job.setEstimatedTime(jobDto.getEstimatedTime());
-        job.setNumberOfChildren(jobDto.getNumberOfChildren());
+        jobCoreEntityFromDto(job, jobDto);
+//        job.setDateOfJob(jobDto.getDateOfJob());
+//        job.setCity(jobDto.getCity());
+//        job.setJobsAddress(jobDto.getJobsAddress());
+//        job.setJobsPostalCode(jobDto.getJobsPostalCode());
+//        job.setSortOfJob(jobDto.getSortOfJob());
+//        job.setEstimatedTime(jobDto.getEstimatedTime());
+//        job.setNumberOfChildren(jobDto.getNumberOfChildren());
+//        job.setJobStatus(jobDto.getJobStatus());
 
         List<Employee> employees = jobDto.getEmployees()
                 .stream()
@@ -170,6 +176,19 @@ public class JobBuilderService {
                 .collect(Collectors.toList());
 
         job.setEmployees(employees);
+
+        return job;
+    }
+
+    public Job jobCoreEntityFromDto(Job job, JobDto jobDto){
+        job.setDateOfJob(jobDto.getDateOfJob());
+        job.setCity(jobDto.getCity());
+        job.setJobsAddress(jobDto.getJobsAddress());
+        job.setJobsPostalCode(jobDto.getJobsPostalCode());
+        job.setSortOfJob(jobDto.getSortOfJob());
+        job.setEstimatedTime(jobDto.getEstimatedTime());
+        job.setNumberOfChildren(jobDto.getNumberOfChildren());
+        job.setJobStatus(jobDto.getJobStatus());
 
         return job;
     }
