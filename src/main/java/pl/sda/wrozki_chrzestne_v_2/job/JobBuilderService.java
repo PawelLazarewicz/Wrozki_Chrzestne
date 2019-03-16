@@ -108,7 +108,9 @@ public class JobBuilderService {
     public Job updateEntityFromDto(JobDto jobDto, Job job) {
 
         job.setId(job.getId());
-        job.setClient(job.getClient());
+
+        Client client = clientBuilderService.selectClientFromDto(jobDto.getClient());
+        job.setClient(client);
 
         jobCoreEntityFromDto(job, jobDto);
 //        job.setDateOfJob(jobDto.getDateOfJob());
@@ -132,25 +134,34 @@ public class JobBuilderService {
         return job;
     }
 
-    public Job updateEntityFromDtoWithClient(JobDto jobDto, Job job) {
-
-        job.setId(job.getId());
-
-        Client client = clientBuilderService.selectClientFromDto(jobDto.getClient());
-        job.setClient(client);
-
-        jobCoreEntityFromDto(job, jobDto);
-//        job.setDateOfJob(jobDto.getDateOfJob());
-//        job.setCity(jobDto.getCity());
-//        job.setJobsAddress(jobDto.getJobsAddress());
-//        job.setJobsPostalCode(jobDto.getJobsPostalCode());
-//        job.setSortOfJob(jobDto.getSortOfJob());
-//        job.setEstimatedTime(jobDto.getEstimatedTime());
-//        job.setNumberOfChildren(jobDto.getNumberOfChildren());
-//        job.setJobStatus(jobDto.getJobStatus());
-
-        return job;
-    }
+//    public Job updateEntityFromDtoWithClient(JobDto jobDto, Job job) {
+//
+//        job.setId(job.getId());
+//
+//        Client client = clientBuilderService.selectClientFromDto(jobDto.getClient());
+//        job.setClient(client);
+//
+//        jobCoreEntityFromDto(job, jobDto);
+//
+//        List<Employee> employees = jobDto.getEmployees()
+//                .stream()
+//                .map(e -> employeeBuilderService.updateEntityFromDto(e, job.getEmployees()
+//                        .stream()
+//                        .filter(employee -> employee.getId().equals(e.getId())).findFirst().get()))
+//                .collect(Collectors.toList());
+//
+//        job.setEmployees(employees);
+////        job.setDateOfJob(jobDto.getDateOfJob());
+////        job.setCity(jobDto.getCity());
+////        job.setJobsAddress(jobDto.getJobsAddress());
+////        job.setJobsPostalCode(jobDto.getJobsPostalCode());
+////        job.setSortOfJob(jobDto.getSortOfJob());
+////        job.setEstimatedTime(jobDto.getEstimatedTime());
+////        job.setNumberOfChildren(jobDto.getNumberOfChildren());
+////        job.setJobStatus(jobDto.getJobStatus());
+//
+//        return job;
+//    }
 
     public Job entityFromDtoWithUpdatingClient(JobDto jobDto, ClientDto clientDto) {
         Job job = new Job();
