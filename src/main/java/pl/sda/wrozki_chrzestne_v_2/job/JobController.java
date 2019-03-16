@@ -107,7 +107,7 @@ public class JobController {
     @RequestMapping("Job/{id}/show")
     public String getJob(@PathVariable Long id, Model model) {
         Job job = jobBuilderService.selectJob(id);
-        selectedJobDto = jobBuilderService.dtoFromEntity(job);
+        //selectedJobDto = jobBuilderService.dtoFromEntity(job);
 
         Optional<JobDto> completedJobToShow = completedJobs
                 .stream()
@@ -188,6 +188,7 @@ public class JobController {
     @RequestMapping(value = "/Job/updateJob", method = RequestMethod.POST)
     public String updateJob(@ModelAttribute JobDto jobDto, Model model) {
         Job job = jobBuilderService.selectJob(selectedJobDto.getId());
+        jobDto.setClient(selectedJobDto.getClient());
         job = jobBuilderService.updateEntityFromDto(jobDto, job);
         jobRepository.save(job);
 
@@ -219,7 +220,7 @@ public class JobController {
         JobDto editedJobDto = jobBuilderService.dtoFromEntityWithEmployees(job);
         editedJobDto.setClient(selectedClientDto);
 
-        job = jobBuilderService.updateEntityFromDtoWithClient(editedJobDto, job);
+        job = jobBuilderService.updateEntityFromDto(editedJobDto, job);
         jobRepository.save(job);
 
         return "redirect:/Job/" + idJob + "/edit";

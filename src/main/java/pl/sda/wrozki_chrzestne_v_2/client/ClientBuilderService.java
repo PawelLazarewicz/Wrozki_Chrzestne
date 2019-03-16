@@ -20,21 +20,14 @@ public class ClientBuilderService {
 
     public Client entityFromDto(ClientDto clientDto) {
         Client client = new Client();
-
         client.setId(null);
-        client.setName(clientDto.getName());
-        client.setLastName(clientDto.getLastName());
-        client.setCity(clientDto.getCity());
-        client.setAddress(clientDto.getAddress());
-        client.setPostalCode(clientDto.getPostalCode());
-        client.setTelephoneNumber(clientDto.getTelephoneNumber());
-        client.setMail(clientDto.getMail());
+
+        clientCoreEntityFromDto(client, clientDto);
 
         List<Job> jobs = clientDto.getJobs()
                 .stream()
                 .map(e -> jobBuilderService.entityFromDto(e))
                 .collect(Collectors.toList());
-
         client.setJobs(jobs);
 
         return client;
@@ -56,22 +49,12 @@ public class ClientBuilderService {
     }
 
     public ClientDto dtoFromEntityWithJobs(Client client) {
-        ClientDto clientDto = new ClientDto();
-
-        clientDto.setId(client.getId());
-        clientDto.setName(client.getName());
-        clientDto.setLastName(client.getLastName());
-        clientDto.setCity(client.getCity());
-        clientDto.setAddress(client.getAddress());
-        clientDto.setPostalCode(client.getPostalCode());
-        clientDto.setTelephoneNumber(client.getTelephoneNumber());
-        clientDto.setMail(client.getMail());
+        ClientDto clientDto = dtoFromEntity(client);
 
         List<JobDto> jobsDto = client.getJobs()
                 .stream()
                 .map(e -> jobBuilderService.dtoFromEntity(e))
                 .collect(Collectors.toList());
-
         clientDto.setJobs(jobsDto);
 
         return clientDto;
@@ -85,8 +68,19 @@ public class ClientBuilderService {
     }
 
     public Client updateEntityFromDto(ClientDto clientDto, Client client) {
-
         client.setId(client.getId());
+        clientCoreEntityFromDto(client, clientDto);
+
+        client.setJobs(client.getJobs());
+
+        return client;
+    }
+
+    public Client selectClientFromDto(ClientDto clientDto) {
+        return selectClient(clientDto.getId());
+    }
+
+    public Client clientCoreEntityFromDto(Client client, ClientDto clientDto){
         client.setName(clientDto.getName());
         client.setLastName(clientDto.getLastName());
         client.setCity(clientDto.getCity());
@@ -95,19 +89,6 @@ public class ClientBuilderService {
         client.setTelephoneNumber(clientDto.getTelephoneNumber());
         client.setMail(clientDto.getMail());
 
-        client.setJobs(client.getJobs());
-
-//        List<Job> jobs = clientDto.getJobs()
-//                .stream()
-//                .map(e -> jobBuilderService.entityFromDto(e))
-//                .collect(Collectors.toList());
-//
-//        client.setJobs(jobs);
-
         return client;
-    }
-
-    public Client selectClientFromDto(ClientDto clientDto) {
-        return selectClient(clientDto.getId());
     }
 }

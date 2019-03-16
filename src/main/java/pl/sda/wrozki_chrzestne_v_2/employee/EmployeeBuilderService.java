@@ -26,22 +26,15 @@ public class EmployeeBuilderService {
 
     public Employee entityFromDto(EmployeeDto employeeDto) {
         Employee employee = new Employee();
-
         employee.setId(null);
-        employee.setName(employeeDto.getName());
-        employee.setLastName(employeeDto.getLastName());
-        employee.setCity(employeeDto.getCity());
-        employee.setAge(employeeDto.getAge());
-        employee.setTelephoneNumber(employeeDto.getTelephoneNumber());
-        employee.setMail(employeeDto.getMail());
-        employee.setAssignedForJobs(employeeDto.isAssignedForJobs());
 
-//        List<Job> jobs = employeeDto.getWorkedJobs()
-//                .stream()
-//                .map(e -> jobBuilderService.entityFromDto(e))
-//                .collect(Collectors.toList());
-//
-//        employee.setWorkedJobs(jobs);
+        employeeCoreEntityFromDto(employee, employeeDto);
+
+        List<Job> jobs = employeeDto.getWorkedJobs()
+                .stream()
+                .map(e -> jobBuilderService.entityFromDto(e))
+                .collect(Collectors.toList());
+        employee.setWorkedJobs(jobs);
 
         return employee;
     }
@@ -56,20 +49,15 @@ public class EmployeeBuilderService {
         employeeDto.setAge(employee.getAge());
         employeeDto.setTelephoneNumber(employee.getTelephoneNumber());
         employeeDto.setMail(employee.getMail());
+        employeeDto.setEmployeeStatus(employee.getEmployeeStatus());
+
+        employeeDto.setAssignedForJobs(employee.isAssignedForJobs());
 
         return employeeDto;
     }
 
     public EmployeeDto dtoFromEntityWithJobs(Employee employee) {
-        EmployeeDto employeeDto = new EmployeeDto();
-
-        employeeDto.setId(employee.getId());
-        employeeDto.setName(employee.getName());
-        employeeDto.setLastName(employee.getLastName());
-        employeeDto.setCity(employee.getCity());
-        employeeDto.setAge(employee.getAge());
-        employeeDto.setTelephoneNumber(employee.getTelephoneNumber());
-        employeeDto.setMail(employee.getMail());
+        EmployeeDto employeeDto = dtoFromEntity(employee);
 
         List<JobDto> activeJobs = employee.getWorkedJobs()
                 .stream()
@@ -89,7 +77,6 @@ public class EmployeeBuilderService {
         allJobs.addAll(completedJobs);
 
         employeeDto.setWorkedJobs(allJobs);
-        employeeDto.setAssignedForJobs(employee.isAssignedForJobs());
 
         return employeeDto;
     }
@@ -102,17 +89,23 @@ public class EmployeeBuilderService {
     }
 
     public Employee updateEntityFromDto(EmployeeDto employeeDto, Employee employee) {
-
         employee.setId(employee.getId());
+        employeeCoreEntityFromDto(employee, employeeDto);
+
+        return employee;
+    }
+
+    public Employee employeeCoreEntityFromDto(Employee employee, EmployeeDto employeeDto) {
         employee.setName(employeeDto.getName());
         employee.setLastName(employeeDto.getLastName());
         employee.setCity(employeeDto.getCity());
         employee.setAge(employeeDto.getAge());
         employee.setTelephoneNumber(employeeDto.getTelephoneNumber());
         employee.setMail(employeeDto.getMail());
+        employeeDto.setEmployeeStatus(employee.getEmployeeStatus());
+
         employee.setAssignedForJobs(employeeDto.isAssignedForJobs());
 
         return employee;
     }
-
 }
