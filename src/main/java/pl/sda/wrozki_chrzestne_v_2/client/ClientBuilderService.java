@@ -20,16 +20,10 @@ public class ClientBuilderService {
 
     public Client entityFromDto(ClientDto clientDto) {
         Client client = new Client();
-
         client.setId(null);
+
         clientCoreEntityFromDto(client, clientDto);
-//        client.setName(clientDto.getName());
-//        client.setLastName(clientDto.getLastName());
-//        client.setCity(clientDto.getCity());
-//        client.setAddress(clientDto.getAddress());
-//        client.setPostalCode(clientDto.getPostalCode());
-//        client.setTelephoneNumber(clientDto.getTelephoneNumber());
-//        client.setMail(clientDto.getMail());
+
         List<Job> jobs = clientDto.getJobs()
                 .stream()
                 .map(e -> jobBuilderService.entityFromDto(e))
@@ -56,14 +50,7 @@ public class ClientBuilderService {
 
     public ClientDto dtoFromEntityWithJobs(Client client) {
         ClientDto clientDto = dtoFromEntity(client);
-//        clientDto.setId(client.getId());
-//        clientDto.setName(client.getName());
-//        clientDto.setLastName(client.getLastName());
-//        clientDto.setCity(client.getCity());
-//        clientDto.setAddress(client.getAddress());
-//        clientDto.setPostalCode(client.getPostalCode());
-//        clientDto.setTelephoneNumber(client.getTelephoneNumber());
-//        clientDto.setMail(client.getMail());
+
         List<JobDto> jobsDto = client.getJobs()
                 .stream()
                 .map(e -> jobBuilderService.dtoFromEntity(e))
@@ -81,23 +68,11 @@ public class ClientBuilderService {
     }
 
     public Client updateEntityFromDto(ClientDto clientDto, Client client) {
-
         client.setId(client.getId());
         clientCoreEntityFromDto(client, clientDto);
-//        client.setName(clientDto.getName());
-//        client.setLastName(clientDto.getLastName());
-//        client.setCity(clientDto.getCity());
-//        client.setAddress(clientDto.getAddress());
-//        client.setPostalCode(clientDto.getPostalCode());
-//        client.setTelephoneNumber(clientDto.getTelephoneNumber());
-//        client.setMail(clientDto.getMail());
+
         client.setJobs(client.getJobs());
-//        List<Job> jobs = clientDto.getJobs()
-//                .stream()
-//                .map(e -> jobBuilderService.entityFromDto(e))
-//                .collect(Collectors.toList());
-//
-//        client.setJobs(jobs);
+
         return client;
     }
 
