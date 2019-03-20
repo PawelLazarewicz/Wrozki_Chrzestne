@@ -15,6 +15,9 @@ import java.util.stream.Collectors;
 @Controller
 public class ClientController {
 
+
+    private ClientFacade clientFacade;
+
     private static final String CLIENT_LIST = "redirect:/Client/listClients";
     private ClientRepository clientRepository;
 
@@ -30,6 +33,11 @@ public class ClientController {
         this.clientBuilderService = clientBuilderService;
     }
 
+    @Autowired
+    public void setClientFacade(ClientFacade clientFacade) {
+        this.clientFacade = clientFacade;
+    }
+
     private ClientDto selectedClientDto;
 
     @RequestMapping("/Client/addClient")
@@ -40,8 +48,9 @@ public class ClientController {
 
     @RequestMapping(value = "/Client/listClients", method = RequestMethod.POST)
     public String addClient(@ModelAttribute ClientDto clientDto, Model model) {
-        Client newClient = clientBuilderService.entityFromDto(clientDto);
-        clientRepository.save(newClient);
+        clientFacade.addClient(clientDto);
+//        Client newClient = clientBuilderService.entityFromDto(clientDto);
+//        clientRepository.save(newClient);
 
         allClients(model);
 

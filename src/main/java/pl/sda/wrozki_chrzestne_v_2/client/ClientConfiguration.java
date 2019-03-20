@@ -10,4 +10,9 @@ public class ClientConfiguration {
     ClientBuilderService clientBuilderService(){
         return new ClientBuilderService();
     }
+
+    @Bean
+    ClientFacade clientFacade(ClientBuilderService clientBuilderService, ClientRepository clientRepository){
+        return new ClientFacade(clientBuilderService, clientRepository);
+    }
 }
