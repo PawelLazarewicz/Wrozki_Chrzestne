@@ -79,4 +79,10 @@ public class ClientFacade {
 
         return deletedClientDto;
     }
+
+    public ClientDto editClient(Long id) {
+        Client editedClient = clientBuilderService.selectClient(id);
+        ClientDto editedClientDto = clientBuilderService.dtoFromEntity(editedClient);
+        return editedClientDto;
+    }
 }

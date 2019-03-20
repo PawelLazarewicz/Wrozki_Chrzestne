@@ -112,10 +112,10 @@ public class ClientController {
 
     @RequestMapping("Client/{id}/edit")
     public String editClient(@PathVariable Long id, Model model) {
-        Client clientToEdit = clientBuilderService.selectClient(id);
-        selectedClientDto = clientBuilderService.dtoFromEntity(clientToEdit);
+//        Client clientToEdit = clientBuilderService.selectClient(id);
+//        selectedClientDto = clientBuilderService.dtoFromEntity(clientToEdit);
 
-        model.addAttribute("selectedClient", selectedClientDto);
+        model.addAttribute("selectedClient", clientFacade.editClient(id));
 
         return "client/updateClientHTML";
     }
