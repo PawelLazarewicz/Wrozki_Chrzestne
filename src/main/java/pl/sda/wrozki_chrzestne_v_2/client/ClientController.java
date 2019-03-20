@@ -96,16 +96,16 @@ public class ClientController {
 
     @RequestMapping("Client/{id}/delete")
     public String deleteClient(@PathVariable Long id, Model model) {
-        Client selectedClient = clientBuilderService.selectClient(id);
-        selectedClientDto = clientBuilderService.dtoFromEntity(selectedClient);
+//        Client selectedClient = clientBuilderService.selectClient(id);
+//        selectedClientDto = clientBuilderService.dtoFromEntity(selectedClient);
+//
+//        if (selectedClient.getJobs()
+//                .stream()
+//                .noneMatch(job -> job.getJobStatus().equals(JobStatus.ACTIVE))) {
+//            clientRepository.delete(selectedClient);
+//        }
 
-        if (selectedClient.getJobs()
-                .stream()
-                .noneMatch(job -> job.getJobStatus().equals(JobStatus.ACTIVE))) {
-            clientRepository.delete(selectedClient);
-        }
-
-        model.addAttribute("client", selectedClientDto);
+        model.addAttribute("client", clientFacade.deleteClient(id));
 
         return CLIENT_LIST;
     }

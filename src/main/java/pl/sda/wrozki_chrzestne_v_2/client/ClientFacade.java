@@ -66,4 +66,17 @@ public class ClientFacade {
 
         return clientToSelectDto;
     }
+
+    public ClientDto deleteClient(Long id) {
+        Client deletedClient = clientBuilderService.selectClient(id);
+        ClientDto deletedClientDto = clientBuilderService.dtoFromEntity(deletedClient);
+
+        if (deletedClient.getJobs()
+                .stream()
+                .noneMatch(job -> job.getJobStatus().equals(JobStatus.ACTIVE))) {
+            clientRepository.delete(deletedClient);
+        }
+
+        return deletedClientDto;
+    }
 }
