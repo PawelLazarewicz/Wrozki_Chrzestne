@@ -115,6 +115,8 @@ public class ClientController {
 //        Client clientToEdit = clientBuilderService.selectClient(id);
 //        selectedClientDto = clientBuilderService.dtoFromEntity(clientToEdit);
 
+        selectedClientDto = clientFacade.editClient(id);
+
         model.addAttribute("selectedClient", clientFacade.editClient(id));
 
         return "client/updateClientHTML";
@@ -122,9 +124,10 @@ public class ClientController {
 
     @RequestMapping(value = "/Client/updateClient", method = RequestMethod.POST)
     public String updateClient(@ModelAttribute ClientDto clientDto, Model model) {
-        Client editedClientToSave = clientBuilderService.selectClientFromDto(selectedClientDto);
-        editedClientToSave = clientBuilderService.updateEntityFromDto(clientDto, editedClientToSave);
-        clientRepository.save(editedClientToSave);
+        clientFacade.updateClient(clientDto, selectedClientDto);
+//        Client editedClientToSave = clientBuilderService.selectClientFromDto(selectedClientDto);
+//        editedClientToSave = clientBuilderService.updateEntityFromDto(clientDto, editedClientToSave);
+//        clientRepository.save(editedClientToSave);
 
         allClients(model);
 

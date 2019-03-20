@@ -85,4 +85,10 @@ public class ClientFacade {
         ClientDto editedClientDto = clientBuilderService.dtoFromEntity(editedClient);
         return editedClientDto;
     }
+
+    public void updateClient(ClientDto updatingClientDto, ClientDto selectingClientDto) {
+        Client editedClientToSave = clientBuilderService.selectClientFromDto(selectingClientDto);
+        editedClientToSave = clientBuilderService.updateEntityFromDto(updatingClientDto, editedClientToSave);
+        clientRepository.save(editedClientToSave);
+    }
 }
