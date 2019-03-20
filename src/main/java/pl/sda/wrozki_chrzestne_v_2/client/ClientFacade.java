@@ -59,4 +59,11 @@ public class ClientFacade {
 
         return countOfCompletedJobsForClient;
     }
+
+    public ClientDto getClient(Long id) {
+        Client selectedClient = clientBuilderService.selectClient(id);
+        ClientDto clientToSelectDto = clientBuilderService.dtoFromEntity(selectedClient);
+
+        return clientToSelectDto;
+    }
 }

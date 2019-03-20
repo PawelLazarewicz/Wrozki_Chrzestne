@@ -86,10 +86,10 @@ public class ClientController {
 
     @RequestMapping("Client/{id}/show")
     public String getClient(@PathVariable Long id, Model model) {
-        Client selectedClient = clientBuilderService.selectClient(id);
-        ClientDto clientToselectDto = clientBuilderService.dtoFromEntity(selectedClient);
+//        Client selectedClient = clientBuilderService.selectClient(id);
+//        ClientDto clientToselectDto = clientBuilderService.dtoFromEntity(selectedClient);
 
-        model.addAttribute("client", clientToselectDto);
+        model.addAttribute("client", clientFacade.getClient(id));
 
         return "client/clientHTML";
     }
