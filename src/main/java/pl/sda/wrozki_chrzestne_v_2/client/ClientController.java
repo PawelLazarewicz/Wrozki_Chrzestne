@@ -60,26 +60,26 @@ public class ClientController {
     @RequestMapping("/Client/listClients")
     public String allClients(Model model) {
 
-        List<ClientDto> allClientDtos = getAllClients();
-        model.addAttribute("clientsDtos", allClientDtos);
+        //List<ClientDto> allClientDtos = getAllClients();
+        model.addAttribute("clientsDtos", clientFacade.allClients());
 
-        //LAMBDA for displaying counter for client active jobs
-        Map<Long, Long> countOfActiveJobsForClient = new HashMap<>();
-        getAllClients()
-                .forEach(clientDto -> countOfActiveJobsForClient.put(clientDto.getId(), clientDto.getJobs()
-                        .stream()
-                        .filter(jobDto -> jobDto.getJobStatus().equals(JobStatus.ACTIVE))
-                        .count()));
-        model.addAttribute("countOfActiveJobsForClient", countOfActiveJobsForClient);
+//        //LAMBDA for displaying counter for client active jobs
+//        Map<Long, Long> countOfActiveJobsForClient = new HashMap<>();
+//        clientFacade.allClients()
+//                .forEach(clientDto -> countOfActiveJobsForClient.put(clientDto.getId(), clientDto.getJobs()
+//                        .stream()
+//                        .filter(jobDto -> jobDto.getJobStatus().equals(JobStatus.ACTIVE))
+//                        .count()));
+        model.addAttribute("countOfActiveJobsForClient", clientFacade.countOfActiveJobsForClient());
 
-        //LAMBDA for displaying counter for client completed jobs
-        Map<Long, Long> countOfCompletedJobsForClient = new HashMap<>();
-        getAllClients()
-                .forEach(clientDto -> countOfCompletedJobsForClient.put(clientDto.getId(), clientDto.getJobs()
-                        .stream()
-                        .filter(jobDto -> jobDto.getJobStatus().equals(JobStatus.COMPLETED))
-                        .count()));
-        model.addAttribute("countOfCompletedJobsForClient", countOfCompletedJobsForClient);
+//        //LAMBDA for displaying counter for client completed jobs
+//        Map<Long, Long> countOfCompletedJobsForClient = new HashMap<>();
+//        clientFacade.allClients()
+//                .forEach(clientDto -> countOfCompletedJobsForClient.put(clientDto.getId(), clientDto.getJobs()
+//                        .stream()
+//                        .filter(jobDto -> jobDto.getJobStatus().equals(JobStatus.COMPLETED))
+//                        .count()));
+        model.addAttribute("countOfCompletedJobsForClient", clientFacade.countOfCompletedJobsForClient());
 
         return "client/clientsHTML";
     }
@@ -131,10 +131,10 @@ public class ClientController {
         return CLIENT_LIST;
     }
 
-    public List<ClientDto> getAllClients() {
-        return clientRepository.findAll()
-                .stream()
-                .map(e -> clientBuilderService.dtoFromEntityWithJobs(e))
-                .collect(Collectors.toList());
-    }
+//    public List<ClientDto> getAllClients() {
+//        return clientRepository.findAll()
+//                .stream()
+//                .map(e -> clientBuilderService.dtoFromEntityWithJobs(e))
+//                .collect(Collectors.toList());
+//    }
 }

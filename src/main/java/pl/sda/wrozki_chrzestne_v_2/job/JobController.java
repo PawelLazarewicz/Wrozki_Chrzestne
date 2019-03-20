@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.sda.wrozki_chrzestne_v_2.client.Client;
 import pl.sda.wrozki_chrzestne_v_2.client.ClientBuilderService;
 import pl.sda.wrozki_chrzestne_v_2.client.ClientController;
+import pl.sda.wrozki_chrzestne_v_2.client.ClientFacade;
 import pl.sda.wrozki_chrzestne_v_2.dto.ClientDto;
 import pl.sda.wrozki_chrzestne_v_2.dto.EmployeeDto;
 import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
@@ -33,7 +34,9 @@ public class JobController {
 
     private ClientBuilderService clientBuilderService;
 
-    private ClientController clientController;
+    //private ClientController clientController;
+
+    private ClientFacade clientFacade;
 
     @Autowired
     public void setJobRepository(JobRepository jobRepository) {
@@ -65,9 +68,14 @@ public class JobController {
         this.clientBuilderService = clientBuilderService;
     }
 
+//    @Autowired
+//    public void setClientController(ClientController clientController) {
+//        this.clientController = clientController;
+//    }
+
     @Autowired
-    public void setClientController(ClientController clientController) {
-        this.clientController = clientController;
+    public void setClientFacade(ClientFacade clientFacade) {
+        this.clientFacade = clientFacade;
     }
 
     private List<JobDto> completedJobs = new ArrayList<>();
@@ -78,7 +86,7 @@ public class JobController {
     @RequestMapping("/Job/addJob")
     public String addJobForm(Model model) {
         model.addAttribute("job", new JobDto());
-        model.addAttribute("clients", clientController.getAllClients());
+        model.addAttribute("clients", clientFacade.getAllClients());
         return "job/addJobHTML";
     }
 
@@ -170,7 +178,7 @@ public class JobController {
         model.addAttribute("selectedJobDto", selectedJobDto);
         model.addAttribute("sorts", SortOfJobs.values());
 
-        List<ClientDto> clientsToChange = clientController.getAllClients();
+        List<ClientDto> clientsToChange = clientFacade.getAllClients();
         selectedClientDto = selectedJobDto.getClient();
 
         for (ClientDto clientDto : clientsToChange) {
