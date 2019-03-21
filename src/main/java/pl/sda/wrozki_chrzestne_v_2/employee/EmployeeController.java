@@ -37,8 +37,8 @@ public class EmployeeController {
 
     private static final String LIST_EMPLOYEES = "redirect:/Employee/listEmployees";
 
-    private List<EmployeeDto> inactiveEmployeeList = new ArrayList<>();
-    private List<EmployeeDto> activeEmployeeList = new ArrayList<>();
+    //    private List<EmployeeDto> inactiveEmployeeList = new ArrayList<>();
+//    private List<EmployeeDto> activeEmployeeList = new ArrayList<>();
     private EmployeeDto selectedEmployee;
 
     @RequestMapping("/Employee/addEmployee")
@@ -60,40 +60,40 @@ public class EmployeeController {
 
     @RequestMapping("/Employee/listEmployees")
     public String allEmployees(Model model) {
-        activeEmployeeList = getActiveEmployeeList();
-        model.addAttribute("activeEmployeesDtos", activeEmployeeList);
+//        activeEmployeeList = getActiveEmployeeList();
+        model.addAttribute("activeEmployeesDtos", employeeFacade.getActiveEmployeeList());
 
-        inactiveEmployeeList = getInactiveEmployeeList();
-        model.addAttribute("inactiveEmployeesDtos", inactiveEmployeeList);
+//        inactiveEmployeeList = getInactiveEmployeeList();
+        model.addAttribute("inactiveEmployeesDtos", employeeFacade.getInactiveEmployeeList());
 
-        //LAMBDA for displaying counter for active employee active jobs
-        Map<Long, Long> countOfActiveJobsForActiveEmployee = new HashMap<>();
-        activeEmployeeList
-                .forEach(employeeDto -> countOfActiveJobsForActiveEmployee.put(employeeDto.getId(), employeeDto.getWorkedJobs()
-                        .stream()
-                        .filter(jobDto -> jobDto.getJobStatus().equals(JobStatus.ACTIVE))
-                        .count()));
-        model.addAttribute("countOfActiveJobsForActiveEmployee", countOfActiveJobsForActiveEmployee);
+//        //LAMBDA for displaying counter for active employee active jobs
+//        Map<Long, Long> countOfActiveJobsForActiveEmployee = new HashMap<>();
+//        activeEmployeeList
+//                .forEach(employeeDto -> countOfActiveJobsForActiveEmployee.put(employeeDto.getId(), employeeDto.getWorkedJobs()
+//                        .stream()
+//                        .filter(jobDto -> jobDto.getJobStatus().equals(JobStatus.ACTIVE))
+//                        .count()));
+        model.addAttribute("countOfActiveJobsForActiveEmployee", employeeFacade.countOfActiveJobsForActiveEmployee());
 
-        //LAMBDA for displaying counter for active employee completed jobs
-        Map<Long, Long> countOfCompletedJobsForActiveEmployee = new HashMap<>();
-        activeEmployeeList
-                .stream()
-                .forEach(employeeDto -> countOfCompletedJobsForActiveEmployee.put(employeeDto.getId(), employeeDto.getWorkedJobs()
-                        .stream()
-                        .filter(jobDto -> jobDto.getJobStatus().equals(JobStatus.COMPLETED))
-                        .count()));
-        model.addAttribute("countOfCompletedJobsForActiveEmployee", countOfCompletedJobsForActiveEmployee);
+//        //LAMBDA for displaying counter for active employee completed jobs
+//        Map<Long, Long> countOfCompletedJobsForActiveEmployee = new HashMap<>();
+//        activeEmployeeList
+//                .stream()
+//                .forEach(employeeDto -> countOfCompletedJobsForActiveEmployee.put(employeeDto.getId(), employeeDto.getWorkedJobs()
+//                        .stream()
+//                        .filter(jobDto -> jobDto.getJobStatus().equals(JobStatus.COMPLETED))
+//                        .count()));
+        model.addAttribute("countOfCompletedJobsForActiveEmployee", employeeFacade.countOfCompletedJobsForActiveEmployee());
 
-        //LAMBDA for displaying counter for inactive employee completed jobs
-        Map<Long, Long> countOfCompletedJobsForInactiveEmployee = new HashMap<>();
-        inactiveEmployeeList
-                .stream()
-                .forEach(employeeDto -> countOfCompletedJobsForInactiveEmployee.put(employeeDto.getId(), employeeDto.getWorkedJobs()
-                        .stream()
-                        .filter(jobDto -> jobDto.getJobStatus().equals(JobStatus.COMPLETED))
-                        .count()));
-        model.addAttribute("countOfCompletedJobsForInactiveEmployee", countOfCompletedJobsForInactiveEmployee);
+//        //LAMBDA for displaying counter for inactive employee completed jobs
+//        Map<Long, Long> countOfCompletedJobsForInactiveEmployee = new HashMap<>();
+//        inactiveEmployeeList
+//                .stream()
+//                .forEach(employeeDto -> countOfCompletedJobsForInactiveEmployee.put(employeeDto.getId(), employeeDto.getWorkedJobs()
+//                        .stream()
+//                        .filter(jobDto -> jobDto.getJobStatus().equals(JobStatus.COMPLETED))
+//                        .count()));
+        model.addAttribute("countOfCompletedJobsForInactiveEmployee", employeeFacade.countOfCompletedJobsForInactiveEmployee());
 
         return "employee/employeesHTML";
     }
@@ -169,22 +169,16 @@ public class EmployeeController {
     }
 
     public List<EmployeeDto> getActiveEmployeeList() {
-        activeEmployeeList = employeeRepository.findAll()
-                .stream()
-                .filter(employee -> employee.getEmployeeStatus().equals(EmployeeStatus.ACTIVE))
-                .map(e -> employeeBuilderService.dtoFromEntityWithJobs(e))
-                .collect(Collectors.toList());
-
-        return activeEmployeeList;
+        return employeeFacade.getActiveEmployeeList();
     }
 
-    public List<EmployeeDto> getInactiveEmployeeList() {
-        inactiveEmployeeList = employeeRepository.findAll()
-                .stream()
-                .filter(employee -> employee.getEmployeeStatus().equals(EmployeeStatus.INACTIVE))
-                .map(e -> employeeBuilderService.dtoFromEntityWithJobs(e))
-                .collect(Collectors.toList());
-
-        return inactiveEmployeeList;
-    }
+//    public List<EmployeeDto> getInactiveEmployeeList() {
+//        inactiveEmployeeList = employeeRepository.findAll()
+//                .stream()
+//                .filter(employee -> employee.getEmployeeStatus().equals(EmployeeStatus.INACTIVE))
+//                .map(e -> employeeBuilderService.dtoFromEntityWithJobs(e))
+//                .collect(Collectors.toList());
+//
+//        return inactiveEmployeeList;
+//    }
 }
