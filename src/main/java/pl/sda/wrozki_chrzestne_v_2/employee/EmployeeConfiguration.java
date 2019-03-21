@@ -7,7 +7,12 @@ import org.springframework.context.annotation.Configuration;
 public class EmployeeConfiguration {
 
     @Bean
-    EmployeeBuilderService employeeBuilderService(){
+    EmployeeBuilderService employeeBuilderService() {
         return new EmployeeBuilderService();
+    }
+
+    @Bean
+    EmployeeFacade employeeFacade(EmployeeRepository employeeRepository, EmployeeBuilderService employeeBuilderService) {
+        return new EmployeeFacade(employeeRepository, employeeBuilderService);
     }
 }
