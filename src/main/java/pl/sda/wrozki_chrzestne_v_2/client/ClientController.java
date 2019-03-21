@@ -16,28 +16,29 @@ import java.util.stream.Collectors;
 public class ClientController {
 
 
+
+//    private ClientRepository clientRepository;
+
+//    private ClientBuilderService clientBuilderService;
+
+//    @Autowired
+//    public void setClientRepository(ClientRepository clientRepository) {
+//        this.clientRepository = clientRepository;
+//    }
+
+//    @Autowired
+//    public void setClientBuilderService(ClientBuilderService clientBuilderService) {
+//        this.clientBuilderService = clientBuilderService;
+//    }
+
     private ClientFacade clientFacade;
-
-    private static final String CLIENT_LIST = "redirect:/Client/listClients";
-    private ClientRepository clientRepository;
-
-    private ClientBuilderService clientBuilderService;
-
-    @Autowired
-    public void setClientRepository(ClientRepository clientRepository) {
-        this.clientRepository = clientRepository;
-    }
-
-    @Autowired
-    public void setClientBuilderService(ClientBuilderService clientBuilderService) {
-        this.clientBuilderService = clientBuilderService;
-    }
 
     @Autowired
     public void setClientFacade(ClientFacade clientFacade) {
         this.clientFacade = clientFacade;
     }
 
+    private static final String CLIENT_LIST = "redirect:/Client/listClients";
     private ClientDto selectedClientDto;
 
     @RequestMapping("/Client/addClient")
