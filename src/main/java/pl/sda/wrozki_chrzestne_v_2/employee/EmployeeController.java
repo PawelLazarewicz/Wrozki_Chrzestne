@@ -18,6 +18,13 @@ public class EmployeeController {
 
     private EmployeeBuilderService employeeBuilderService;
 
+    private EmployeeFacade employeeFacade;
+
+    @Autowired
+    public void setEmployeeFacade(EmployeeFacade employeeFacade) {
+        this.employeeFacade = employeeFacade;
+    }
+
     @Autowired
     public void setEmployeeRepository(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
@@ -42,8 +49,9 @@ public class EmployeeController {
 
     @RequestMapping(value = "/Employee/listEmployees", method = RequestMethod.POST)
     public String addEmployee(@ModelAttribute EmployeeDto employeeDto, Model model) {
-        Employee newEmployee = employeeBuilderService.entityFromDto(employeeDto);
-        employeeRepository.save(newEmployee);
+        employeeFacade.addEmployee(employeeDto);
+//        Employee newEmployee = employeeBuilderService.entityFromDto(employeeDto);
+//        employeeRepository.save(newEmployee);
 
         allEmployees(model);
 
