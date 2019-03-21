@@ -34,9 +34,9 @@ public class JobController {
 
     private ClientBuilderService clientBuilderService;
 
-    //private ClientController clientController;
+    private ClientController clientController;
 
-    private ClientFacade clientFacade;
+    //private ClientFacade clientFacade;
 
     @Autowired
     public void setJobRepository(JobRepository jobRepository) {
@@ -68,15 +68,15 @@ public class JobController {
         this.clientBuilderService = clientBuilderService;
     }
 
-//    @Autowired
-//    public void setClientController(ClientController clientController) {
-//        this.clientController = clientController;
-//    }
-
     @Autowired
-    public void setClientFacade(ClientFacade clientFacade) {
-        this.clientFacade = clientFacade;
+    public void setClientController(ClientController clientController) {
+        this.clientController = clientController;
     }
+
+//    @Autowired
+//    public void setClientFacade(ClientFacade clientFacade) {
+//        this.clientFacade = clientFacade;
+//    }
 
     private List<JobDto> completedJobs = new ArrayList<>();
     private List<JobDto> uncompletedJobs = new ArrayList<>();
@@ -86,7 +86,7 @@ public class JobController {
     @RequestMapping("/Job/addJob")
     public String addJobForm(Model model) {
         model.addAttribute("job", new JobDto());
-        model.addAttribute("clients", clientFacade.getAllClients());
+        model.addAttribute("clients", clientController.getAllClients());
         return "job/addJobHTML";
     }
 
@@ -178,7 +178,7 @@ public class JobController {
         model.addAttribute("selectedJobDto", selectedJobDto);
         model.addAttribute("sorts", SortOfJobs.values());
 
-        List<ClientDto> clientsToChange = clientFacade.getAllClients();
+        List<ClientDto> clientsToChange = clientController.getAllClients();
         selectedClientDto = selectedJobDto.getClient();
 
         for (ClientDto clientDto : clientsToChange) {

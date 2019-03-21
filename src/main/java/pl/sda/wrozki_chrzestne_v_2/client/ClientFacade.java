@@ -23,11 +23,11 @@ public class ClientFacade {
         //return clientBuilderService.dtoFromEntityWithJobs(savedClient);
     }
 
-    public List<ClientDto> allClients() {
-        return getAllClients();
-    }
+//    public List<ClientDto> allClients() {
+//        return getAllClients();
+//    }
 
-    public List<ClientDto> getAllClients() {
+    public List<ClientDto> allClients() {
         return clientRepository.findAll()
                 .stream()
                 .map(e -> clientBuilderService.dtoFromEntityWithJobs(e))

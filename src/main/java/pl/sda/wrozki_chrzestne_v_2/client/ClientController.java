@@ -135,10 +135,7 @@ public class ClientController {
         return CLIENT_LIST;
     }
 
-//    public List<ClientDto> getAllClients() {
-//        return clientRepository.findAll()
-//                .stream()
-//                .map(e -> clientBuilderService.dtoFromEntityWithJobs(e))
-//                .collect(Collectors.toList());
-//    }
+    public List<ClientDto> getAllClients() {
+        return clientFacade.allClients();
+    }
 }
