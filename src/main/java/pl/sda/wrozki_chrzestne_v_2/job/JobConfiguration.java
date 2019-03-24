@@ -10,4 +10,9 @@ public class JobConfiguration {
     JobBuilderService jobBuilderService(){
         return new JobBuilderService();
     }
+
+    @Bean
+    JobFacade jobFacade(JobRepository jobRepository, JobBuilderService jobBuilderService){
+        return new JobFacade(jobRepository, jobBuilderService);
+    }
 }
