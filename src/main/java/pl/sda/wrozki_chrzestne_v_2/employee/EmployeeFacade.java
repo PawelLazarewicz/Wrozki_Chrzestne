@@ -2,6 +2,7 @@ package pl.sda.wrozki_chrzestne_v_2.employee;
 
 import lombok.AllArgsConstructor;
 import pl.sda.wrozki_chrzestne_v_2.dto.EmployeeDto;
+import pl.sda.wrozki_chrzestne_v_2.job.Job;
 import pl.sda.wrozki_chrzestne_v_2.job.JobStatus;
 
 import java.util.HashMap;
@@ -96,5 +97,21 @@ public class EmployeeFacade {
         EmployeeDto selectedEmployeeDto = employeeBuilderService.dtoFromEntityWithJobs(selectedEmployee);
 
         return selectedEmployeeDto;
+    }
+
+    public void deleteEmployee(Long id) {
+        Employee employeeToDelete = employeeBuilderService.selectEmployee(id);
+        for (Job workedJob : employeeToDelete.getWorkedJobs()) {
+            if (workedJob.getJobStatus().equals(JobStatus.ACTIVE)) {
+                employeeToDelete = null;
+                break;
+            } else {
+                //empty
+            }
+        }
+
+        if (employeeToDelete != null) {
+            employeeRepository.delete(employeeToDelete);
+        }
     }
 }

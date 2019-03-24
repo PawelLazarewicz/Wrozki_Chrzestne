@@ -122,19 +122,20 @@ public class EmployeeController {
 
     @RequestMapping("Employee/{id}/delete")
     public String deleteEmployee(@PathVariable Long id, Model model) {
-        Employee employeeToDelete = employeeBuilderService.selectEmployee(id);
-        for (Job workedJob : employeeToDelete.getWorkedJobs()) {
-            if (workedJob.getJobStatus().equals(JobStatus.ACTIVE)) {
-                employeeToDelete = null;
-                break;
-            } else {
-                //empty
-            }
-        }
-
-        if (employeeToDelete != null) {
-            employeeRepository.delete(employeeToDelete);
-        }
+        employeeFacade.deleteEmployee(id);
+//        Employee employeeToDelete = employeeBuilderService.selectEmployee(id);
+//        for (Job workedJob : employeeToDelete.getWorkedJobs()) {
+//            if (workedJob.getJobStatus().equals(JobStatus.ACTIVE)) {
+//                employeeToDelete = null;
+//                break;
+//            } else {
+//                //empty
+//            }
+//        }
+//
+//        if (employeeToDelete != null) {
+//            employeeRepository.delete(employeeToDelete);
+//        }
 
         return LIST_EMPLOYEES;
     }
