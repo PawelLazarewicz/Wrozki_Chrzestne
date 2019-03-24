@@ -114,4 +114,10 @@ public class EmployeeFacade {
             employeeRepository.delete(employeeToDelete);
         }
     }
+
+    public void moveEmployeeActive(Long id) {
+        Employee employeeToMoveActive = employeeBuilderService.selectEmployee(id);
+        employeeToMoveActive.setEmployeeStatus(EmployeeStatus.ACTIVE);
+        employeeRepository.save(employeeToMoveActive);
+    }
 }

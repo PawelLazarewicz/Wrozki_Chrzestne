@@ -142,9 +142,10 @@ public class EmployeeController {
 
     @RequestMapping("Employee/{id}/move_Active")
     public String moveEmployeeActive(@PathVariable Long id, Model model) {
-        Employee employeeToMoveActive = employeeBuilderService.selectEmployee(id);
-        employeeToMoveActive.setEmployeeStatus(EmployeeStatus.ACTIVE);
-        employeeRepository.save(employeeToMoveActive);
+        employeeFacade.moveEmployeeActive(id);
+//        Employee employeeToMoveActive = employeeBuilderService.selectEmployee(id);
+//        employeeToMoveActive.setEmployeeStatus(EmployeeStatus.ACTIVE);
+//        employeeRepository.save(employeeToMoveActive);
 
         return LIST_EMPLOYEES;
     }
