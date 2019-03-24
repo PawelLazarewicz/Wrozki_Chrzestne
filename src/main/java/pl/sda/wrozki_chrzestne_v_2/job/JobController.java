@@ -22,6 +22,14 @@ import java.util.stream.Collectors;
 public class JobController {
 
     private static final String JOB_LIST = "redirect:/Job/listJobs";
+
+    private JobFacade jobFacade;
+
+    @Autowired
+    public void setJobFacade(JobFacade jobFacade) {
+        this.jobFacade = jobFacade;
+    }
+
     private JobRepository jobRepository;
 
     private JobBuilderService jobBuilderService;
@@ -92,8 +100,9 @@ public class JobController {
 
     @RequestMapping(value = "/Job/listJobs", method = RequestMethod.POST)
     public String addJob(@ModelAttribute JobDto jobDto, Model model) {
-        Job newJob = jobBuilderService.entityFromDto(jobDto);
-        jobRepository.save(newJob);
+        jobFacade.addJob(jobDto);
+//        Job newJob = jobBuilderService.entityFromDto(jobDto);
+//        jobRepository.save(newJob);
 
         allJobs(model);
 
