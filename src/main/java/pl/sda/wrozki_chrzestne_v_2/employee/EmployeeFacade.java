@@ -82,4 +82,12 @@ public class EmployeeFacade {
 
         return countOfCompletedJobsForInactiveEmployee;
     }
+
+    public void moveEmployeeInactive(Long id) {
+        Employee employeeToMoveInactive = employeeBuilderService.selectEmployee(id);
+        if (!employeeToMoveInactive.isAssignedForJobs()) {
+            employeeToMoveInactive.setEmployeeStatus(EmployeeStatus.INACTIVE);
+            employeeRepository.save(employeeToMoveInactive);
+        }
+    }
 }

@@ -100,11 +100,12 @@ public class EmployeeController {
 
     @RequestMapping("Employee/{id}/move_Inactive")
     public String moveEmployeeInactive(@PathVariable Long id, Model model) {
-        Employee employeeToMoveInactive = employeeBuilderService.selectEmployee(id);
-        if (!employeeToMoveInactive.isAssignedForJobs()) {
-            employeeToMoveInactive.setEmployeeStatus(EmployeeStatus.INACTIVE);
-            employeeRepository.save(employeeToMoveInactive);
-        }
+        employeeFacade.moveEmployeeInactive(id);
+//        Employee employeeToMoveInactive = employeeBuilderService.selectEmployee(id);
+//        if (!employeeToMoveInactive.isAssignedForJobs()) {
+//            employeeToMoveInactive.setEmployeeStatus(EmployeeStatus.INACTIVE);
+//            employeeRepository.save(employeeToMoveInactive);
+//        }
 
         return LIST_EMPLOYEES;
     }
