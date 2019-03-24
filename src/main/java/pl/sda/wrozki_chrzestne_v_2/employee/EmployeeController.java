@@ -14,31 +14,33 @@ import java.util.stream.Collectors;
 @Controller
 public class EmployeeController {
 
-    private EmployeeRepository employeeRepository;
+//    private EmployeeRepository employeeRepository;
+//
+//    private EmployeeBuilderService employeeBuilderService;
 
-    private EmployeeBuilderService employeeBuilderService;
 
-    private EmployeeFacade employeeFacade;
+//    @Autowired
+//    }
+//        this.employeeBuilderService = employeeBuilderService;
+//    public void setEmployeeBuilderService(EmployeeBuilderService employeeBuilderService) {
+//    @Autowired
+//
+//    }
+//        this.employeeRepository = employeeRepository;
+//    public void setEmployeeRepository(EmployeeRepository employeeRepository) {
+
+private EmployeeFacade employeeFacade;
 
     @Autowired
     public void setEmployeeFacade(EmployeeFacade employeeFacade) {
         this.employeeFacade = employeeFacade;
     }
 
-    @Autowired
-    public void setEmployeeRepository(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
-    }
-
-    @Autowired
-    public void setEmployeeBuilderService(EmployeeBuilderService employeeBuilderService) {
-        this.employeeBuilderService = employeeBuilderService;
-    }
-
     private static final String LIST_EMPLOYEES = "redirect:/Employee/listEmployees";
 
-    //    private List<EmployeeDto> inactiveEmployeeList = new ArrayList<>();
+//    private List<EmployeeDto> inactiveEmployeeList = new ArrayList<>();
 //    private List<EmployeeDto> activeEmployeeList = new ArrayList<>();
+
     private EmployeeDto selectedEmployee;
 
     @RequestMapping("/Employee/addEmployee")
