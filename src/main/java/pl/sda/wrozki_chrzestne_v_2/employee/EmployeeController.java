@@ -152,19 +152,22 @@ public class EmployeeController {
 
     @RequestMapping("Employee/{id}/edit")
     public String editEmployee(@PathVariable Long id, Model model) {
-        Employee employeeToEdit = employeeBuilderService.selectEmployee(id);
-        selectedEmployee = employeeBuilderService.dtoFromEntityWithJobs(employeeToEdit);
+//        Employee employeeToEdit = employeeBuilderService.selectEmployee(id);
+//        selectedEmployee = employeeBuilderService.dtoFromEntityWithJobs(employeeToEdit);
 
-        model.addAttribute("employee", selectedEmployee);
+        selectedEmployee = employeeFacade.editEmployee(id);
+
+        model.addAttribute("employee", employeeFacade.editEmployee(id));
 
         return "employee/updateEmployeeHTML";
     }
 
     @RequestMapping(value = "/Employee/updateEmployee", method = RequestMethod.POST)
     public String updateEmployee(@ModelAttribute EmployeeDto employeeDto, Model model) {
-        Employee employeeToUpdate = employeeBuilderService.selectEmployee(selectedEmployee.getId());
-        employeeToUpdate = employeeBuilderService.updateEntityFromDto(employeeDto, employeeToUpdate);
-        employeeRepository.save(employeeToUpdate);
+        employeeFacade.updateEmployee(employeeDto, selectedEmployee);
+//        Employee employeeToUpdate = employeeBuilderService.selectEmployee(selectedEmployee.getId());
+//        employeeToUpdate = employeeBuilderService.updateEntityFromDto(employeeDto, employeeToUpdate);
+//        employeeRepository.save(employeeToUpdate);
 
         allEmployees(model);
 

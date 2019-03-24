@@ -120,4 +120,17 @@ public class EmployeeFacade {
         employeeToMoveActive.setEmployeeStatus(EmployeeStatus.ACTIVE);
         employeeRepository.save(employeeToMoveActive);
     }
+
+    public EmployeeDto editEmployee(Long id) {
+        Employee employeeToEdit = employeeBuilderService.selectEmployee(id);
+        EmployeeDto employeeToEditDto = employeeBuilderService.dtoFromEntityWithJobs(employeeToEdit);
+
+        return employeeToEditDto;
+    }
+
+    public void updateEmployee(EmployeeDto updatingEmployeeDto, EmployeeDto selectingEmployeeDto) {
+        Employee employeeToUpdate = employeeBuilderService.selectEmployee(selectingEmployeeDto.getId());
+        employeeToUpdate = employeeBuilderService.updateEntityFromDto(updatingEmployeeDto, employeeToUpdate);
+        employeeRepository.save(employeeToUpdate);
+    }
 }
