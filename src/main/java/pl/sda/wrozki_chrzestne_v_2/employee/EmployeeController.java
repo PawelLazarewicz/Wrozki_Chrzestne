@@ -112,10 +112,10 @@ public class EmployeeController {
 
     @RequestMapping("Employee/{id}/show")
     public String getEmployee(@PathVariable Long id, Model model) {
-        Employee employee = employeeBuilderService.selectEmployee(id);
-        selectedEmployee = employeeBuilderService.dtoFromEntityWithJobs(employee);
+//        Employee employee = employeeBuilderService.selectEmployee(id);
+//        selectedEmployee = employeeBuilderService.dtoFromEntityWithJobs(employee);
 
-        model.addAttribute("employee", selectedEmployee);
+        model.addAttribute("employee", employeeFacade.getEmployee(id));
 
         return "employee/employeeHTML";
     }

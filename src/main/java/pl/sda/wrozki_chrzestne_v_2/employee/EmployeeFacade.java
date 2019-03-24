@@ -90,4 +90,11 @@ public class EmployeeFacade {
             employeeRepository.save(employeeToMoveInactive);
         }
     }
+
+    public EmployeeDto getEmployee(Long id) {
+        Employee selectedEmployee = employeeBuilderService.selectEmployee(id);
+        EmployeeDto selectedEmployeeDto = employeeBuilderService.dtoFromEntityWithJobs(selectedEmployee);
+
+        return selectedEmployeeDto;
+    }
 }
