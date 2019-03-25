@@ -222,15 +222,16 @@ public class JobController {
 
     @RequestMapping(value = "Job/{idJob}/selectClient/{id}", method = RequestMethod.POST)
     public String changeSelectedClient(@PathVariable Long idJob, @ModelAttribute ClientDto clientDto, Model model) {
-        Client client = clientBuilderService.selectClient(clientDto.getId());
-        selectedClientDto = clientBuilderService.dtoFromEntity(client);
-
-        Job job = jobBuilderService.selectJob(idJob);
-        JobDto editedJobDto = jobBuilderService.dtoFromEntityWithEmployees(job);
-        editedJobDto.setClient(selectedClientDto);
-
-        job = jobBuilderService.updateEntityFromDto(editedJobDto, job);
-        jobRepository.save(job);
+        jobFacade.changeSelectedClient(idJob, clientDto);
+//        Client client = clientBuilderService.selectClient(clientDto.getId());
+//        selectedClientDto = clientBuilderService.dtoFromEntity(client);
+//
+//        Job job = jobBuilderService.selectJob(idJob);
+//        JobDto editedJobDto = jobBuilderService.dtoFromEntityWithEmployees(job);
+//        editedJobDto.setClient(selectedClientDto);
+//
+//        job = jobBuilderService.updateEntityFromDto(editedJobDto, job);
+//        jobRepository.save(job);
 
         return "redirect:/Job/" + idJob + "/edit";
     }

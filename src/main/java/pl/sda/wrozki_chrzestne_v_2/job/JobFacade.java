@@ -133,4 +133,16 @@ public class JobFacade {
 
         return newJob.getId();
     }
+
+    public void changeSelectedClient(Long idJob, ClientDto clientDto) {
+        Client client = clientBuilderService.selectClient(clientDto.getId());
+        ClientDto selectedClientDto = clientBuilderService.dtoFromEntity(client);
+
+        Job job = jobBuilderService.selectJob(idJob);
+        JobDto editedJobDto = jobBuilderService.dtoFromEntityWithEmployees(job);
+        editedJobDto.setClient(selectedClientDto);
+
+        job = jobBuilderService.updateEntityFromDto(editedJobDto, job);
+        jobRepository.save(job);
+    }
 }
