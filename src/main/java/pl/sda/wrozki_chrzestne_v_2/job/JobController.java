@@ -94,7 +94,7 @@ public class JobController {
     @RequestMapping("/Job/addJob")
     public String addJobForm(Model model) {
         model.addAttribute("job", new JobDto());
-        model.addAttribute("clients", clientController.getAllClients());
+        model.addAttribute("clients", jobFacade.getClients());
         return "job/addJobHTML";
     }
 

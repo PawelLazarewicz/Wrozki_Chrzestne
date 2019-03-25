@@ -11,7 +11,6 @@ import pl.sda.wrozki_chrzestne_v_2.employee.Employee;
 import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeBuilderService;
 import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeController;
 import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeRepository;
-import sun.security.krb5.internal.ktab.KeyTab;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -208,5 +207,9 @@ public class JobFacade {
             removedEmployee.setAssignedForJobs(false);
             employeeRepository.save(removedEmployee);
         }
+    }
+
+    public List<ClientDto> getClients() {
+        return clientController.getAllClients();
     }
 }
