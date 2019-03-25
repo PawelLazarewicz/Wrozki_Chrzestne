@@ -37,14 +37,14 @@ public class JobFacade {
 
     public JobDto getJob(Long id) {
         Job job = jobBuilderService.selectJob(id);
-        JobDto selectedJobDto = jobBuilderService.dtoFromEntity(job);
+        //Job finalSelectedJob = job;
 
-        JobDto finalSelectedJobDto = selectedJobDto;
         Optional<JobDto> completedJobToShow = getCompletedJobList()
                 .stream()
-                .filter(jobDto -> jobDto.getId().equals(finalSelectedJobDto.getId()))
+                .filter(jobDto -> jobDto.getId().equals(job.getId()))
                 .findFirst();
 
+        JobDto selectedJobDto;
         if (completedJobToShow.isPresent()) {
             selectedJobDto = completedJobToShow.get();
         } else {
