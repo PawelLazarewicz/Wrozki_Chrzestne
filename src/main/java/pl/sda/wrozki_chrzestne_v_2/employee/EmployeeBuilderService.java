@@ -15,14 +15,26 @@ import java.util.stream.Collectors;
 
 public class EmployeeBuilderService {
 
-    @Autowired
     private EmployeeRepository employeeRepository;
 
-    @Autowired
     private JobBuilderService jobBuilderService;
 
-    @Autowired
     private JobController jobController;
+
+    @Autowired
+    public void setEmployeeRepository(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
+    }
+
+    @Autowired
+    public void setJobBuilderService(JobBuilderService jobBuilderService) {
+        this.jobBuilderService = jobBuilderService;
+    }
+
+    @Autowired
+    public void setJobController(JobController jobController) {
+        this.jobController = jobController;
+    }
 
     public Employee entityFromDto(EmployeeDto employeeDto) {
         Employee employee = new Employee();

@@ -12,11 +12,19 @@ import java.util.stream.Collectors;
 
 public class ClientBuilderService {
 
-    @Autowired
     private ClientRepository clientRepository;
 
-    @Autowired
     private JobBuilderService jobBuilderService;
+
+    @Autowired
+    public void setClientRepository(ClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
+    }
+
+    @Autowired
+    public void setJobBuilderService(JobBuilderService jobBuilderService) {
+        this.jobBuilderService = jobBuilderService;
+    }
 
     public Client entityFromDto(ClientDto clientDto) {
         Client client = new Client();
