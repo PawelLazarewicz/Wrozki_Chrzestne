@@ -1,6 +1,8 @@
 package pl.sda.wrozki_chrzestne_v_2.job;
 
 import lombok.AllArgsConstructor;
+import pl.sda.wrozki_chrzestne_v_2.client.ClientController;
+import pl.sda.wrozki_chrzestne_v_2.dto.ClientDto;
 import pl.sda.wrozki_chrzestne_v_2.dto.EmployeeDto;
 import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
 import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeController;
@@ -16,6 +18,7 @@ public class JobFacade {
     private JobBuilderService jobBuilderService;
     private JobController jobController;
     private EmployeeController employeeController;
+    private ClientController clientController;
 
     public void addJob(JobDto jobDto) {
         Job newJob = jobBuilderService.entityFromDto(jobDto);
@@ -95,5 +98,25 @@ public class JobFacade {
                         .allMatch(job -> job.getJobStatus().equals(JobStatus.COMPLETED)))
                 .peek(employee -> employee.setAssignedForJobs(false))
                 .collect(Collectors.toList());
+    }
+
+    public List<ClientDto> getClientsToChange(JobDto selectedJobDto) {
+        List<ClientDto> clientsToChange = clientController.getAllClients();
+        ClientDto selectedClientDto = selectedJobDto.getClient();
+
+        for (ClientDto clientDto : clientsToChange) {
+            if (clientDto.getId().equals(selectedClientDto.getId())) {
+                clientsToChange.remove(clientDto);
+                break;
+            }
+        }
+        return clientsToChange;
+    }
+
+    public void updateJob(JobDto updatingJobDto, JobDto selectingJobDto) {
+        Job job = jobBuilderService.selectJob(selectingJobDto.getId());
+        updatingJobDto.setClient(selectingJobDto.getClient());
+        job = jobBuilderService.updateEntityFromDto(updatingJobDto, job);
+        jobRepository.save(job);
     }
 }

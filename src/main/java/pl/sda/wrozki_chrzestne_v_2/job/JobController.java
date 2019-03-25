@@ -187,27 +187,18 @@ public class JobController {
         model.addAttribute("selectedJobDto", selectedJobDto);
         model.addAttribute("sorts", SortOfJobs.values());
 
-        List<ClientDto> clientsToChange = clientController.getAllClients();
-        selectedClientDto = selectedJobDto.getClient();
-
-        for (ClientDto clientDto : clientsToChange) {
-            if (clientDto.getId().equals(selectedClientDto.getId())) {
-                clientsToChange.remove(clientDto);
-                break;
-            }
-        }
-
-        model.addAttribute("clients", clientsToChange);
+        model.addAttribute("clients", jobFacade.getClientsToChange(selectedJobDto));
 
         return "job/updateJobHTML";
     }
 
     @RequestMapping(value = "/Job/updateJob", method = RequestMethod.POST)
     public String updateJob(@ModelAttribute JobDto jobDto, Model model) {
-        Job job = jobBuilderService.selectJob(selectedJobDto.getId());
-        jobDto.setClient(selectedJobDto.getClient());
-        job = jobBuilderService.updateEntityFromDto(jobDto, job);
-        jobRepository.save(job);
+        jobFacade.updateJob(jobDto, selectedJobDto);
+//        Job job = jobBuilderService.selectJob(selectedJobDto.getId());
+//        jobDto.setClient(selectedJobDto.getClient());
+//        job = jobBuilderService.updateEntityFromDto(jobDto, job);
+//        jobRepository.save(job);
 
         allJobs(model);
 
