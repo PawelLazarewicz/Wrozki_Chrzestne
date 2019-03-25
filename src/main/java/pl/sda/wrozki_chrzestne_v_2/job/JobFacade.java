@@ -7,8 +7,11 @@ import pl.sda.wrozki_chrzestne_v_2.client.ClientController;
 import pl.sda.wrozki_chrzestne_v_2.dto.ClientDto;
 import pl.sda.wrozki_chrzestne_v_2.dto.EmployeeDto;
 import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
+import pl.sda.wrozki_chrzestne_v_2.employee.Employee;
+import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeBuilderService;
 import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,6 +25,7 @@ public class JobFacade {
     private EmployeeController employeeController;
     private ClientController clientController;
     private ClientBuilderService clientBuilderService;
+    private EmployeeBuilderService employeeBuilderService;
 
     public void addJob(JobDto jobDto) {
         Job newJob = jobBuilderService.entityFromDto(jobDto);
@@ -143,6 +147,36 @@ public class JobFacade {
         editedJobDto.setClient(selectedClientDto);
 
         job = jobBuilderService.updateEntityFromDto(editedJobDto, job);
+        jobRepository.save(job);
+    }
+
+    public List<EmployeeDto> getEmployeesDtoAvailableToAssign(JobDto selectedJobDto) {
+        List<EmployeeDto> activeEmployeesDtos = employeeController.getActiveEmployeeList();
+
+        List<EmployeeDto> alreadyAssignedEmployeesDto = selectedJobDto.getEmployees();
+        List<EmployeeDto> employeesDtoAvailableToAssign = new ArrayList<>(activeEmployeesDtos);
+
+        for (EmployeeDto employeeAssigned : alreadyAssignedEmployeesDto) {
+            if (!employeesDtoAvailableToAssign.isEmpty()) {
+                for (EmployeeDto employeeAvailableToAssign : employeesDtoAvailableToAssign) {
+                    if (employeeAssigned.getId().equals(employeeAvailableToAssign.getId())) {
+                        employeesDtoAvailableToAssign.remove(employeeAvailableToAssign);
+                        break;
+                    }
+                }
+            } else {
+                employeesDtoAvailableToAssign = new ArrayList<>();
+            }
+        }
+        return employeesDtoAvailableToAssign;
+    }
+
+    public void assignEmployeeForJob(EmployeeDto employeeDto, Long id) {
+        Employee employeeToAssign = employeeBuilderService.selectEmployee(employeeDto.getId());
+        employeeToAssign.setAssignedForJobs(true);
+
+        Job job = jobBuilderService.selectJob(id);
+        job.getEmployees().add(employeeToAssign);
         jobRepository.save(job);
     }
 }

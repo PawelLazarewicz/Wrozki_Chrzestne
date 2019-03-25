@@ -243,41 +243,42 @@ public class JobController {
 
         model.addAttribute("jobForAssign", selectedJobDto);
 
-        List<EmployeeDto> activeEmployeesDtos = employeeController.getActiveEmployeeList();
+//        List<EmployeeDto> activeEmployeesDtos = employeeController.getActiveEmployeeList();
+//
+//        List<EmployeeDto> alreadyAssignedEmployeesDto = selectedJobDto.getEmployees();
+//        List<EmployeeDto> employeesDtoAvailableToAssign = new ArrayList<>(activeEmployeesDtos);
+//
+//        for (EmployeeDto employeeAssigned : alreadyAssignedEmployeesDto) {
+//            if (!employeesDtoAvailableToAssign.isEmpty()) {
+//                for (EmployeeDto employeeAvailableToAssign : employeesDtoAvailableToAssign) {
+//                    if (employeeAssigned.getId().equals(employeeAvailableToAssign.getId())) {
+//                        employeesDtoAvailableToAssign.remove(employeeAvailableToAssign);
+//                        break;
+//                    }
+//                }
+//            } else {
+//                employeesDtoAvailableToAssign = new ArrayList<>();
+//            }
+//        }
 
-        List<EmployeeDto> alreadyAssignedEmployeesDto = selectedJobDto.getEmployees();
-        List<EmployeeDto> employeesDtoAvailableToAssign = new ArrayList<>(activeEmployeesDtos);
-
-        for (EmployeeDto employeeAssigned : alreadyAssignedEmployeesDto) {
-            if (!employeesDtoAvailableToAssign.isEmpty()) {
-                for (EmployeeDto employeeAvailableToAssign : employeesDtoAvailableToAssign) {
-                    if (employeeAssigned.getId().equals(employeeAvailableToAssign.getId())) {
-                        employeesDtoAvailableToAssign.remove(employeeAvailableToAssign);
-                        break;
-                    }
-                }
-            } else {
-                employeesDtoAvailableToAssign = new ArrayList<>();
-            }
-        }
-
-        model.addAttribute("employeesDtoAvailableToAssign", employeesDtoAvailableToAssign);
+        model.addAttribute("employeesDtoAvailableToAssign", jobFacade.getEmployeesDtoAvailableToAssign(selectedJobDto));
 
         return "job/assignEmployeeHTML";
     }
 
     @RequestMapping(value = "/Job/{id}/assigningEmployee", method = RequestMethod.POST)
     public String assignEmployeeForJob(@ModelAttribute EmployeeDto employeeDto, @PathVariable Long id, Model model) {
-        Employee employeeToAssign = employeeBuilderService.selectEmployee(employeeDto.getId());
-        employeeToAssign.setAssignedForJobs(true);
-
-        Job job = jobBuilderService.selectJob(id);
-        job.getEmployees().add(employeeToAssign);
-        jobRepository.save(job);
+//        Employee employeeToAssign = employeeBuilderService.selectEmployee(employeeDto.getId());
+//        employeeToAssign.setAssignedForJobs(true);
+//
+//        Job job = jobBuilderService.selectJob(id);
+//        job.getEmployees().add(employeeToAssign);
+//        jobRepository.save(job);
+        jobFacade.assignEmployeeForJob(employeeDto, id);
 
         allJobs(model);
 
-        return "redirect:/Job/" + selectedJobDto.getId() + "/assignEmployee";
+        return "redirect:/Job/" + id + "/assignEmployee";
     }
 
     @RequestMapping(value = "/Job/{id}/removeAssignedEmployee/{idEmployee}", method = RequestMethod.POST)
