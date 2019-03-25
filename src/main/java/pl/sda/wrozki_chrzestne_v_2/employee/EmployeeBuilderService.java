@@ -65,7 +65,7 @@ public class EmployeeBuilderService {
                 .map(e -> jobBuilderService.dtoFromEntity(e))
                 .collect(Collectors.toList());
 
-        List<JobDto> completedJobs = jobController.getCompletedJobList()
+        List<JobDto> completedJobs = jobController.getCompletedJobsField()
                 .stream()
                 .filter(jobDto -> jobDto.getEmployees()
                         .stream()

@@ -115,8 +115,8 @@ public class JobController {
 //        uncompletedJobs = getUncompletedJobList();
         model.addAttribute("activeJobsDto", jobFacade.getUncompletedJobList());
 
-        completedJobs = getCompletedJobList();
-        model.addAttribute("completedJobsDto", completedJobs);
+//        completedJobs = getCompletedJobList();
+        model.addAttribute("completedJobsDto", jobFacade.getCompletedJobList());
 
         return "job/jobsHTML";
     }
@@ -330,7 +330,7 @@ public class JobController {
 //        return uncompletedJobs;
 //    }
 
-    public List<JobDto> getCompletedJobList() {
+    public List<JobDto> getCompletedJobsField() {
         return completedJobs;
     }
 }

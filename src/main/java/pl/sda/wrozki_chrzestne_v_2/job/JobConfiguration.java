@@ -12,7 +12,7 @@ public class JobConfiguration {
     }
 
     @Bean
-    JobFacade jobFacade(JobRepository jobRepository, JobBuilderService jobBuilderService){
-        return new JobFacade(jobRepository, jobBuilderService);
+    JobFacade jobFacade(JobRepository jobRepository, JobBuilderService jobBuilderService, JobController jobController){
+        return new JobFacade(jobRepository, jobBuilderService, jobController);
     }
 }

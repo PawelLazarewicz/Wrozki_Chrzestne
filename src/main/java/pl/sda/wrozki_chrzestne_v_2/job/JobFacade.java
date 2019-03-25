@@ -11,6 +11,7 @@ public class JobFacade {
 
     private JobRepository jobRepository;
     private JobBuilderService jobBuilderService;
+    private JobController jobController;
 
     public void addJob(JobDto jobDto) {
         Job newJob = jobBuilderService.entityFromDto(jobDto);
@@ -24,5 +25,9 @@ public class JobFacade {
                 .filter(job -> job.getJobStatus().equals(JobStatus.ACTIVE))
                 .map(e -> jobBuilderService.dtoFromEntityWithEmployees(e))
                 .collect(Collectors.toList());
+    }
+
+    public List<JobDto> getCompletedJobList() {
+        return jobController.getCompletedJobsField();
     }
 }
