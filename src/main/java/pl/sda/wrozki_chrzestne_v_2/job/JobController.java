@@ -147,35 +147,35 @@ public class JobController {
 
     @GetMapping("Job/{id}/move")
     public String moveJobCompleted(@PathVariable Long id, Model model) {
-        Job jobToMove = jobBuilderService.selectJob(id);
-        selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(jobToMove);
-        selectedJobDto.setJobStatus(JobStatus.COMPLETED);
-
-        // lambda for set employee assigned for job as FALSE
-        selectedJobDto.getEmployees()
-                .stream()
-                .filter(employee -> employee.getWorkedJobs()
-                        .stream()
-                        .allMatch(job -> job.getJobStatus().equals(JobStatus.COMPLETED)))
-                .peek(employee -> employee.setAssignedForJobs(false))
-                .collect(Collectors.toList());
-
-        jobToMove = jobBuilderService.updateEntityFromDto(selectedJobDto, jobToMove);
-        jobRepository.save(jobToMove);
-
-        JobDto jobToMoveCompleted = jobBuilderService.dtoFromEntityWithEmployees(jobToMove);
-
-        if (completedJobs.isEmpty()) {
-            completedJobs.add(jobToMoveCompleted);
-        } else {
-            for (JobDto completedJob : completedJobs) {
-                if (completedJob.getId().equals(jobToMoveCompleted.getId())) {
-                    break;
-                }
-            }
-            completedJobs.add(jobToMoveCompleted);
-        }
-
+        jobFacade.moveJobCompleted(id);
+//        Job jobToMove = jobBuilderService.selectJob(id);
+//        selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(jobToMove);
+//        selectedJobDto.setJobStatus(JobStatus.COMPLETED);
+//
+//        // lambda for set employee assigned for job as FALSE
+//        selectedJobDto.getEmployees()
+//                .stream()
+//                .filter(employee -> employee.getWorkedJobs()
+//                        .stream()
+//                        .allMatch(job -> job.getJobStatus().equals(JobStatus.COMPLETED)))
+//                .peek(employee -> employee.setAssignedForJobs(false))
+//                .collect(Collectors.toList());
+//
+//        jobToMove = jobBuilderService.updateEntityFromDto(selectedJobDto, jobToMove);
+//        jobRepository.save(jobToMove);
+//
+//        JobDto jobToMoveCompleted = jobBuilderService.dtoFromEntityWithEmployees(jobToMove);
+//
+//        if (completedJobs.isEmpty()) {
+//            completedJobs.add(jobToMoveCompleted);
+//        } else {
+//            for (JobDto completedJob : completedJobs) {
+//                if (completedJob.getId().equals(jobToMoveCompleted.getId())) {
+//                    break;
+//                }
+//            }
+//            completedJobs.add(jobToMoveCompleted);
+//        }
         return JOB_LIST;
     }
 

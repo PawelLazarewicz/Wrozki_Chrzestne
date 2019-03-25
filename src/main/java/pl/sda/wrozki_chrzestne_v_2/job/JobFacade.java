@@ -57,4 +57,35 @@ public class JobFacade {
 
         return employeeController.getActiveEmployeeList();
     }
+
+    public void moveJobCompleted(Long id) {
+        Job jobToMove = jobBuilderService.selectJob(id);
+        JobDto selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(jobToMove);
+        selectedJobDto.setJobStatus(JobStatus.COMPLETED);
+
+        // lambda for set employee assigned for job as FALSE
+        selectedJobDto.getEmployees()
+                .stream()
+                .filter(employee -> employee.getWorkedJobs()
+                        .stream()
+                        .allMatch(job -> job.getJobStatus().equals(JobStatus.COMPLETED)))
+                .peek(employee -> employee.setAssignedForJobs(false))
+                .collect(Collectors.toList());
+
+        jobToMove = jobBuilderService.updateEntityFromDto(selectedJobDto, jobToMove);
+        jobRepository.save(jobToMove);
+
+        JobDto jobToMoveCompleted = jobBuilderService.dtoFromEntityWithEmployees(jobToMove);
+
+        if (getCompletedJobList().isEmpty()) {
+            getCompletedJobList().add(jobToMoveCompleted);
+        } else {
+            for (JobDto completedJob : getCompletedJobList()) {
+                if (completedJob.getId().equals(jobToMoveCompleted.getId())) {
+                    break;
+                }
+            }
+            getCompletedJobList().add(jobToMoveCompleted);
+        }
+    }
 }
