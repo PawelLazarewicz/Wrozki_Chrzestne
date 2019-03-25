@@ -30,26 +30,9 @@ public class JobController {
         this.jobFacade = jobFacade;
     }
 
-    private JobRepository jobRepository;
-
     private JobBuilderService jobBuilderService;
 
-    private EmployeeRepository employeeRepository;
-
     private EmployeeBuilderService employeeBuilderService;
-
-    private EmployeeController employeeController;
-
-    private ClientBuilderService clientBuilderService;
-
-    private ClientController clientController;
-
-    //private ClientFacade clientFacade;
-
-    @Autowired
-    public void setJobRepository(JobRepository jobRepository) {
-        this.jobRepository = jobRepository;
-    }
 
     @Autowired
     public void setJobBuilderService(JobBuilderService jobBuilderService) {
@@ -57,39 +40,59 @@ public class JobController {
     }
 
     @Autowired
-    public void setEmployeeRepository(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
-    }
-
-    @Autowired
     public void setEmployeeBuilderService(EmployeeBuilderService employeeBuilderService) {
         this.employeeBuilderService = employeeBuilderService;
     }
 
-    @Autowired
-    public void setEmployeeController(EmployeeController employeeController) {
-        this.employeeController = employeeController;
-    }
+    //
+    //    private EmployeeRepository employeeRepository;
+    //
+    //    private EmployeeController employeeController;
+    //
+    //    private ClientBuilderService clientBuilderService;
+    //
+    //    private ClientController clientController;
+    //
 
-    @Autowired
-    public void setClientBuilderService(ClientBuilderService clientBuilderService) {
-        this.clientBuilderService = clientBuilderService;
-    }
+//    private JobRepository jobRepository;
 
-    @Autowired
-    public void setClientController(ClientController clientController) {
-        this.clientController = clientController;
-    }
+//    private ClientFacade clientFacade;
+
+//    @Autowired
+//    public void setJobRepository(JobRepository jobRepository) {
+//        this.jobRepository = jobRepository;
+//    }
+//
+//    @Autowired
+//    public void setEmployeeRepository(EmployeeRepository employeeRepository) {
+//        this.employeeRepository = employeeRepository;
+//    }
+//
+//    @Autowired
+//    public void setEmployeeController(EmployeeController employeeController) {
+//        this.employeeController = employeeController;
+//    }
+//
+//    @Autowired
+//    public void setClientBuilderService(ClientBuilderService clientBuilderService) {
+//        this.clientBuilderService = clientBuilderService;
+//    }
+//
+//    @Autowired
+//    public void setClientController(ClientController clientController) {
+//        this.clientController = clientController;
+//    }
 
 //    @Autowired
 //    public void setClientFacade(ClientFacade clientFacade) {
 //        this.clientFacade = clientFacade;
 //    }
+//
+    //    private List<JobDto> uncompletedJobs = new ArrayList<>();
+    //    private ClientDto selectedClientDto;
 
     private List<JobDto> completedJobs = new ArrayList<>();
-    private List<JobDto> uncompletedJobs = new ArrayList<>();
     private JobDto selectedJobDto;
-    private ClientDto selectedClientDto;
 
     @RequestMapping("/Job/addJob")
     public String addJobForm(Model model) {
