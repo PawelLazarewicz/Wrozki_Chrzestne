@@ -63,18 +63,15 @@ public class JobFacade {
         JobDto selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(jobToMove);
         selectedJobDto.setJobStatus(JobStatus.COMPLETED);
 
-        // lambda for set employee assigned for job as FALSE
-        selectedJobDto.getEmployees()
-                .stream()
-                .filter(employee -> employee.getWorkedJobs()
-                        .stream()
-                        .allMatch(job -> job.getJobStatus().equals(JobStatus.COMPLETED)))
-                .peek(employee -> employee.setAssignedForJobs(false))
-                .collect(Collectors.toList());
+        employeeAssignedForJobAsFalse(selectedJobDto);
 
         jobToMove = jobBuilderService.updateEntityFromDto(selectedJobDto, jobToMove);
         jobRepository.save(jobToMove);
 
+        moveJobToCompletedJobList(jobToMove);
+    }
+
+    private void moveJobToCompletedJobList(Job jobToMove) {
         JobDto jobToMoveCompleted = jobBuilderService.dtoFromEntityWithEmployees(jobToMove);
 
         if (getCompletedJobList().isEmpty()) {
@@ -87,5 +84,16 @@ public class JobFacade {
             }
             getCompletedJobList().add(jobToMoveCompleted);
         }
+    }
+
+    private List<EmployeeDto> employeeAssignedForJobAsFalse(JobDto selectedJobDto) {
+        // lambda for set employee assigned for job as FALSE
+        return selectedJobDto.getEmployees()
+                .stream()
+                .filter(employee -> employee.getWorkedJobs()
+                        .stream()
+                        .allMatch(job -> job.getJobStatus().equals(JobStatus.COMPLETED)))
+                .peek(employee -> employee.setAssignedForJobs(false))
+                .collect(Collectors.toList());
     }
 }
