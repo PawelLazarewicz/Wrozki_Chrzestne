@@ -10,6 +10,8 @@ import pl.sda.wrozki_chrzestne_v_2.dto.JobDto;
 import pl.sda.wrozki_chrzestne_v_2.employee.Employee;
 import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeBuilderService;
 import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeController;
+import pl.sda.wrozki_chrzestne_v_2.employee.EmployeeRepository;
+import sun.security.krb5.internal.ktab.KeyTab;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,7 @@ public class JobFacade {
     private ClientController clientController;
     private ClientBuilderService clientBuilderService;
     private EmployeeBuilderService employeeBuilderService;
+    private EmployeeRepository employeeRepository;
 
     public void addJob(JobDto jobDto) {
         Job newJob = jobBuilderService.entityFromDto(jobDto);
@@ -178,5 +181,32 @@ public class JobFacade {
         Job job = jobBuilderService.selectJob(id);
         job.getEmployees().add(employeeToAssign);
         jobRepository.save(job);
+    }
+
+    public void removeEmployeeFromJob(Job job, Employee employee) {
+        List<Employee> assignedEmployeesForSelectedJob = job.getEmployees();
+
+        //removing employee only from selectedJobDto
+        for (Employee assignedEmployeeJob : assignedEmployeesForSelectedJob) {
+
+            if (employee.getId().equals(assignedEmployeeJob.getId())) {
+                assignedEmployeesForSelectedJob.remove(assignedEmployeeJob);
+                break;
+            }
+        }
+
+        jobRepository.save(job);
+    }
+
+    public void setEmployeeAssignedAsFalse(Employee removedEmployee) {
+        // lambda for set employee assigned for job as FALSE
+        if (removedEmployee.getWorkedJobs()
+                .stream()
+                .filter(job1 -> job1.getJobStatus().equals(JobStatus.ACTIVE))
+                .collect(Collectors.toList())
+                .isEmpty()) {
+            removedEmployee.setAssignedForJobs(false);
+            employeeRepository.save(removedEmployee);
+        }
     }
 }

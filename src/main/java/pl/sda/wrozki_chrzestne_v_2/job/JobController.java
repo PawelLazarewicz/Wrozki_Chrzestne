@@ -260,8 +260,8 @@ public class JobController {
 //                employeesDtoAvailableToAssign = new ArrayList<>();
 //            }
 //        }
-
-        model.addAttribute("employeesDtoAvailableToAssign", jobFacade.getEmployeesDtoAvailableToAssign(selectedJobDto));
+        List<EmployeeDto> employeesDtoAvailableToAssign = jobFacade.getEmployeesDtoAvailableToAssign(selectedJobDto);
+        model.addAttribute("employeesDtoAvailableToAssign", employeesDtoAvailableToAssign);
 
         return "job/assignEmployeeHTML";
     }
@@ -286,28 +286,32 @@ public class JobController {
         Employee removedEmployee = employeeBuilderService.selectEmployee(idEmployee);
         Job job = jobBuilderService.selectJob(id);
 
-        List<Employee> assignedEmployeesForSelectedJob = job.getEmployees();
+        jobFacade.removeEmployeeFromJob(job, removedEmployee);
 
-        //removing employee only from selectedJobDto
-        for (Employee assignedEmployeeJob : assignedEmployeesForSelectedJob) {
+//        List<Employee> assignedEmployeesForSelectedJob = job.getEmployees();
+//
+//        //removing employee only from selectedJobDto
+//        for (Employee assignedEmployeeJob : assignedEmployeesForSelectedJob) {
+//
+//            if (removedEmployee.getId().equals(assignedEmployeeJob.getId())) {
+//                assignedEmployeesForSelectedJob.remove(assignedEmployeeJob);
+//                break;
+//            }
+//        }
+//
+//        jobRepository.save(job);
 
-            if (removedEmployee.getId().equals(assignedEmployeeJob.getId())) {
-                assignedEmployeesForSelectedJob.remove(assignedEmployeeJob);
-                break;
-            }
-        }
+        jobFacade.setEmployeeAssignedAsFalse(removedEmployee);
 
-        jobRepository.save(job);
-
-        // lambda for set employee assigned for job as FALSE
-        if (removedEmployee.getWorkedJobs()
-                .stream()
-                .filter(job1 -> job1.getJobStatus().equals(JobStatus.ACTIVE))
-                .collect(Collectors.toList())
-                .isEmpty()) {
-            removedEmployee.setAssignedForJobs(false);
-            employeeRepository.save(removedEmployee);
-        }
+//        // lambda for set employee assigned for job as FALSE
+//        if (removedEmployee.getWorkedJobs()
+//                .stream()
+//                .filter(job1 -> job1.getJobStatus().equals(JobStatus.ACTIVE))
+//                .collect(Collectors.toList())
+//                .isEmpty()) {
+//            removedEmployee.setAssignedForJobs(false);
+//            employeeRepository.save(removedEmployee);
+//        }
 
         allJobs(model);
 
