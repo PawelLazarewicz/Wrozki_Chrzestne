@@ -123,24 +123,24 @@ public class JobController {
 
     @RequestMapping("Job/{id}/show")
     public String getJob(@PathVariable Long id, Model model) {
-        Job job = jobBuilderService.selectJob(id);
-        //selectedJobDto = jobBuilderService.dtoFromEntity(job);
+//        Job job = jobBuilderService.selectJob(id);
+//        //selectedJobDto = jobBuilderService.dtoFromEntity(job);
+//
+//        Optional<JobDto> completedJobToShow = completedJobs
+//                .stream()
+//                .filter(jobDto -> jobDto.getId().equals(selectedJobDto.getId()))
+//                .findFirst();
+//
+//        if (completedJobToShow.isPresent()) {
+//            selectedJobDto = completedJobToShow.get();
+//        } else {
+//            selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(job);
+//        }
 
-        Optional<JobDto> completedJobToShow = completedJobs
-                .stream()
-                .filter(jobDto -> jobDto.getId().equals(selectedJobDto.getId()))
-                .findFirst();
+        model.addAttribute("job", jobFacade.getJob(id));
 
-        if (completedJobToShow.isPresent()) {
-            selectedJobDto = completedJobToShow.get();
-        } else {
-            selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(job);
-        }
-
-        model.addAttribute("job", selectedJobDto);
-
-        List<EmployeeDto> activeEmployeesDtos = employeeController.getActiveEmployeeList();
-        model.addAttribute("employees", activeEmployeesDtos);
+//        List<EmployeeDto> activeEmployeesDtos = employeeController.getActiveEmployeeList();
+        model.addAttribute("employees", jobFacade.getActiveEmployeeList());
 
         return "job/jobHTML";
     }
