@@ -182,13 +182,15 @@ public class JobFacade {
         jobRepository.save(job);
     }
 
-    public void removeEmployeeFromJob(Job job, Employee employee) {
+    public void removeEmployeeFromJob(Long id, Long idEmployee) {
+        Employee removedEmployee = employeeBuilderService.selectEmployee(idEmployee);
+        Job job = jobBuilderService.selectJob(id);
         List<Employee> assignedEmployeesForSelectedJob = job.getEmployees();
 
         //removing employee only from selectedJobDto
         for (Employee assignedEmployeeJob : assignedEmployeesForSelectedJob) {
 
-            if (employee.getId().equals(assignedEmployeeJob.getId())) {
+            if (removedEmployee.getId().equals(assignedEmployeeJob.getId())) {
                 assignedEmployeesForSelectedJob.remove(assignedEmployeeJob);
                 break;
             }
@@ -197,7 +199,8 @@ public class JobFacade {
         jobRepository.save(job);
     }
 
-    public void setEmployeeAssignedAsFalse(Employee removedEmployee) {
+    public void setEmployeeAssignedAsFalse(Long idEmployee) {
+        Employee removedEmployee = employeeBuilderService.selectEmployee(idEmployee);
         // lambda for set employee assigned for job as FALSE
         if (removedEmployee.getWorkedJobs()
                 .stream()
@@ -211,5 +214,11 @@ public class JobFacade {
 
     public List<ClientDto> getClients() {
         return clientController.getAllClients();
+    }
+
+    public JobDto selectJob(Long id) {
+        Job job = jobBuilderService.selectJob(id);
+
+        return jobBuilderService.dtoFromEntityWithEmployees(job);
     }
 }

@@ -30,19 +30,19 @@ public class JobController {
         this.jobFacade = jobFacade;
     }
 
-    private JobBuilderService jobBuilderService;
-
-    private EmployeeBuilderService employeeBuilderService;
-
-    @Autowired
-    public void setJobBuilderService(JobBuilderService jobBuilderService) {
-        this.jobBuilderService = jobBuilderService;
-    }
-
-    @Autowired
-    public void setEmployeeBuilderService(EmployeeBuilderService employeeBuilderService) {
-        this.employeeBuilderService = employeeBuilderService;
-    }
+//    private JobBuilderService jobBuilderService;
+//
+//    private EmployeeBuilderService employeeBuilderService;
+//
+//    @Autowired
+//    public void setJobBuilderService(JobBuilderService jobBuilderService) {
+//        this.jobBuilderService = jobBuilderService;
+//    }
+//
+//    @Autowired
+//    public void setEmployeeBuilderService(EmployeeBuilderService employeeBuilderService) {
+//        this.employeeBuilderService = employeeBuilderService;
+//    }
 
     //
     //    private EmployeeRepository employeeRepository;
@@ -184,8 +184,9 @@ public class JobController {
 
     @RequestMapping("Job/{id}/edit")
     public String editJob(@PathVariable Long id, Model model) {
-        Job job = jobBuilderService.selectJob(id);
-        selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(job);
+//        Job job = jobBuilderService.selectJob(id);
+//        jobBuilderService.dtoFromEntityWithEmployees(job);
+        selectedJobDto = jobFacade.selectJob(id);
 
         model.addAttribute("selectedJobDto", selectedJobDto);
         model.addAttribute("sorts", SortOfJobs.values());
@@ -241,8 +242,8 @@ public class JobController {
 
     @RequestMapping("Job/{id}/assignEmployee")
     public String assignEmployee(@PathVariable Long id, Model model) {
-        Job job = jobBuilderService.selectJob(id);
-        selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(job);
+//        Job job = jobBuilderService.selectJob(id);
+        selectedJobDto = jobFacade.selectJob(id);
 
         model.addAttribute("jobForAssign", selectedJobDto);
 
@@ -286,10 +287,8 @@ public class JobController {
 
     @RequestMapping(value = "/Job/{id}/removeAssignedEmployee/{idEmployee}", method = RequestMethod.POST)
     public String removeAssignedEmployeeFromJob(@PathVariable Long id, @PathVariable Long idEmployee, Model model) {
-        Employee removedEmployee = employeeBuilderService.selectEmployee(idEmployee);
-        Job job = jobBuilderService.selectJob(id);
 
-        jobFacade.removeEmployeeFromJob(job, removedEmployee);
+        jobFacade.removeEmployeeFromJob(id, idEmployee);
 
 //        List<Employee> assignedEmployeesForSelectedJob = job.getEmployees();
 //
@@ -304,7 +303,7 @@ public class JobController {
 //
 //        jobRepository.save(job);
 
-        jobFacade.setEmployeeAssignedAsFalse(removedEmployee);
+        jobFacade.setEmployeeAssignedAsFalse(idEmployee);
 
 //        // lambda for set employee assigned for job as FALSE
 //        if (removedEmployee.getWorkedJobs()
@@ -318,7 +317,7 @@ public class JobController {
 
         allJobs(model);
 
-        return "redirect:/Job/" + selectedJobDto.getId() + "/assignEmployee";
+        return "redirect:/Job/" + id + "/assignEmployee";
     }
 
 //    public List<JobDto> getUncompletedJobList() {
