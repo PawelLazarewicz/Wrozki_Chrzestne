@@ -1,6 +1,8 @@
 package pl.sda.wrozki_chrzestne_v_2.job;
 
 import lombok.AllArgsConstructor;
+import pl.sda.wrozki_chrzestne_v_2.client.Client;
+import pl.sda.wrozki_chrzestne_v_2.client.ClientBuilderService;
 import pl.sda.wrozki_chrzestne_v_2.client.ClientController;
 import pl.sda.wrozki_chrzestne_v_2.dto.ClientDto;
 import pl.sda.wrozki_chrzestne_v_2.dto.EmployeeDto;
@@ -19,6 +21,7 @@ public class JobFacade {
     private JobController jobController;
     private EmployeeController employeeController;
     private ClientController clientController;
+    private ClientBuilderService clientBuilderService;
 
     public void addJob(JobDto jobDto) {
         Job newJob = jobBuilderService.entityFromDto(jobDto);
@@ -118,5 +121,16 @@ public class JobFacade {
         updatingJobDto.setClient(selectingJobDto.getClient());
         job = jobBuilderService.updateEntityFromDto(updatingJobDto, job);
         jobRepository.save(job);
+    }
+
+    public Long selectClient(ClientDto clientDto, JobDto jobDto) {
+        Client client = clientBuilderService.selectClient(clientDto.getId());
+        ClientDto selectedClientDto = clientBuilderService.dtoFromEntity(client);
+        jobDto.setClient(selectedClientDto);
+
+        Job newJob = jobBuilderService.entityFromDtoWithUpdatingClient(jobDto, selectedClientDto);
+        jobRepository.save(newJob);
+
+        return newJob.getId();
     }
 }
