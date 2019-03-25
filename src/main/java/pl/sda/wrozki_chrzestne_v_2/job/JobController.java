@@ -112,8 +112,8 @@ public class JobController {
     @RequestMapping("/Job/listJobs")
     public String allJobs(Model model) {
 
-        uncompletedJobs = getUncompletedJobList();
-        model.addAttribute("activeJobsDto", uncompletedJobs);
+//        uncompletedJobs = getUncompletedJobList();
+        model.addAttribute("activeJobsDto", jobFacade.getUncompletedJobList());
 
         completedJobs = getCompletedJobList();
         model.addAttribute("completedJobsDto", completedJobs);
@@ -320,15 +320,15 @@ public class JobController {
         return "redirect:/Job/" + selectedJobDto.getId() + "/assignEmployee";
     }
 
-    public List<JobDto> getUncompletedJobList() {
-        uncompletedJobs = jobRepository.findAll()
-                .stream()
-                .filter(job -> job.getJobStatus().equals(JobStatus.ACTIVE))
-                .map(e -> jobBuilderService.dtoFromEntityWithEmployees(e))
-                .collect(Collectors.toList());
-
-        return uncompletedJobs;
-    }
+//    public List<JobDto> getUncompletedJobList() {
+//        uncompletedJobs = jobRepository.findAll()
+//                .stream()
+//                .filter(job -> job.getJobStatus().equals(JobStatus.ACTIVE))
+//                .map(e -> jobBuilderService.dtoFromEntityWithEmployees(e))
+//                .collect(Collectors.toList());
+//
+//        return uncompletedJobs;
+//    }
 
     public List<JobDto> getCompletedJobList() {
         return completedJobs;
