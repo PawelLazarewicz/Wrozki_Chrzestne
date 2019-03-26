@@ -49,7 +49,6 @@ public class JobFacade {
 
     public JobDto getJob(Long id) {
         Job job = jobBuilderService.selectJob(id);
-        //Job finalSelectedJob = job;
 
         Optional<JobDto> completedJobToShow = getCompletedJobList()
                 .stream()
@@ -57,11 +56,15 @@ public class JobFacade {
                 .findFirst();
 
         JobDto selectedJobDto;
-        if (completedJobToShow.isPresent()) {
-            selectedJobDto = completedJobToShow.get();
-        } else {
-            selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(job);
-        }
+        selectedJobDto = completedJobToShow.orElseGet(() -> jobBuilderService.dtoFromEntityWithEmployees(job));
+
+        //other possibility for orElseGet//
+
+//        if (completedJobToShow.isPresent()) {
+//            selectedJobDto = completedJobToShow.get();
+//        } else {
+//            selectedJobDto = jobBuilderService.dtoFromEntityWithEmployees(job);
+//        }
         return selectedJobDto;
     }
 
@@ -110,16 +113,12 @@ public class JobFacade {
     }
 
     public List<ClientDto> getClientsToChange(JobDto selectedJobDto) {
-        List<ClientDto> clientsToChange = clientController.getAllClients();
         ClientDto selectedClientDto = selectedJobDto.getClient();
 
-        for (ClientDto clientDto : clientsToChange) {
-            if (clientDto.getId().equals(selectedClientDto.getId())) {
-                clientsToChange.remove(clientDto);
-                break;
-            }
-        }
-        return clientsToChange;
+        return clientController.getAllClients()
+                .stream()
+                .filter(clientDto -> !clientDto.getId().equals(selectedClientDto.getId()))
+                .collect(Collectors.toList());
     }
 
     public void updateJob(JobDto updatingJobDto, JobDto selectingJobDto) {
@@ -189,13 +188,11 @@ public class JobFacade {
 
         //removing employee only from selectedJobDto
         for (Employee assignedEmployeeJob : assignedEmployeesForSelectedJob) {
-
             if (removedEmployee.getId().equals(assignedEmployeeJob.getId())) {
                 assignedEmployeesForSelectedJob.remove(assignedEmployeeJob);
                 break;
             }
         }
-
         jobRepository.save(job);
     }
 
