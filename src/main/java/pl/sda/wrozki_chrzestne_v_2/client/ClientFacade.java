@@ -16,16 +16,9 @@ public class ClientFacade {
     private ClientRepository clientRepository;
 
     public void addClient(ClientDto clientDto) {
-
         Client newClient = clientBuilderService.entityFromDto(clientDto);
         clientRepository.save(newClient);
-
-        //return clientBuilderService.dtoFromEntityWithJobs(savedClient);
     }
-
-//    public List<ClientDto> allClients() {
-//        return getAllClients();
-//    }
 
     public List<ClientDto> allClients() {
         return clientRepository.findAll()
@@ -35,7 +28,6 @@ public class ClientFacade {
     }
 
     public Map<Long, Long> countOfActiveJobsForClient() {
-
         //LAMBDA for displaying counter for client active jobs
         Map<Long, Long> countOfActiveJobsForClient = new HashMap<>();
         allClients()
@@ -48,7 +40,6 @@ public class ClientFacade {
     }
 
     public Map<Long, Long> countOfCompletedJobsForClient() {
-
         //LAMBDA for displaying counter for client completed jobs
         Map<Long, Long> countOfCompletedJobsForClient = new HashMap<>();
         allClients()
@@ -62,9 +53,8 @@ public class ClientFacade {
 
     public ClientDto getClient(Long id) {
         Client selectedClient = clientBuilderService.selectClient(id);
-        ClientDto clientToSelectDto = clientBuilderService.dtoFromEntity(selectedClient);
 
-        return clientToSelectDto;
+        return clientBuilderService.dtoFromEntity(selectedClient);
     }
 
     public ClientDto deleteClient(Long id) {
@@ -78,12 +68,6 @@ public class ClientFacade {
         }
 
         return deletedClientDto;
-    }
-
-    public ClientDto editClient(Long id) {
-        Client editedClient = clientBuilderService.selectClient(id);
-        ClientDto editedClientDto = clientBuilderService.dtoFromEntity(editedClient);
-        return editedClientDto;
     }
 
     public void updateClient(ClientDto updatingClientDto, ClientDto selectingClientDto) {

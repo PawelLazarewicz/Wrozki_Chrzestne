@@ -63,8 +63,8 @@ public class ClientController {
 
     @RequestMapping("Client/{id}/edit")
     public String editClient(@PathVariable Long id, Model model) {
-        selectedClientDto = clientFacade.editClient(id);
-        model.addAttribute("selectedClient", clientFacade.editClient(id));
+        selectedClientDto = clientFacade.getClient(id);
+        model.addAttribute("selectedClient", clientFacade.getClient(id));
 
         return "client/updateClientHTML";
     }
