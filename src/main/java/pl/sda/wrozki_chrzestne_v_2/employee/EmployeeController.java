@@ -81,8 +81,8 @@ public class EmployeeController {
 
     @RequestMapping("Employee/{id}/edit")
     public String editEmployee(@PathVariable Long id, Model model) {
-        selectedEmployee = employeeFacade.editEmployee(id);
-        model.addAttribute("employee", employeeFacade.editEmployee(id));
+        selectedEmployee = employeeFacade.getEmployee(id);
+        model.addAttribute("employee", employeeFacade.getEmployee(id));
 
         return "employee/updateEmployeeHTML";
     }

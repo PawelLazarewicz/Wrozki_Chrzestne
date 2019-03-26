@@ -23,23 +23,21 @@ public class EmployeeFacade {
     }
 
     public List<EmployeeDto> getActiveEmployeeList() {
-        List<EmployeeDto> activeEmployeeList = employeeRepository.findAll()
+
+        return employeeRepository.findAll()
                 .stream()
                 .filter(employee -> employee.getEmployeeStatus().equals(EmployeeStatus.ACTIVE))
                 .map(e -> employeeBuilderService.dtoFromEntityWithJobs(e))
                 .collect(Collectors.toList());
-
-        return activeEmployeeList;
     }
 
     public List<EmployeeDto> getInactiveEmployeeList() {
-        List<EmployeeDto> inactiveEmployeeList = employeeRepository.findAll()
+
+        return employeeRepository.findAll()
                 .stream()
                 .filter(employee -> employee.getEmployeeStatus().equals(EmployeeStatus.INACTIVE))
                 .map(e -> employeeBuilderService.dtoFromEntityWithJobs(e))
                 .collect(Collectors.toList());
-
-        return inactiveEmployeeList;
     }
 
     public Map<Long, Long> countOfActiveJobsForActiveEmployee() {
@@ -47,11 +45,12 @@ public class EmployeeFacade {
         //LAMBDA for displaying counter for active employee active jobs
         Map<Long, Long> countOfActiveJobsForActiveEmployee = new HashMap<>();
 
-        getActiveEmployeeList().forEach(employeeDto -> countOfActiveJobsForActiveEmployee
-                .put(employeeDto.getId(), employeeDto.getWorkedJobs()
-                        .stream()
-                        .filter(jobDto -> jobDto.getJobStatus().equals(JobStatus.ACTIVE))
-                        .count()));
+        getActiveEmployeeList()
+                .forEach(employeeDto -> countOfActiveJobsForActiveEmployee
+                        .put(employeeDto.getId(), employeeDto.getWorkedJobs()
+                                .stream()
+                                .filter(jobDto -> jobDto.getJobStatus().equals(JobStatus.ACTIVE))
+                                .count()));
 
         return countOfActiveJobsForActiveEmployee;
     }
@@ -61,11 +60,12 @@ public class EmployeeFacade {
         //LAMBDA for displaying counter for active employee completed jobs
         Map<Long, Long> countOfCompletedJobsForActiveEmployee = new HashMap<>();
 
-        getActiveEmployeeList().forEach(employeeDto -> countOfCompletedJobsForActiveEmployee
-                .put(employeeDto.getId(), employeeDto.getWorkedJobs()
-                        .stream()
-                        .filter(jobDto -> jobDto.getJobStatus().equals(JobStatus.COMPLETED))
-                        .count()));
+        getActiveEmployeeList()
+                .forEach(employeeDto -> countOfCompletedJobsForActiveEmployee
+                        .put(employeeDto.getId(), employeeDto.getWorkedJobs()
+                                .stream()
+                                .filter(jobDto -> jobDto.getJobStatus().equals(JobStatus.COMPLETED))
+                                .count()));
 
         return countOfCompletedJobsForActiveEmployee;
     }
@@ -75,17 +75,19 @@ public class EmployeeFacade {
         //LAMBDA for displaying counter for inactive employee completed jobs
         Map<Long, Long> countOfCompletedJobsForInactiveEmployee = new HashMap<>();
 
-        getInactiveEmployeeList().forEach(employeeDto -> countOfCompletedJobsForInactiveEmployee
-                .put(employeeDto.getId(), employeeDto.getWorkedJobs()
-                        .stream()
-                        .filter(jobDto -> jobDto.getJobStatus().equals(JobStatus.COMPLETED))
-                        .count()));
+        getInactiveEmployeeList()
+                .forEach(employeeDto -> countOfCompletedJobsForInactiveEmployee
+                        .put(employeeDto.getId(), employeeDto.getWorkedJobs()
+                                .stream()
+                                .filter(jobDto -> jobDto.getJobStatus().equals(JobStatus.COMPLETED))
+                                .count()));
 
         return countOfCompletedJobsForInactiveEmployee;
     }
 
     public void moveEmployeeInactive(Long id) {
         Employee employeeToMoveInactive = employeeBuilderService.selectEmployee(id);
+
         if (!employeeToMoveInactive.isAssignedForJobs()) {
             employeeToMoveInactive.setEmployeeStatus(EmployeeStatus.INACTIVE);
             employeeRepository.save(employeeToMoveInactive);
@@ -94,9 +96,8 @@ public class EmployeeFacade {
 
     public EmployeeDto getEmployee(Long id) {
         Employee selectedEmployee = employeeBuilderService.selectEmployee(id);
-        EmployeeDto selectedEmployeeDto = employeeBuilderService.dtoFromEntityWithJobs(selectedEmployee);
 
-        return selectedEmployeeDto;
+        return employeeBuilderService.dtoFromEntityWithJobs(selectedEmployee);
     }
 
     public void deleteEmployee(Long id) {
@@ -119,13 +120,6 @@ public class EmployeeFacade {
         Employee employeeToMoveActive = employeeBuilderService.selectEmployee(id);
         employeeToMoveActive.setEmployeeStatus(EmployeeStatus.ACTIVE);
         employeeRepository.save(employeeToMoveActive);
-    }
-
-    public EmployeeDto editEmployee(Long id) {
-        Employee employeeToEdit = employeeBuilderService.selectEmployee(id);
-        EmployeeDto employeeToEditDto = employeeBuilderService.dtoFromEntityWithJobs(employeeToEdit);
-
-        return employeeToEditDto;
     }
 
     public void updateEmployee(EmployeeDto updatingEmployeeDto, EmployeeDto selectingEmployeeDto) {
